@@ -11,7 +11,7 @@ function Defaultlayout() {
       <div className='header'>
         <Header />
       </div>
-      <span className='row'>
+      <span className='content'>
         <div className='sidebarmenucol'>
           <Menu />
         </div>
