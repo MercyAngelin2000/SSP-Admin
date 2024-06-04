@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import '../App.css'
 import DataTable from 'react-data-table-component';
+import RegionUser from './RegionUser';
 
 function Region() {
 
@@ -90,7 +91,7 @@ function Region() {
 
         {selectedTab == 'user' &&
           <section id='user'>
-            <h4>User</h4>
+           <RegionUser />
           </section>}
 
       </div>
