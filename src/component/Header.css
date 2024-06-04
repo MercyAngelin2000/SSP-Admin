@@ -1,0 +1,18 @@
+.header{
+    box-shadow: 5px 5px 15px rgb(192, 190, 190);
+    padding: 15px;
+}
+.sidebarmenucol{
+    width: 6%;
+}
+.addcontentcol{
+    width: 94%;
+}
+@media only screen and (max-width: 600px) {
+    .sidebarmenucol{
+        width: 25%;
+    }
+    .addcontentcol{
+        width: 75%;
+    }
+  }
