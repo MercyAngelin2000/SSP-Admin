@@ -16,11 +16,19 @@ function Region() {
   const [selectedAdmin, setSelectedAdmin] = useState()
   const [selectedMember, setSelectedMember] = useState()
   const [mode, setMode] = useState('add')
+  const [skip, setSkip] = useState(0)
+  const [limit, setLimit] = useState(10)
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [errors, setErrors] = useState({
+    code: '', name: '', admin: ''
+  })
 
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWRtaW4iLCJ1c2VyX2lkIjoxLCJyb2xlX2lkIjoxLCJleHAiOjE3MTc1ODczNjR9.J8ERCTUu2WPlxgBrV5pXSHlSxUN7zyRIco_Ld6kKHbI"
-  
+  var token = localStorage.getItem("access-token");
+  let base_url = process.env.REACT_APP_BASE_URL
+
   useEffect(() => {
-
+    getUserList()
     if (selectedTab === 'region') {
       document.getElementById("region").classList.add("active")
       document.getElementById("user").classList.remove("active")
@@ -28,22 +36,22 @@ function Region() {
       document.getElementById("region").classList.remove("active")
       document.getElementById("user").classList.add("active")
     }
-  }, [selectedTab])
+  }, [selectedTab, regionList])
 
   useEffect(() => {
     getRegionList()
-    getUserList()
-  }, [])
+  }, [limit, skip])
 
   const getRegionList = () => {
     axios({
       method: 'GET',
-      url: 'http://192.168.1.148:8080/region/?skip=0&limit=10',
+      url: `${base_url}/region/?skip=${skip}&limit=${limit}`,
       headers: {
         'Authorization': 'Bearer ' + token
       }
     }).then((response) => {
       setRegionList(response?.data?.data)
+      setTotal(response?.data?.total_count)
     }).catch((error) => {
       console.log(error);
     })
@@ -53,7 +61,7 @@ function Region() {
   const getUserList = () => {
     axios({
       method: 'GET',
-      url: 'http://192.168.1.148:8080/region/regionusers',
+      url: `${base_url}/region/regionusers`,
       headers: {
         'Authorization': 'Bearer ' + token
       }
@@ -77,80 +85,76 @@ function Region() {
   }
 
   const addRegion = () => {
-    const userids = selectedMember?.map((item) => ({ user_id: item.value }));
-    const data = {
-      "code": regionData?.code,
-      "name": regionData?.name,
-      "admin_id": {
-        "user_id": selectedAdmin?.value
-      },
-      "member_ids": userids,
-      "active": true
-    }
-    axios({
-      method: "POST",
-      url: "http://192.168.1.148:8080/region/",
-      data: data,
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) => {
-      getRegionList()
-      clearModal()
-      document.getElementById('modalClose').click()
-      Swal.fire({
-        toast: true,
-        position: "center",
-        icon: "success",
-        title: "Region added successfully" ,
-        showConfirmButton: false,
-        timer: 1500
-    });
-    }).catch((error) => {
-      console.log(error)
-    })
 
-  }
+    const errors = {};
 
-  const updateRegion = () => {
-    const userids = selectedMember?.map((item) => ({ user_id: item.value }));
-    const data = {
-      "code": regionData?.code,
-      "name": regionData?.name,
-      "admin_id": {
-        "user_id": selectedAdmin?.value
-      },
-      "member_ids": userids,
-      "active": true
+    if (!regionData?.code) {
+      errors.code = 'Code is required';
     }
-    axios({
-      method: "PUT",
-      url: "http://192.168.1.148:8080/region/" + regionData?.id,
-      data: data,
-      headers: {
-        'Authorization': 'Bearer ' + token
+
+    if (!regionData?.name) {
+      errors.name = 'Name is required';
+    }
+
+    if (!selectedAdmin) {
+      errors.admin = 'Admin is required';
+    }
+
+    setErrors(errors);
+
+    if (regionData?.code && regionData?.name && selectedAdmin) {
+      const userids = selectedMember?.map((item) => ({ user_id: item.value }));
+      const data = {
+        "code": regionData?.code,
+        "name": regionData?.name,
+        "admin_id": {
+          "user_id": selectedAdmin?.value
+        },
+        "member_ids": userids,
+        "active": true
       }
-    }).then((response) => {
-      getRegionList()
-      clearModal()
-      document.getElementById('modalClose').click()
-      Swal.fire({
-        toast: true,
-        position: "center",
-        icon: "success",
-        title: "Region updated successfully" ,
-        showConfirmButton: false,
-        timer: 1500
-    });
-    }).catch((error) => {
-      console.log(error)
-    })
+
+      var method
+      var url
+
+      if (mode === 'add') {
+        method = "POST"
+        url = `${base_url}/region/`
+      }
+      else {
+        method = "PUT"
+        url = `${base_url}/region/` + regionData?.id
+      }
+
+      axios({
+        method: method,
+        url: url,
+        data: data,
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      }).then((response) => {
+        getRegionList()
+        clearModal()
+        document.getElementById('modalClose').click()
+        Swal.fire({
+          toast: true,
+          position: "center",
+          icon: "success",
+          title: mode === 'add' ? "Region added successfully" : "Region updated successfully",
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
   }
 
   const getSingleRegion = (id) => {
     axios({
       method: 'GET',
-      url: 'http://192.168.1.148:8080/region/regionbyid/?region_id=' + id,
+      url: `${base_url}/region/regionbyid/?region_id=` + id,
       headers: {
         'Authorization': 'Bearer ' + token
       }
@@ -174,14 +178,14 @@ function Region() {
   const deleteRegion = (id) => {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
-          confirmButton: "btn btn-success btn-sm",
-          cancelButton: "btn btn-danger me-2 btn-sm"
+        confirmButton: "btn btn-success btn-sm",
+        cancelButton: "btn btn-danger me-2 btn-sm"
       },
       buttonsStyling: false
-  });
-  swalWithBootstrapButtons.fire({
+    });
+    swalWithBootstrapButtons.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this user!",
+      text: "You won't be able to revert this region!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
@@ -189,27 +193,31 @@ function Region() {
       reverseButtons: true,
       heightAuto: false,
       width: 400
-  }).then((result) => {
+    }).then((result) => {
       if (result.isConfirmed) {
         axios({
           method: 'DELETE',
-          url: 'http://192.168.1.148:8080/region/' + id,
+          url: `${base_url}/region/` + id,
           headers: {
             'Authorization': 'Bearer ' + token
           }
         }).then((response) => {
           getRegionList()
-    
+
         }).catch((error) => {
           console.log(error)
         })
 
       }
-})
-    
+    })
+
   }
 
   const columns = [
+    {
+      name: '#',
+      selector: (row, index) => index + 1
+    },
     {
       name: 'Code',
       selector: row => row.code,
@@ -235,7 +243,7 @@ function Region() {
             </svg>
           </button>
           <div className="form-check form-switch mt-2">
-            <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" defaultChecked={row?.active} />
+            <input className="form-check-input" disabled type="checkbox" role="switch" id="flexSwitchCheckChecked" defaultChecked={row?.active} />
             <label className="form-check-label" htmlFor="flexSwitchCheckChecked"></label>
           </div>
         </div>
@@ -260,20 +268,17 @@ function Region() {
   };
 
   const handleChange = (data) => {
-    if (mode == 'edit') {
+    if (mode === 'edit') {
       const dataIds = new Set(data.map(dataItem => dataItem.value));
       const missingMembers = selectedMember.filter(member => !dataIds.has(member.value));
-      console.log("Missing Members: ", missingMembers[0]?.value);
-
       if (missingMembers?.length > 0) {
         axios({
           method: 'DELETE',
-          url: 'http://192.168.1.148:8080/region/regionusers/' + missingMembers[0]?.value,
+          url: `${base_url}/region/regionusers/` + missingMembers[0]?.value,
           headers: {
             'Authorization': 'Bearer ' + token
           }
         }).then((response) => {
-          console.log(response.data.data)
           getUserList()
         }).catch((error) => {
           console.log(error)
@@ -286,8 +291,21 @@ function Region() {
   const clearModal = () => {
     setRegionData({ code: '', name: '' });
     setSelectedAdmin(null);
-    setSelectedMember([]); 
+    setSelectedMember([]);
+    setErrors({ code: '', name: '', admin: '' })
   }
+
+  const handlePerRowsChange = (newPerPage, page) => {
+    console.log("newPerPage", newPerPage, "page", page);
+    setLimit(newPerPage);
+
+  }
+  const handlePageChange = (currentpage) => {
+    console.log("page", currentpage, 'limit', limit, 'skip', skip, 'page', page);
+    // setPage(currentpage)
+    setSkip((currentpage - 1) * limit)
+  }
+
 
   return (
     <div>
@@ -305,7 +323,7 @@ function Region() {
           </li>
         </ul>
 
-        {selectedTab == 'region' &&
+        {selectedTab === 'region' &&
           <section id='regiontbl'>
             <div className='d-flex justify-content-end mt-3'>
               <button className='btn btn-success' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
@@ -315,12 +333,16 @@ function Region() {
               customStyles={customStyles}
               columns={columns}
               data={regionList}
+              paginationTotalRows={total}
+              paginationServer
+              onChangeRowsPerPage={handlePerRowsChange}
+              onChangePage={handlePageChange}
             />
           </section>}
 
-        {selectedTab == 'user' &&
+        {selectedTab === 'user' &&
           <section id='user'>
-           <RegionUser />
+            <RegionUser />
           </section>}
 
       </div>
@@ -328,30 +350,40 @@ function Region() {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="staticBackdropLabel">{mode=='edit' ? 'Edit Region' : 'Add Region'}</h1>
+              <h1 className="modal-title fs-5" id="staticBackdropLabel">{mode === 'edit' ? 'Edit Region' : 'Add Region'}</h1>
               <button type="button" id='modalClose' className="btn-close" onClick={() => clearModal()} data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
               <div>
-                <label className='mt-2'>Code</label>
-                <input className='form-control' value={regionData?.code} defaultValue={regionData?.code} onChange={(e) => setRegionData({ ...regionData, 'code': e.target.value })} />
-                <label className='mt-2'>Name</label>
-                <input className='form-control' value={regionData?.name} defaultValue={regionData?.name} onChange={(e) => setRegionData({ ...regionData, 'name': e.target.value })} />
-                <label className='mt-2'>Admin</label>
-                <Select options={adminList}
-                  value={selectedAdmin}
-                  onChange={(e) => setSelectedAdmin(e)}
-                />
-                <label className='mt-2'>Members</label>
-                <Select options={memberList}
-                  value={selectedMember}
-                  onChange={handleChange}
-                  isMulti />
-
+                <div>
+                  <label className='mt-2'>Code <span className='text-danger'>*</span></label>
+                  <input className='form-control' value={regionData?.code} defaultValue={regionData?.code} onChange={(e) => setRegionData({ ...regionData, 'code': e.target.value })} />
+                  {errors?.code && <span className='text-danger'>{errors.code}</span>}
+                </div>
+                <div>
+                  <label className='mt-2'>Name <span className='text-danger'>*</span></label>
+                  <input className='form-control' value={regionData?.name} defaultValue={regionData?.name} onChange={(e) => setRegionData({ ...regionData, 'name': e.target.value })} />
+                  <span className='text-danger'>{errors?.name}</span>
+                </div>
+                <div>
+                  <label className='mt-2'>Admin <span className='text-danger'>*</span></label>
+                  <Select options={adminList}
+                    value={selectedAdmin}
+                    onChange={(e) => setSelectedAdmin(e)}
+                  />
+                  <span className='text-danger'>{errors?.admin}</span>
+                </div>
+                <div>
+                  <label className='mt-2'>Members</label>
+                  <Select options={memberList}
+                    value={selectedMember}
+                    onChange={handleChange}
+                    isMulti />
+                </div>
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-primary" onClick={() => mode == 'add' ? addRegion() : updateRegion()}>Save</button>
+              <button type="button" className="btn btn-primary" onClick={() => addRegion()}>Save</button>
               <button type="button" onClick={() => clearModal()} className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
           </div>
