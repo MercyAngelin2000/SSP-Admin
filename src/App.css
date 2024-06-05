@@ -1,15 +1,3 @@
 .App {
   text-align: center;
 }
-.title{
-  color: #05609c;
-  padding: 10px;
-}
-.nav-item.active a {
-  background-color: #05609c; 
-  color: white;
-}
-
-.nav-tabs{
-  margin-top: 10px;
-}

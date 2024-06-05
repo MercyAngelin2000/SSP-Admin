@@ -4,9 +4,10 @@
     height: 100vh;
   }
   .header {
-    box-shadow: 5px 5px 15px rgb(192, 190, 190);
-    padding: 15px;
-    color: #05609c;
+    /* box-shadow: 5px 5px 15px rgb(233, 232, 232); */
+    border: 1px solid rgb(233, 232, 232);
+    padding: 10px;
+    color: #02095c;
   }
   .content {
     display: flex;

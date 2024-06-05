@@ -1,20 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap'); */
 
 :root{
-  --color-default:#05609c;
-  --color-second:#0067ac;
+  --color-default:#02095c;
+  --color-second:#02095c;
   --color-white:#fff;
   --color-body:#e4e9f7;
   --color-light:#e0e0e0;
 }
 
 
-*{
+/* *{
   padding: 0%;
   margin: 0%;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
-}
+} */
 
 .sidebar{
   min-height: 100vh;
@@ -122,7 +122,7 @@
 .sidebar.open li .tooltip{
   display: none;
 }
-.sidebar li a{
+.sidebar li p{
   display: flex;
   height: 100%;
   width: 100%;
@@ -134,7 +134,7 @@
   z-index: 12;
 }
 
-.sidebar li a::after{
+.sidebar li p::after{
   content: "";
   position: absolute;
   width: 100%;
@@ -147,12 +147,12 @@
   z-index: -2;
 }
 
-.sidebar li a:hover::after{
+/* .sidebar li p:hover::after{
   transform: scaleX(1);
   color:var(--color-default)
-}
+} */
 
-.sidebar li a .link_name{
+.sidebar li p .link_name{
   color:var(--color-white);
   font-size: 15px;
   font-weight: 400;
@@ -163,13 +163,13 @@
   opacity: 0;
 }
 
-.sidebar li a:hover .link_name,
-.sidebar li a:hover i{
+/* .sidebar li p:hover .link_name,
+.sidebar li p:hover i{
   transition: all 0.5s ease;
   color:var(--color-default)
-}
+} */
 
-.sidebar.open li a .link_name{
+.sidebar.open li p .link_name{
   opacity: 1;
   pointer-events: auto;
 }
@@ -179,4 +179,16 @@
   line-height: 35px;
   font-size: 18px;
   border-radius: 5px;
+}
+.active p{
+  background-color: white !important;
+  border-radius: 10px;
+}
+
+.active p i{
+  color: black !important;
+}
+
+.active p span{
+  color: black !important;
 }

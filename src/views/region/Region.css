@@ -1,0 +1,12 @@
+.title{
+    color: #02095c !important;
+    padding: 10px;
+  }
+  .nav-item.active a {
+    background-color: #02095c !important; 
+    color: white;
+  }
+  
+  .nav-tabs{
+    margin-top: 10px;
+  }

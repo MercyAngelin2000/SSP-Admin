@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import '../App.css'
 import DataTable from 'react-data-table-component';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import "./Region.css"
 
 const customStyles = {
     headCells: {
