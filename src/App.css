@@ -1,3 +1,60 @@
 .App {
   text-align: center;
 }
+:root {
+  --sidebar-width: 250px;
+  --sidebar-collapsed-width: 80px;
+  --sidebar-mobile-width: 150px; /* Add a variable for mobile sidebar width */
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  flex: 0 0 auto;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+}
+
+.sidebarmenucol {
+  transition: width 0.3s ease;
+}
+
+.addcontentcol {
+  flex: 1;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar {
+  width: var(--sidebar-collapsed-width);
+  transition: width 0.3s ease;
+}
+
+.wrapper.sidebar-open .sidebarmenucol .sidebar {
+  width: var(--sidebar-width);
+}
+
+.wrapper.sidebar-open .addcontentcol {
+  margin-left: var(--sidebar-width);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: var(--sidebar-collapsed-width); /* Adjust for mobile collapsed width */
+  }
+
+  .wrapper.sidebar-open .sidebarmenucol .sidebar {
+    width: var(--sidebar-mobile-width); /* Use mobile sidebar width */
+  }
+
+  .wrapper.sidebar-open .addcontentcol {
+    margin-left: var(--sidebar-mobile-width); /* Adjust margin for mobile view */
+  }
+}
+

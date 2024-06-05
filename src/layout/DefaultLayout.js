@@ -1,29 +1,32 @@
-import React from 'react'
-import AppContent from '../component/AppContent'
-import Footer from '../component/Footer'
-import Header from '../component/Header'
-import Menu from '../component/Menu'
-import '../component/Header.css'
+import React, { useState } from 'react';
+import AppContent from '../component/AppContent';
+import Footer from '../component/Footer';
+import Header from '../component/Header';
+import Menu from '../component/Menu';
+import '../component/Header.css';
+import '../App.css'
 
-function Defaultlayout() {
+function DefaultLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div className="wrapper">
+    <div className={`wrapper ${sidebarOpen ? 'sidebar-open' : ''}`}>
       <div className='header'>
         <Header />
       </div>
-      <span className='content'>
+      <div className='content'>
         <div className='sidebarmenucol'>
-          <Menu />
+          <Menu onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
         </div>
         <div className='addcontentcol p-0'>
           <AppContent />
         </div>
-      </span>
+      </div>
       <div>
         <Footer />
       </div>
     </div>
-  )
+  );
 }
 
-export default Defaultlayout
+export default DefaultLayout;
