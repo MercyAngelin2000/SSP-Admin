@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 function Menu({ onToggleSidebar }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const currentPath = location.pathname.split("/")[1];
+  const currentPath = location?.pathname?.split("/")?.[1];
   const [activeTab, setActiveTab] = useState(currentPath);
   const handleTabChange = (id) => {
     setActiveTab(id);

@@ -43,7 +43,7 @@ const schema1 = yup.object().shape({
     username: yup.string().required('Username is required'),
     role: yup.string().required('Role is required'),
 });
-function User() {
+function RegionUser() {
     let base_url = process.env.REACT_APP_BASE_URL
     var token = localStorage.getItem("access-token");
     const [title, setTile] = useState("Add User")
@@ -381,7 +381,7 @@ function User() {
                                         <option value="">Select Role</option>
                                         {
                                             roleData?.map((item, index) => {
-                                                return <option key={index} value={item?.id}>{item?.name}</option>
+                                                return <option key={index} value={item?.id} selected={item?.id===editData?.role_id ? true : false}>{item?.name}</option>
                                             })
                                         }
                                     </select>
@@ -401,4 +401,4 @@ function User() {
     )
 }
 
-export default User
+export default RegionUser
