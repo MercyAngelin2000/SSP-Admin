@@ -34,7 +34,7 @@ useEffect(() => {
   return (
     <div>
       <h4 className='title fw-bold'>Dashboard</h4>
-      <div className='card'>
+      <div className='card dashboard_card'>
       <Doughnut data={data}/>
       <label className='fw-bold mt-2 text-center'>Region</label>
       </div>

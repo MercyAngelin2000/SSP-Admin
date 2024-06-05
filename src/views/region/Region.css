@@ -10,5 +10,9 @@
     color: #02095c !important;
   }
   .nav-tabs{
-    margin-top: 10px;
+    margin-top: 3px;
+  }
+  .add{
+    background-color: #02095c !important; 
+    color: white !important;
   }

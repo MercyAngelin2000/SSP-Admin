@@ -1,6 +1,8 @@
 .App {
   text-align: center;
+  font-size: medium;
 }
+/* default file css for sidebar */
 :root {
   --sidebar-width: 250px;
   --sidebar-collapsed-width: 80px;

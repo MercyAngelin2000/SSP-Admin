@@ -10,9 +10,14 @@ import "./Region.css"
 const customStyles = {
     headCells: {
         style: {
-            paddingLeft: '8px',
-            paddingRight: '8px',
-            fontWeight: 800,
+            fontSize: '14px', // Decrease font size
+            fontWeight: 'bold', // Make font weight bold
+            color: '#333', // Change font color
+        },
+    },
+    cells: {
+        style: {
+            fontSize: '13px', // Decrease font size
         },
     },
 };
@@ -54,6 +59,7 @@ function User() {
     const [total, setTotal] = useState(0);
     const columns = [
         {
+            width: '100px',
             name: '#',
             selector: (row, index) => index + 1,
             cell: (row, index) => <div>{index + 1}</div>,
@@ -196,7 +202,7 @@ function User() {
     useEffect(() => {
         fetchUserListData()
         // eslint-disable-next-line
-    }, [skip,limit])
+    }, [skip, limit])
     const handleActiveStatus = (event, row) => {
         axios({
             method: 'put',
@@ -306,9 +312,9 @@ function User() {
         setEditData()
     }
     const handlePageChange = (page) => {
-        setSkip((page-1) * limit)
+        setSkip((page - 1) * limit)
     }
-    const handlePerRowsChange =(newPerPage, page) => {
+    const handlePerRowsChange = (newPerPage, page) => {
         setLimit(newPerPage)
     }
     const handleAdd = () => {
@@ -316,9 +322,12 @@ function User() {
     }
     return (
         <div>
-            <div className='mt-2'>
+            <div className='mt-1'>
                 <div className='d-flex justify-content-end'>
-                    <button className='btn btn-success btn-sm' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
+                    <div className='d-flex'>
+                    <input type="text" className='form-control me-2' placeholder='Search'/>
+                    <button className='btn btn-success btn-sm add' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
+                    </div>
                 </div>
                 <DataTable
                     columns={columns}
@@ -341,13 +350,13 @@ function User() {
                         <form onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
                             <div className="modal-body">
                                 <div>
-                                    <label htmlFor="name">Name</label>
+                                    <label htmlFor="name">Name<span className='text-danger'>*</span></label>
                                     <input id="name" className='form-control' {...register('name')} />
                                     {errors.name && <span className='text-danger'>{errors.name.message}</span>}
                                 </div>
 
                                 <div>
-                                    <label htmlFor="username">Username</label>
+                                    <label htmlFor="username">Username<span className='text-danger'>*</span></label>
                                     <input id="username" className='form-control' {...register('username')} autoComplete='off' />
                                     {errors.username && <span className='text-danger'>{errors.username.message}</span>}
                                 </div>
@@ -355,19 +364,19 @@ function User() {
                                     title === "Edit User" ? "" :
                                         <>
                                             <div>
-                                                <label htmlFor="password">Password</label>
+                                                <label htmlFor="password">Password<span className='text-danger'>*</span></label>
                                                 <input id="password" className='form-control' type="text" {...register('password')} autoComplete='off' />
                                                 {errors.password && <span className='text-danger'>{errors.password.message}</span>}
                                             </div>
                                             <div>
-                                                <label htmlFor="confirmPassword">Confirm Password</label>
+                                                <label htmlFor="confirmPassword">Confirm Password<span className='text-danger'>*</span></label>
                                                 <input id="confirmPassword" className='form-control' type="text" {...register('confirmPassword')} />
                                                 {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword.message}</span>}
                                             </div>
                                         </>
                                 }
                                 <div>
-                                    <label htmlFor="role">Role</label>
+                                    <label htmlFor="role">Role<span className='text-danger'>*</span></label>
                                     <select className='form-control' id="role" {...register('role')}>
                                         <option value="">Select Role</option>
                                         {
@@ -382,7 +391,7 @@ function User() {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary btn-sm" data-bs-dismiss="modal" title='Cancel' onClick={() => handleCancel()}>Cancel</button>
-                                <button type="submit" className="btn btn-success btn-sm">{title === "Add User" ? "Save" : "Update"}</button>
+                                <button type="submit" className="btn btn-success btn-sm add">{title === "Add User" ? "Save" : "Update"}</button>
                             </div>
                         </form>
                     </div>

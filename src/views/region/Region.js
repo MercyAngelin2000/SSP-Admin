@@ -85,7 +85,7 @@ function Region() {
   }
 
   const addRegion = (data) => {
-  
+
     const userids = data?.member?.map((item) => ({ user_id: item.value }));
     const values = {
       "code": data?.code,
@@ -141,16 +141,16 @@ function Region() {
         'Authorization': 'Bearer ' + token
       }
     }).then((response) => {
-      var data=response?.data?.data
+      var data = response?.data?.data
       reset({
-        code : data?.code,
+        code: data?.code,
         id: data?.id,
         name: data?.name,
         admin: { value: data?.admin_id?.user_id, label: data?.admin_id?.name },
-        member:data?.member_ids?.map((item) => (
+        member: data?.member_ids?.map((item) => (
           { value: item.user_id, label: item.name })
         )
-    })
+      })
 
       var record = response?.data?.data?.member_ids
       const members = record?.map((item) => (
@@ -202,6 +202,7 @@ function Region() {
 
   const columns = [
     {
+      width: '100px',
       name: '#',
       selector: (row, index) => index + 1
     },
@@ -212,6 +213,15 @@ function Region() {
     {
       name: 'Name',
       selector: row => row.name,
+    },
+    {
+      name: 'Active Status',
+      selector: row => row.active,
+      cell: row => <div className="form-check form-switch mt-2">
+        <input className="form-check-input" disabled type="checkbox" role="switch" id="flexSwitchCheckChecked" defaultChecked={row?.active} />
+        <label className="form-check-label" htmlFor="flexSwitchCheckChecked"></label>
+      </div>,
+      sortable: true,
     },
     {
       name: 'Actions',
@@ -229,10 +239,6 @@ function Region() {
               <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
             </svg>
           </button>
-          <div className="form-check form-switch mt-2">
-            <input className="form-check-input" disabled type="checkbox" role="switch" id="flexSwitchCheckChecked" defaultChecked={row?.active} />
-            <label className="form-check-label" htmlFor="flexSwitchCheckChecked"></label>
-          </div>
         </div>
 
     },
@@ -252,7 +258,7 @@ function Region() {
       },
     },
   };
-  
+
 
   const handleChange = (selectedOptions) => {
     setValue("member", selectedOptions)
@@ -277,7 +283,7 @@ function Region() {
   }
 
   const clearModal = () => {
-    reset({ code: '', name: '', admin: '',member:'' })
+    reset({ code: '', name: '', admin: '', member: '' })
   }
 
   const handlePerRowsChange = (newPerPage, page) => {
@@ -291,8 +297,8 @@ function Region() {
 
   return (
     <div>
-      <div className='d-flex  mt-3'>
-        <h4 className='title fw-bold '>Region</h4>
+      <div className='d-flex justify-content-center align-items-center'>
+        <h5 className='title fw-bold'>Region</h5>
 
       </div>
       <div className='container card'>
@@ -307,8 +313,11 @@ function Region() {
 
         {selectedTab === 'region' &&
           <section id='regiontbl'>
-            <div className='d-flex justify-content-end mt-3'>
-              <button className='btn btn-success' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
+            <div className='d-flex justify-content-end mt-1 p-0'>
+              <div className='d-flex'>
+                <input type="text" className='form-control me-2' placeholder='Search' />
+                <button className='btn btn-success btn-sm add' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
+              </div>
             </div>
             <DataTable
               pagination
@@ -387,8 +396,8 @@ function Region() {
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="submit" className="btn btn-primary">Save</button>
-                <button type="button" onClick={() => clearModal()} className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" onClick={() => clearModal()} className="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" className="btn btn-primary btn-sm add">Save</button>
               </div>
             </form>
           </div>
