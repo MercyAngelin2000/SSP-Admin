@@ -34,10 +34,12 @@ function Region() {
       document.getElementById("region").classList.remove("active")
       document.getElementById("user").classList.add("active")
     }
+    // eslint-disable-next-line
   }, [selectedTab, regionList])
 
   useEffect(() => {
     getRegionList()
+    // eslint-disable-next-line
   }, [limit, skip])
 
   const getRegionList = () => {
@@ -71,8 +73,8 @@ function Region() {
       );
       setMemberList(members)
 
-      var data = response?.data?.data?.admin
-      const admins = data?.map((item) => (
+      var value = response?.data?.data?.admin
+      const admins = value?.map((item) => (
         { value: item.id, label: item.name })
       );
       setAdminList(admins)
@@ -296,10 +298,10 @@ function Region() {
       <div className='container card'>
         <ul className="nav nav-tabs" >
           <li className="nav-item " id="region" onClick={() => setSelectedTab('region')}>
-            <a className="nav-link " aria-current="page" href="#">Region</a>
+            <span className="nav-link " aria-current="page" role='button'>Region</span>
           </li>
           <li className="nav-item" id="user" onClick={() => setSelectedTab('user')}>
-            <a className="nav-link" href="#">User</a>
+            <span className="nav-link" role='button'>User</span>
           </li>
         </ul>
 

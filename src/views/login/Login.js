@@ -60,11 +60,6 @@ function Login() {
                   </p>
 
                   <div>
-                    {/* <span style={{ width: '48%', textAlign: 'left', display: 'inline-block' }}>
-                      <a className="" href="#">
-                        Forgot password?
-                      </a>
-                    </span> */}
                     <span style={{ width: '50%', textAlign: 'center', display: 'inline-block' }}>
                       <input type="submit" value="Sign In" />
                     </span>
