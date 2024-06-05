@@ -28,11 +28,11 @@ function Region() {
   useEffect(() => {
     getUserList()
     if (selectedTab === 'region') {
-      document.getElementById("region").classList.add("active")
-      document.getElementById("user").classList.remove("active")
+      document.getElementById("regiontab").classList.add("active")
+      document.getElementById("usertab").classList.remove("active")
     } else {
-      document.getElementById("region").classList.remove("active")
-      document.getElementById("user").classList.add("active")
+      document.getElementById("regiontab").classList.remove("active")
+      document.getElementById("usertab").classList.add("active")
     }
     // eslint-disable-next-line
   }, [selectedTab, regionList])
@@ -241,18 +241,18 @@ function Region() {
   const customStyles = {
     headCells: {
       style: {
-        fontWeight: '501',
-        fontSize: '15px',
-        color: '#05609c'
+        fontSize: '14px', // Decrease font size
+        fontWeight: 'bold', // Make font weight bold
+        color: '#333', // Change font color
       },
     },
     cells: {
       style: {
-        fontSize: '15px',
-
+        fontSize: '13px', // Decrease font size
       },
     },
   };
+  
 
   const handleChange = (selectedOptions) => {
     setValue("member", selectedOptions)
@@ -291,16 +291,16 @@ function Region() {
 
   return (
     <div>
-      <div className='d-flex justify-content-center mt-3'>
+      <div className='d-flex  mt-3'>
         <h4 className='title fw-bold '>Region</h4>
 
       </div>
       <div className='container card'>
         <ul className="nav nav-tabs" >
-          <li className="nav-item " id="region" onClick={() => setSelectedTab('region')}>
+          <li className="nav-item " id="regiontab" onClick={() => setSelectedTab('region')}>
             <span className="nav-link " aria-current="page" role='button'>Region</span>
           </li>
-          <li className="nav-item" id="user" onClick={() => setSelectedTab('user')}>
+          <li className="nav-item" id="usertab" onClick={() => setSelectedTab('user')}>
             <span className="nav-link" role='button'>User</span>
           </li>
         </ul>
