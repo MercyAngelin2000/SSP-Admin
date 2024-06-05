@@ -33,7 +33,9 @@ useEffect(() => {
 },[token])
   return (
     <div>
-      <h4 className='title fw-bold'>Dashboard</h4>
+      <div className='d-flex justify-content-center align-items-center'>
+        <h5 className='title fw-bold'>Dashboard</h5>
+      </div>
       <div className='card dashboard_card'>
       <Doughnut data={data}/>
       <label className='fw-bold mt-2 text-center'>Region</label>

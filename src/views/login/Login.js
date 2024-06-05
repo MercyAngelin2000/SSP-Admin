@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Login.css';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
-
+  const navigate = useNavigate();
   const { register, formState: { errors }, handleSubmit } = useForm();
   let base_url = process.env.REACT_APP_BASE_URL
   const login = (data) => {
@@ -23,14 +24,19 @@ function Login() {
             icon: "error",
             title: "Oops...",
             text: response.data.message,
-        });
+          });
         }
       })
       .catch((error) => {
         console.log(error);
       });
   }
-
+  useEffect(() => {
+    var token = localStorage.getItem('access-token')
+    if (token) {
+      navigate('/dashboard')
+    }
+  }, [])
   return (
     <div className="main">
       <div className="container1">
