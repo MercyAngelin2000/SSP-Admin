@@ -5,24 +5,22 @@ import Select from 'react-select';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import RegionUser from './RegionUser';
-
+import { useForm } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 function Region() {
 
   const [selectedTab, setSelectedTab] = useState('region')
   const [regionList, setRegionList] = useState()
   const [adminList, setAdminList] = useState()
   const [memberList, setMemberList] = useState()
-  const [regionData, setRegionData] = useState({ code: '', name: '' })
-  const [selectedAdmin, setSelectedAdmin] = useState()
   const [selectedMember, setSelectedMember] = useState()
   const [mode, setMode] = useState('add')
   const [skip, setSkip] = useState(0)
   const [limit, setLimit] = useState(10)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
-  const [errors, setErrors] = useState({
-    code: '', name: '', admin: ''
-  })
+
+  const { control, register, formState: { errors: formErrors }, reset, handleSubmit, setValue } = useForm();
 
   var token = localStorage.getItem("access-token");
   let base_url = process.env.REACT_APP_BASE_URL
@@ -84,71 +82,53 @@ function Region() {
     })
   }
 
-  const addRegion = () => {
-
-    const errors = {};
-
-    if (!regionData?.code) {
-      errors.code = 'Code is required';
+  const addRegion = (data) => {
+  
+    const userids = data?.member?.map((item) => ({ user_id: item.value }));
+    const values = {
+      "code": data?.code,
+      "name": data?.name,
+      "admin_id": {
+        "user_id": data?.admin.value
+      },
+      "member_ids": userids,
+      "active": true
     }
 
-    if (!regionData?.name) {
-      errors.name = 'Name is required';
+    var method
+    var url
+
+    if (mode === 'add') {
+      method = "POST"
+      url = `${base_url}/region/`
+    }
+    else {
+      method = "PUT"
+      url = `${base_url}/region/` + data?.id
     }
 
-    if (!selectedAdmin) {
-      errors.admin = 'Admin is required';
-    }
-
-    setErrors(errors);
-
-    if (regionData?.code && regionData?.name && selectedAdmin) {
-      const userids = selectedMember?.map((item) => ({ user_id: item.value }));
-      const data = {
-        "code": regionData?.code,
-        "name": regionData?.name,
-        "admin_id": {
-          "user_id": selectedAdmin?.value
-        },
-        "member_ids": userids,
-        "active": true
+    axios({
+      method: method,
+      url: url,
+      data: values,
+      headers: {
+        'Authorization': 'Bearer ' + token
       }
-
-      var method
-      var url
-
-      if (mode === 'add') {
-        method = "POST"
-        url = `${base_url}/region/`
-      }
-      else {
-        method = "PUT"
-        url = `${base_url}/region/` + regionData?.id
-      }
-
-      axios({
-        method: method,
-        url: url,
-        data: data,
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }).then((response) => {
-        getRegionList()
-        clearModal()
-        document.getElementById('modalClose').click()
-        Swal.fire({
-          toast: true,
-          position: "center",
-          icon: "success",
-          title: mode === 'add' ? "Region added successfully" : "Region updated successfully",
-          showConfirmButton: false,
-          timer: 1500
-        });
-      }).catch((error) => {
-        console.log(error)
-      })
-    }
+    }).then((response) => {
+      getRegionList()
+      clearModal()
+      document.getElementById('modalClose').click()
+      Swal.fire({
+        toast: true,
+        position: "center",
+        icon: "success",
+        title: mode === 'add' ? "Region added successfully" : "Region updated successfully",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }).catch((error) => {
+      console.log(error)
+    })
   }
 
   const getSingleRegion = (id) => {
@@ -159,11 +139,16 @@ function Region() {
         'Authorization': 'Bearer ' + token
       }
     }).then((response) => {
-      setRegionData(response?.data?.data)
-
-      var data = response?.data?.data?.admin_id
-      const admin = { value: data?.user_id, label: data?.name }
-      setSelectedAdmin(admin)
+      var data=response?.data?.data
+      reset({
+        code : data?.code,
+        id: data?.id,
+        name: data?.name,
+        admin: { value: data?.admin_id?.user_id, label: data?.admin_id?.name },
+        member:data?.member_ids?.map((item) => (
+          { value: item.user_id, label: item.name })
+        )
+    })
 
       var record = response?.data?.data?.member_ids
       const members = record?.map((item) => (
@@ -267,9 +252,10 @@ function Region() {
     },
   };
 
-  const handleChange = (data) => {
+  const handleChange = (selectedOptions) => {
+    setValue("member", selectedOptions)
     if (mode === 'edit') {
-      const dataIds = new Set(data.map(dataItem => dataItem.value));
+      const dataIds = new Set(selectedOptions.map(dataItem => dataItem.value));
       const missingMembers = selectedMember.filter(member => !dataIds.has(member.value));
       if (missingMembers?.length > 0) {
         axios({
@@ -285,24 +271,18 @@ function Region() {
         })
       }
     }
-    setSelectedMember(data)
+    setSelectedMember(selectedOptions)
   }
 
   const clearModal = () => {
-    setRegionData({ code: '', name: '' });
-    setSelectedAdmin(null);
-    setSelectedMember([]);
-    setErrors({ code: '', name: '', admin: '' })
+    reset({ code: '', name: '', admin: '',member:'' })
   }
 
   const handlePerRowsChange = (newPerPage, page) => {
-    console.log("newPerPage", newPerPage, "page", page);
     setLimit(newPerPage);
 
   }
   const handlePageChange = (currentpage) => {
-    console.log("page", currentpage, 'limit', limit, 'skip', skip, 'page', page);
-    // setPage(currentpage)
     setSkip((currentpage - 1) * limit)
   }
 
@@ -353,39 +333,62 @@ function Region() {
               <h1 className="modal-title fs-5" id="staticBackdropLabel">{mode === 'edit' ? 'Edit Region' : 'Add Region'}</h1>
               <button type="button" id='modalClose' className="btn-close" onClick={() => clearModal()} data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div className="modal-body">
-              <div>
+            <form onSubmit={handleSubmit(addRegion)}>
+              <div className="modal-body">
                 <div>
                   <label className='mt-2'>Code <span className='text-danger'>*</span></label>
-                  <input className='form-control' value={regionData?.code} defaultValue={regionData?.code} onChange={(e) => setRegionData({ ...regionData, 'code': e.target.value })} />
-                  {errors?.code && <span className='text-danger'>{errors.code}</span>}
+                  <input className='form-control' {...register('code', { required: true })} />
+                  {formErrors.code && <span className='text-danger'>Code is required</span>}
                 </div>
                 <div>
                   <label className='mt-2'>Name <span className='text-danger'>*</span></label>
-                  <input className='form-control' value={regionData?.name} defaultValue={regionData?.name} onChange={(e) => setRegionData({ ...regionData, 'name': e.target.value })} />
-                  <span className='text-danger'>{errors?.name}</span>
+                  <input className='form-control' {...register('name', { required: true })} />
+                  {formErrors.name && <span className='text-danger'>Name is required</span>}
                 </div>
                 <div>
                   <label className='mt-2'>Admin <span className='text-danger'>*</span></label>
-                  <Select options={adminList}
-                    value={selectedAdmin}
-                    onChange={(e) => setSelectedAdmin(e)}
+                  <Controller
+                    name="admin"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        options={adminList}
+                        isClearable
+                      />
+                    )}
                   />
-                  <span className='text-danger'>{errors?.admin}</span>
+                  {formErrors.admin && <span className='text-danger'>Admin is required</span>}
                 </div>
                 <div>
-                  <label className='mt-2'>Members</label>
-                  <Select options={memberList}
-                    value={selectedMember}
-                    onChange={handleChange}
-                    isMulti />
+                  <label className='mt-2'>Member</label>
+                  <Controller
+                    name="member"
+                    control={control}
+                    defaultValue={[]}
+                    rules={{}}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        options={memberList}
+                        isMulti
+                        isClearable
+                        onChange={(selectedOptions) => {
+                          handleChange(selectedOptions);
+                        }}
+                      />
+                    )}
+                  />
+
                 </div>
               </div>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-primary" onClick={() => addRegion()}>Save</button>
-              <button type="button" onClick={() => clearModal()} className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
+              <div className="modal-footer">
+                <button type="submit" className="btn btn-primary">Save</button>
+                <button type="button" onClick={() => clearModal()} className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
