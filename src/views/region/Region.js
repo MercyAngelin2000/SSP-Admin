@@ -13,13 +13,10 @@ function Region() {
   const [regionList, setRegionList] = useState()
   const [adminList, setAdminList] = useState()
   const [memberList, setMemberList] = useState()
-  const [selectedMember, setSelectedMember] = useState()
   const [mode, setMode] = useState('add')
   const [skip, setSkip] = useState(0)
   const [limit, setLimit] = useState(10)
-  const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
-  const [search, setSearchData] = useState()
 
   const { control, register, formState: { errors: formErrors }, reset, handleSubmit, setValue, getValues } = useForm();
 
@@ -119,6 +116,7 @@ function Region() {
         'Authorization': 'Bearer ' + token
       }
     }).then((response) => {
+      if(response?.data?.status){
       getRegionList()
       clearModal()
       document.getElementById('modalClose').click()
@@ -130,6 +128,7 @@ function Region() {
         showConfirmButton: false,
         timer: 1500
       });
+    }
     }).catch((error) => {
       console.log(error)
     })
@@ -154,11 +153,6 @@ function Region() {
         )
       })
 
-      var record = response?.data?.data?.member_ids
-      const members = record?.map((item) => (
-        { value: item.user_id, label: item.name })
-      );
-      setSelectedMember(members)
     }).catch((error) => {
       console.log(error)
     })
@@ -307,29 +301,6 @@ function Region() {
       }
     }
 
-
-
-
-
-    // setValue("member", selectedOptions)
-    // if (mode === 'edit') {
-    //   const dataIds = new Set(selectedOptions.map(dataItem => dataItem.value));
-    //   const missingMembers = selectedMember.filter(member => !dataIds.has(member.value));
-    //   if (missingMembers?.length > 0) {
-    //     axios({
-    //       method: 'DELETE',
-    //       url: `${base_url}/region/regionusers/` + missingMembers[0]?.value,
-    //       headers: {
-    //         'Authorization': 'Bearer ' + token
-    //       }
-    //     }).then((response) => {
-    //       getUserList()
-    //     }).catch((error) => {
-    //       console.log(error)
-    //     })
-    //   }
-    // }
-    // setSelectedMember(selectedOptions)
   }
 
   const clearModal = () => {

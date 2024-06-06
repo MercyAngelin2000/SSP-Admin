@@ -11,11 +11,9 @@ function Corporate() {
   const [corporateList, setCorporateList] = useState()
   const [userList, setUserList] = useState()
   const [selectedCorporate, setSelectedCorporate] = useState()
-  const [selectedMember, setSelectedMember] = useState()
   const [mode, setMode] = useState('add')
   const [skip, setSkip] = useState(0)
   const [limit, setLimit] = useState(10)
-  const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
 
   const { control, register, formState: { errors }, reset, handleSubmit, setValue ,getValues} = useForm();
@@ -74,10 +72,6 @@ function Corporate() {
       console.log(error);
     })
   }
-
-  const getViewData = (data) => {
-    setSelectedCorporate(data)
-  }
   const addCorporate = (data) => {
     console.log(data?.admin_id?.value);
     const values = {
@@ -114,7 +108,9 @@ function Corporate() {
         'Authorization': 'Bearer ' + token
       }
     }).then((response) => {
-      getCorporateList()
+      console.log(response?.data?.status);
+      if(response?.data?.status){
+        getCorporateList()
       clearModal()
       document.getElementById('modalClose').click()
       Swal.fire({
@@ -125,6 +121,9 @@ function Corporate() {
         showConfirmButton: false,
         timer: 1500
       });
+
+      }
+      
     }).catch((error) => {
       console.log(error)
     })
@@ -286,7 +285,20 @@ function Corporate() {
   const handlePageChange = (currentpage) => {
     setSkip((currentpage - 1) * limit)
   }
+  const searchCorporate = (e) => {
 
+    axios({
+      method: 'GET',
+      url: `${base_url}/corporate/search/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`,
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    }).then((response) => {
+      setCorporateList(response?.data?.data)
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
 
   return (
     <div>
@@ -307,7 +319,7 @@ function Corporate() {
           <section id='regiontbl'>
             <div className='d-flex justify-content-end mt-1 p-0'>
               <div className='d-flex'>
-                <input type="text" className='form-control me-2' placeholder='Search' />
+                <input type="text" className='form-control me-2' placeholder='Search' onChange={(e) => searchCorporate(e)} />
                 <button className='btn btn-success btn-sm add' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
               </div>
             </div>
