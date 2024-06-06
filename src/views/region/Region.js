@@ -86,7 +86,7 @@ function Region() {
   }
 
   const addRegion = (data) => {
-    console.log("data",data);
+    console.log("data", data);
 
     const userids = data?.member?.map((item) => ({ user_id: item.value }));
     const values = {
@@ -284,7 +284,7 @@ function Region() {
         var newAdminList = adminList.filter((item) => item.value !== selectedOptions?.value);
         setAdminList([...newAdminList, oldAdmin])
         setValue("admin", selectedOptions)
-      } 
+      }
       else {
 
         var oldMembers = getValues('member')
@@ -347,11 +347,11 @@ function Region() {
 
   return (
     <div>
-      <div className='d-flex justify-content-center align-items-center'>
-        <h5 className='title fw-bold'>Region</h5>
+      <div className=''>
+        <h5 className='title fw-bold header-position'>Region</h5>
 
       </div>
-      <div className='container card'>
+      <div className='container card mt-5'>
         <ul className="nav nav-tabs" >
           <li className="nav-item " id="regiontab" onClick={() => setSelectedTab('region')}>
             <span className="nav-link " aria-current="page" role='button'>Region</span>
@@ -363,22 +363,26 @@ function Region() {
 
         {selectedTab === 'region' &&
           <section id='regiontbl'>
-            <div className='d-flex justify-content-end mt-1 p-0'>
-              <div className='d-flex'>
-                <input type="text" className='form-control me-2' placeholder='Search' onChange={(e) => searchRegion(e)} />
-                <button className='btn btn-success btn-sm add' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
+            <div className='d-flex justify-content-between align-items-end mt-1 p-0'>
+              <div>
+                <input type="text" className='form-control me-2 tab_search' placeholder='Search' onChange={(e) => searchRegion(e)} />
+              </div>
+              <div>
+                <button className='btn btn-success btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
               </div>
             </div>
-            <DataTable
-              pagination
-              customStyles={customStyles}
-              columns={columns}
-              data={regionList}
-              paginationTotalRows={total}
-              paginationServer
-              onChangeRowsPerPage={handlePerRowsChange}
-              onChangePage={handlePageChange}
-            />
+            <div className='container card my-3 tablecard'>
+              <DataTable
+                pagination
+                customStyles={customStyles}
+                columns={columns}
+                data={regionList}
+                paginationTotalRows={total}
+                paginationServer
+                onChangeRowsPerPage={handlePerRowsChange}
+                onChangePage={handlePageChange}
+              />
+            </div>
           </section>}
 
         {selectedTab === 'user' &&

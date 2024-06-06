@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Menu.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -22,12 +22,12 @@ function Menu({ onToggleSidebar }) {
   };
 
   return (
-    <div className="sidebar">
-      <div className="logo_details">
-        <div className="logo_name">SSP Admin</div>
-        <i className="bx bx-menu" id="btn" onClick={onToggleSidebar}></i>
-      </div>
-      <ul className="nav-list">
+    <div className="sidebar open">
+    <div className="logo_details px-3">
+      <div className="logo_name">SSP 3.0</div>
+      <i className="bx bx-menu-alt-right" id="btn" onClick={onToggleSidebar}></i>
+    </div>
+      <ul className="nav-list px-3">
         <li id="dashboard" className={activeTab === "dashboard" ? "active" : ""} onClick={() => handleTabChange('dashboard')}>
           <p>
             <i>

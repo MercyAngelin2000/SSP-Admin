@@ -1,8 +1,8 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap'); */
 
 :root{
-  --color-default:#02095c;
-  --color-second:#02095c;
+  --color-default:#301470;
+  --color-second:#301470;
   --color-white:#fff;
   --color-body:#e4e9f7;
   --color-light:#e0e0e0;
@@ -19,7 +19,7 @@
 .sidebar{
   min-height: 100vh;
   width: 78px;
-  padding: 6px 14px;
+  /* padding: 6px 14px; */
   z-index: 99;
   background-color: var(--color-default);
   transition: all .5s ease;
@@ -27,16 +27,23 @@
   top:0;
   left: 0;
 }
-
-.sidebar.open{
-  width: 250px;
+.sidebarmenucol{
+  z-index: 1111;
+}
+.sidebar.open, .sidebarmenucol.open{
+  width: 210px !important;
 }
 
 .sidebar .logo_details{
-  height: 60px;
+  /* height: 60px; */
+  /* display: flex;
+  align-items: center;
+  position: relative; */
+  height: 53px;
   display: flex;
   align-items: center;
   position: relative;
+  background-color: #a758fd;
 }
 
 .sidebar .logo_details .icon{
@@ -65,14 +72,14 @@
   right: 0;
   transform: translateY(-50%);
   font-size: 23px;
-  text-align: center;
+  text-align: justify !important;
   cursor: pointer;
   transition: all .5s ease;
 }
 
-.sidebar.open .logo_details #btn{
+/* .sidebar.open .logo_details #btn{
   text-align: right;
-}
+} */
 
 .sidebar i{
   color:var(--color-white);
@@ -128,10 +135,11 @@
   width: 100%;
   align-items: center;
   text-decoration: none;
-  background-color: var(--color-default);
+  /* background-color: var(--color-default); */
   position: relative;
   transition: all .5s ease;
   z-index: 12;
+  cursor: pointer;
 }
 
 .sidebar li p::after{
@@ -179,6 +187,7 @@
   line-height: 35px;
   font-size: 18px;
   border-radius: 5px;
+  color: #a758fd;
 }
 .active p{
   background-color: white !important;

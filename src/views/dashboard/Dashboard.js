@@ -79,10 +79,10 @@ useEffect(()=>{
     },[regionCount])
   return (
     <div>
-      <div className='d-flex justify-content-center align-items-center'>
-        <h5 className='title fw-bold'>Dashboard</h5>
+      <div>
+        <h5 className='title fw-bold header-position  '>Dashboard</h5>
       </div>
-      <div className='card dashboard_card'>
+      <div className='card dashboard_card mt-5'>
       <Doughnut data={data}/>
       <label className='mt-2 text-center title'>Region</label>
       </div>

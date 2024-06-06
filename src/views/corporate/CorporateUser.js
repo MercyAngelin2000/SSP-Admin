@@ -36,22 +36,22 @@ const schema = yup.object().shape({
     .string()
     .oneOf([yup.ref('password'), null], 'Passwords must match')
     .required('Confirm password is required'),
-  role:yup.string().optional(),
+  role: yup.string().optional(),
 });
 const schema1 = yup.object().shape({
   name: yup.string().required('Name is required'),
   username: yup.string().required('Username is required'),
   role: yup.string().optional(),
 });
-function CorporateUser({activeTab}) {
+function CorporateUser({ activeTab }) {
   let base_url = process.env.REACT_APP_BASE_URL
   var token = localStorage.getItem("access-token");
   const [title, setTile] = useState("Add User")
   const [editData, setEditData] = useState()
   const [roleData, setRoleData] = useState()
-  const [defaultRoleValue,setDefaultRoleValue] = useState()
+  const [defaultRoleValue, setDefaultRoleValue] = useState()
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
-    resolver: yupResolver(title === "Add User" ? schema : schema1),defaultValues: {
+    resolver: yupResolver(title === "Add User" ? schema : schema1), defaultValues: {
       role: defaultRoleValue, // Set default value for role
     }
   });
@@ -211,7 +211,7 @@ function CorporateUser({activeTab}) {
   useEffect(() => {
     fetchUserListData()
     // eslint-disable-next-line
-  }, [skip, limit,activeTab])
+  }, [skip, limit, activeTab])
   const handleActiveStatus = (event, row) => {
     axios({
       method: 'put',
@@ -332,22 +332,26 @@ function CorporateUser({activeTab}) {
   return (
     <div>
       <div className='mt-1'>
-        <div className='d-flex justify-content-end'>
-          <div className='d-flex'>
-            <input type="text" className='form-control me-2' placeholder='Search' />
-            <button className='btn btn-success btn-sm add' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
+        <div className='d-flex justify-content-between'>
+          <div className=''>
+            <input type="text" className='form-control me-2 tab_search' placeholder='Search' />
+          </div>
+          <div>
+            <button className='btn btn-success btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
           </div>
         </div>
-        <DataTable
-          columns={columns}
-          data={userdata}
-          customStyles={customStyles}
-          pagination
-          paginationServer
-          paginationTotalRows={total}
-          onChangeRowsPerPage={handlePerRowsChange}
-          onChangePage={handlePageChange}
-        />
+        <div className='container card my-3 tablecard'>
+          <DataTable
+            columns={columns}
+            data={userdata}
+            customStyles={customStyles}
+            pagination
+            paginationServer
+            paginationTotalRows={total}
+            onChangeRowsPerPage={handlePerRowsChange}
+            onChangePage={handlePageChange}
+          />
+        </div>
       </div>
       <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div className="modal-dialog">

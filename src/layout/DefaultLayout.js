@@ -7,18 +7,18 @@ import '../component/Header.css';
 import '../App.css'
 
 function DefaultLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
     <div className={`wrapper ${sidebarOpen ? 'sidebar-open' : ''}`}>
-      <div className='header'>
+      <div className='header fixed-top'>
         <Header />
       </div>
       <div className='content'>
-        <div className='sidebarmenucol'>
+        <div className={`sidebarmenucol ${sidebarOpen ? 'open':''}`}>
           <Menu onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
         </div>
-        <div className='addcontentcol p-0'>
+        <div className='addcontentcol px-4 pt-4'>
           <AppContent />
         </div>
       </div>

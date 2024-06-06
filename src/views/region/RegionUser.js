@@ -327,12 +327,15 @@ function RegionUser({activeTab}) {
     return (
         <div>
             <div className='mt-1'>
-                <div className='d-flex justify-content-end'>
+                <div className='d-flex justify-content-between align-items-end'>
                     <div className='d-flex'>
-                    <input type="text" className='form-control me-2' placeholder='Search'/>
-                    <button className='btn btn-success btn-sm add' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
+                    <input type="text" className='form-control me-2 tab_search' placeholder='Search'/>
+                    </div>
+                    <div>
+                    <button className='btn btn-success btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
                     </div>
                 </div>
+                <div className='container card tablecard my-3'>
                 <DataTable
                     columns={columns}
                     data={userdata}
@@ -343,6 +346,7 @@ function RegionUser({activeTab}) {
                     onChangeRowsPerPage={handlePerRowsChange}
                     onChangePage={handlePageChange}
                 />
+                </div>
             </div>
             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div className="modal-dialog">

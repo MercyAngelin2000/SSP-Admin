@@ -4,7 +4,7 @@
 }
 /* default file css for sidebar */
 :root {
-  --sidebar-width: 250px;
+  --sidebar-width: 210px;
   --sidebar-collapsed-width: 80px;
   --sidebar-mobile-width: 150px; /* Add a variable for mobile sidebar width */
 }
@@ -42,9 +42,9 @@
   width: var(--sidebar-width);
 }
 
-.wrapper.sidebar-open .addcontentcol {
+/* .wrapper.sidebar-open .addcontentcol {
   margin-left: var(--sidebar-width);
-}
+} */
 
 @media (max-width: 768px) {
   .sidebar {
@@ -60,3 +60,42 @@
   }
 }
 
+/* For module design  */
+.header-position{
+  top: 0px;
+  position: fixed;
+  z-index: 1111;
+}
+
+.tab_search{
+  border-left: 0;
+  border-radius: 0;
+  border-right: 0;
+  border-top: 0;
+}
+.tab_search::placeholder{
+  font-size: small;
+}
+.tab_search:focus {
+  box-shadow: none !important;
+  border-color: #02095c !important;
+}
+
+.tablecard{
+  box-shadow: 0px 0px 5px 2px #c9c9c9c0 !important;
+  border-radius: 0px !important;
+}
+
+.nav-item.active span {
+  /* background-color: #02095c !important; 
+  color: white !important; */
+  background-color: transparent !important;
+  color: black !important;
+  border-bottom: 2px solid;
+}
+.nav-item.active:hover{
+  border-color: #02095c !important;
+}
+.nav-tabs .nav-link:hover{
+  border-color: transparent !important;
+}

@@ -18,7 +18,7 @@ function Corporate() {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
 
-  const { control, register, formState: { errors }, reset, handleSubmit, setValue ,getValues} = useForm();
+  const { control, register, formState: { errors }, reset, handleSubmit, setValue, getValues } = useForm();
   var token = localStorage.getItem("access-token");
   let base_url = process.env.REACT_APP_BASE_URL
 
@@ -208,7 +208,7 @@ function Corporate() {
       name: 'Active Status',
       selector: row => row.active,
       cell: row => <div className="form-check form-switch mt-2">
-        <input className="form-check-input" disabled type="checkbox"  role="switch" id="flexSwitchCheckChecked" defaultChecked={row?.active} />
+        <input className="form-check-input" disabled type="checkbox" role="switch" id="flexSwitchCheckChecked" defaultChecked={row?.active} />
         <label className="form-check-label" htmlFor="flexSwitchCheckChecked"></label>
       </div>,
       sortable: true,
@@ -262,17 +262,17 @@ function Corporate() {
       var newAdminList = userList.filter((item) => item.value !== selectedOptions?.value);
       setUserList([...newAdminList, oldAdmin])
       setValue("admin_id", selectedOptions)
-      
-      }
+
+    }
   }
 
   const clearModal = () => {
-    reset({ 
+    reset({
       "corporate_group_code": '',
       "name": '',
-      "address":'',
+      "address": '',
       "city": '',
-      "district":'',
+      "district": '',
       "state": '',
       "pincode": '',
       "admin_id": '',
@@ -290,10 +290,10 @@ function Corporate() {
 
   return (
     <div>
-      <div className='d-flex justify-content-center align-items-center'>
-        <h5 className='title fw-bold'>Corporate</h5>
+      <div className=''>
+        <h5 className='title fw-bold header-position'>Corporate</h5>
       </div>
-      <div className='container card'>
+      <div className='container card mt-5'>
         <ul className="nav nav-tabs" >
           <li className="nav-item " id="corporttab" onClick={() => setSelectedTab('corporate')}>
             <span className="nav-link " aria-current="page" role='button'>Corporate</span>
@@ -305,22 +305,26 @@ function Corporate() {
 
         {selectedTab === 'corporate' &&
           <section id='regiontbl'>
-            <div className='d-flex justify-content-end mt-1 p-0'>
-              <div className='d-flex'>
-                <input type="text" className='form-control me-2' placeholder='Search' />
-                <button className='btn btn-success btn-sm add' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
+            <div className='d-flex justify-content-between mt-1 p-0'>
+              <div className=''>
+                <input type="text" className='form-control me-2 tab_search' placeholder='Search' />
+              </div>
+              <div>
+                <button className='btn btn-success btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
               </div>
             </div>
-            <DataTable
-              pagination
-              customStyles={customStyles}
-              columns={columns}
-              data={corporateList}
-              paginationTotalRows={total}
-              paginationServer
-              onChangeRowsPerPage={handlePerRowsChange}
-              onChangePage={handlePageChange}
-            />
+            <div className='container card my-3 tablecard'>
+              <DataTable
+                pagination
+                customStyles={customStyles}
+                columns={columns}
+                data={corporateList}
+                paginationTotalRows={total}
+                paginationServer
+                onChangeRowsPerPage={handlePerRowsChange}
+                onChangePage={handlePageChange}
+              />
+            </div>
           </section>}
 
         {selectedTab === 'user' &&

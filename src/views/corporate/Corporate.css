@@ -2,17 +2,19 @@
     color: #02095c !important;
     padding: 10px;
   }
-  .nav-item.active span {
+  /* .nav-item.active span {
     background-color: #02095c !important; 
     color: white !important;
-  }
+  } */
   .nav-link{
     color: #02095c !important;
+    font-weight: bold;
   }
   .nav-tabs{
     margin-top: 3px;
   }
   .add{
-    background-color: #02095c !important; 
+    background-color:  var(--color-default) !important; 
     color: white !important;
+    font-weight: bold;
   }
