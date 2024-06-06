@@ -19,8 +19,9 @@ function Region() {
   const [limit, setLimit] = useState(10)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
+  const [search, setSearchData] = useState()
 
-  const { control, register, formState: { errors: formErrors }, reset, handleSubmit, setValue } = useForm();
+  const { control, register, formState: { errors: formErrors }, reset, handleSubmit, setValue, getValues } = useForm();
 
   var token = localStorage.getItem("access-token");
   let base_url = process.env.REACT_APP_BASE_URL
@@ -85,6 +86,7 @@ function Region() {
   }
 
   const addRegion = (data) => {
+    console.log("data",data);
 
     const userids = data?.member?.map((item) => ({ user_id: item.value }));
     const values = {
@@ -200,6 +202,20 @@ function Region() {
 
   }
 
+  const searchRegion = (e) => {
+
+    axios({
+      method: 'GET',
+      url: `${base_url}/region/search/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`,
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    }).then((response) => {
+      setRegionList(response?.data?.data)
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
   const columns = [
     {
       width: '100px',
@@ -247,39 +263,73 @@ function Region() {
   const customStyles = {
     headCells: {
       style: {
-        fontSize: '14px', // Decrease font size
-        fontWeight: 'bold', // Make font weight bold
-        color: '#333', // Change font color
+        fontSize: '14px',
+        fontWeight: 'bold',
+        color: '#333',
       },
     },
     cells: {
       style: {
-        fontSize: '13px', // Decrease font size
+        fontSize: '13px',
       },
     },
   };
 
 
-  const handleChange = (selectedOptions) => {
-    setValue("member", selectedOptions)
+  const handleChange = (selectedOptions, name) => {
+
     if (mode === 'edit') {
-      const dataIds = new Set(selectedOptions.map(dataItem => dataItem.value));
-      const missingMembers = selectedMember.filter(member => !dataIds.has(member.value));
-      if (missingMembers?.length > 0) {
-        axios({
-          method: 'DELETE',
-          url: `${base_url}/region/regionusers/` + missingMembers[0]?.value,
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        }).then((response) => {
-          getUserList()
-        }).catch((error) => {
-          console.log(error)
-        })
+      if (name === 'admin') {
+        var oldAdmin = getValues('admin')
+        var newAdminList = adminList.filter((item) => item.value !== selectedOptions?.value);
+        setAdminList([...newAdminList, oldAdmin])
+        setValue("admin", selectedOptions)
+      } 
+      else {
+
+        var oldMembers = getValues('member')
+        setValue("member", selectedOptions)
+        const dataIds = new Set(selectedOptions.map(dataItem => dataItem.value));
+        const missingMembers = oldMembers.filter(member => !dataIds.has(member.value));
+        if (missingMembers?.length > 0) {
+          axios({
+            method: 'DELETE',
+            url: `${base_url}/region/regionusers/` + missingMembers[0]?.value,
+            headers: {
+              'Authorization': 'Bearer ' + token
+            }
+          }).then((response) => {
+            getUserList()
+          }).catch((error) => {
+            console.log(error)
+          })
+        }
       }
     }
-    setSelectedMember(selectedOptions)
+
+
+
+
+
+    // setValue("member", selectedOptions)
+    // if (mode === 'edit') {
+    //   const dataIds = new Set(selectedOptions.map(dataItem => dataItem.value));
+    //   const missingMembers = selectedMember.filter(member => !dataIds.has(member.value));
+    //   if (missingMembers?.length > 0) {
+    //     axios({
+    //       method: 'DELETE',
+    //       url: `${base_url}/region/regionusers/` + missingMembers[0]?.value,
+    //       headers: {
+    //         'Authorization': 'Bearer ' + token
+    //       }
+    //     }).then((response) => {
+    //       getUserList()
+    //     }).catch((error) => {
+    //       console.log(error)
+    //     })
+    //   }
+    // }
+    // setSelectedMember(selectedOptions)
   }
 
   const clearModal = () => {
@@ -315,7 +365,7 @@ function Region() {
           <section id='regiontbl'>
             <div className='d-flex justify-content-end mt-1 p-0'>
               <div className='d-flex'>
-                <input type="text" className='form-control me-2' placeholder='Search' />
+                <input type="text" className='form-control me-2' placeholder='Search' onChange={(e) => searchRegion(e)} />
                 <button className='btn btn-success btn-sm add' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
               </div>
             </div>
@@ -368,6 +418,9 @@ function Region() {
                         {...field}
                         options={adminList}
                         isClearable
+                        onChange={(selectedOptions) => {
+                          handleChange(selectedOptions, 'admin');
+                        }}
                       />
                     )}
                   />
@@ -387,7 +440,7 @@ function Region() {
                         isMulti
                         isClearable
                         onChange={(selectedOptions) => {
-                          handleChange(selectedOptions);
+                          handleChange(selectedOptions, 'member');
                         }}
                       />
                     )}
