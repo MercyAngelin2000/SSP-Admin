@@ -333,7 +333,7 @@ function Region() {
 
         {selectedTab === 'user' &&
           <section id='user'>
-            <RegionUser />
+            <RegionUser activeTab={selectedTab} />
           </section>}
 
       </div>

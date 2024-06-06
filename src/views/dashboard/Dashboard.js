@@ -52,6 +52,8 @@ const handleRegionCount=()=>{
       arr?.push(response?.data?.inactive_count)
       setRegionCount(arr)
     }
+  }).catch((error)=>{
+    console.log(error)
   })
 }
 useEffect(()=>{
