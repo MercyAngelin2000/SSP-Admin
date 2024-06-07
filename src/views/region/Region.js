@@ -83,7 +83,6 @@ function Region() {
   }
 
   const addRegion = (data) => {
-    console.log("data", data);
 
     const userids = data?.member?.map((item) => ({ user_id: item.value }));
     const values = {
@@ -299,6 +298,9 @@ function Region() {
           })
         }
       }
+    }
+    else{
+      setValue(name, selectedOptions)
     }
 
   }

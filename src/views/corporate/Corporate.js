@@ -45,7 +45,6 @@ function Corporate() {
         'Authorization': 'Bearer ' + token
       }
     }).then((response) => {
-      console.log(response?.data?.data);
       setCorporateList(response?.data?.data)
       setTotal(response?.data?.total_count)
     }).catch((error) => {
@@ -64,7 +63,6 @@ function Corporate() {
     }).then((response) => {
 
       var data = response?.data?.data?.admin
-      console.log(data);
       var list = data?.map((item) => ({ value: item?.id, label: item?.name }))
       setUserList(list)
 
@@ -73,7 +71,6 @@ function Corporate() {
     })
   }
   const addCorporate = (data) => {
-    console.log(data?.admin_id?.value);
     const values = {
       "corporate_group_code": data?.corporate_group_code,
       "name": data?.name,
@@ -108,7 +105,6 @@ function Corporate() {
         'Authorization': 'Bearer ' + token
       }
     }).then((response) => {
-      console.log(response?.data?.status);
       if(response?.data?.status){
         getCorporateList()
       clearModal()
@@ -263,6 +259,9 @@ function Corporate() {
       setValue("admin_id", selectedOptions)
 
     }
+    else{
+      setValue("admin_id", selectedOptions)
+    }
   }
 
   const clearModal = () => {
@@ -319,7 +318,7 @@ function Corporate() {
           <section id='regiontbl'>
             <div className='d-flex justify-content-between mt-1 p-0'>
               <div className=''>
-                <input type="text" className='form-control me-2 tab_search' placeholder='Search' />
+                <input type="text" className='form-control me-2 tab_search' placeholder='Search' onChange={(e)=>searchCorporate(e)}/>
               </div>
               <div>
                 <button className='btn btn-success btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
@@ -388,7 +387,7 @@ function Corporate() {
       </div>
 
       <div className="modal fade" id="addRegionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-lg">
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="staticBackdropLabel">{mode === 'edit' ? 'Edit Corporate' : 'Add Corporate'}</h1>
