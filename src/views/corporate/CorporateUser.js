@@ -3,9 +3,9 @@ import DataTable from 'react-data-table-component';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import "./Corporate.css"
+import { deleteCorporateUserAPI,getcorporatUserListAPI,getcorporatRoleAPI,addUpdateCorporateUserAPI} from '../../apiService/ApiService';
 
 const customStyles = {
   headCells: {
@@ -44,8 +44,6 @@ const schema1 = yup.object().shape({
   role: yup.string().optional(),
 });
 function CorporateUser({ activeTab }) {
-  let base_url = process.env.REACT_APP_BASE_URL
-  var token = localStorage.getItem("access-token");
   const [title, setTile] = useState("Add User")
   const [editData, setEditData] = useState()
   const [roleData, setRoleData] = useState()
@@ -139,13 +137,7 @@ function CorporateUser({ activeTab }) {
       width: 400
     }).then((result) => {
       if (result.isConfirmed) {
-        axios({
-          method: 'delete',
-          url: `${base_url}/users/${row?.id}`,
-          headers: {
-            "Authorization": "Bearer " + token
-          }
-        }).then((response) => {
+        deleteCorporateUserAPI(row?.id).then((response) => {
           let data = response?.data
           if (data?.status) {
             fetchUserListData()
@@ -173,13 +165,7 @@ function CorporateUser({ activeTab }) {
     });
   }
   const fetchUserListData = () => {
-    axios({
-      method: 'get',
-      url: `${base_url}/users/users/?user_type=corporate&skip=${skip}&limit=${limit}`,
-      headers: {
-        "Authorization": "Bearer " + token
-      }
-    }).then((response) => {
+    getcorporatUserListAPI(skip, limit).then((response) => {
       setUserData(response?.data?.data)
       setTotal(response?.data?.total_count)
     }).catch((error) => {
@@ -187,13 +173,7 @@ function CorporateUser({ activeTab }) {
     })
   }
   const fetchRoleData = () => {
-    axios({
-      method: 'get',
-      url: `${base_url}/users/roles/`,
-      headers: {
-        "Authorization": "Bearer " + token
-      }
-    }).then((response) => {
+    getcorporatRoleAPI().then((response) => {
       var data = response?.data?.data
       var arr = []
       //eslint-disable-next-line
@@ -213,19 +193,15 @@ function CorporateUser({ activeTab }) {
     // eslint-disable-next-line
   }, [skip, limit, activeTab])
   const handleActiveStatus = (event, row) => {
-    axios({
-      method: 'put',
-      url: `${base_url}/users/${row?.id}`,
-      headers: {
-        "Authorization": "Bearer " + token
-      },
-      data: {
-        "name": row?.name,
+    var method="PUT"
+    var url=`/users/${row?.id}`
+    var data = {
+      "name": row?.name,
         "username": row?.username,
         "role_id": Number(row?.role_id),
         "active": event.target.checked
-      }
-    }).then((response) => {
+    }
+    addUpdateCorporateUserAPI(method, url, data).then((response) => {
       let data = response?.data
       if (data?.status) {
         fetchUserListData()
@@ -251,38 +227,30 @@ function CorporateUser({ activeTab }) {
     })
   }
   const onSubmit = (data) => {
+    var method;
+    var url;
     var postData;
     if (title === "Add User") {
-      postData = {
-        method: 'post',
-        url: `${base_url}/users/register/`,
-        headers: {
-          "Authorization": "Bearer " + token
-        },
-        data: {
-          "name": data?.name,
+      method="POST"
+      url=`/users/register/`
+      postData={
+        "name": data?.name,
           "username": data?.username,
           "password": data?.password,
           "role_id": Number(defaultRoleValue),
           "active": true
-        }
       }
     }
     else {
-      postData = {
-        method: 'put',
-        url: `${base_url}/users/${editData?.id}`,
-        headers: {
-          "Authorization": "Bearer " + token
-        },
-        data: {
-          "name": data?.name,
+      method="PUT"
+      url=`/users/${editData?.id}`
+      postData={
+        "name": data?.name,
           "username": data?.username,
           "role_id": Number(defaultRoleValue)
-        }
       }
     }
-    axios(postData).then((response) => {
+    addUpdateCorporateUserAPI(method, url, postData).then((response) => {
       let data = response?.data
       if (data?.status) {
         handleCancel()

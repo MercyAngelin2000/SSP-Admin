@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Select from 'react-select';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import CorporateUser from './CorporateUser';
 import { useForm } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
+import { getCorporateListAPI, getCorporateUserListAPI, addUpdateCorporateAPI, getSingleCorporateAPI, deleteCorporateAPI, searchCorporateAPI } from '../../apiService/ApiService';
 function Corporate() {
   const [selectedTab, setSelectedTab] = useState('corporate')
   const [corporateList, setCorporateList] = useState()
@@ -17,16 +17,14 @@ function Corporate() {
   const [total, setTotal] = useState(0)
 
   const { control, register, formState: { errors }, reset, handleSubmit, setValue, getValues } = useForm();
-  var token = localStorage.getItem("access-token");
-  let base_url = process.env.REACT_APP_BASE_URL
 
   useEffect(() => {
     getUserList()
     if (selectedTab === 'corporate') {
-      document.getElementById("corporttab").classList.add("active")
+      document.getElementById("corporatetab").classList.add("active")
       document.getElementById("usertab").classList.remove("active")
     } else {
-      document.getElementById("corporttab").classList.remove("active")
+      document.getElementById("corporatetab").classList.remove("active")
       document.getElementById("usertab").classList.add("active")
     }
     // eslint-disable-next-line
@@ -38,13 +36,7 @@ function Corporate() {
   }, [limit, skip])
 
   const getCorporateList = () => {
-    axios({
-      method: 'GET',
-      url: `${base_url}/corporate/?skip=${skip}&limit=${limit}`,
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) => {
+    getCorporateListAPI(skip, limit).then((response) => {
       setCorporateList(response?.data?.data)
       setTotal(response?.data?.total_count)
     }).catch((error) => {
@@ -54,13 +46,7 @@ function Corporate() {
   }
 
   const getUserList = () => {
-    axios({
-      method: 'GET',
-      url: `${base_url}/corporate/corporateusers`,
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) => {
+    getCorporateUserListAPI().then((response) => {
 
       var data = response?.data?.data?.admin
       var list = data?.map((item) => ({ value: item?.id, label: item?.name }))
@@ -90,21 +76,14 @@ function Corporate() {
 
     if (mode === 'add') {
       method = "POST"
-      url = `${base_url}/corporate/`
+      url = `/corporate/`
     }
     else {
       method = "PUT"
-      url = `${base_url}/corporate/` + data?.id
+      url = `/corporate/` + data?.id
     }
 
-    axios({
-      method: method,
-      url: url,
-      data: values,
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) => {
+    addUpdateCorporateAPI(method, url, values).then((response) => {
       if(response?.data?.status){
         getCorporateList()
       clearModal()
@@ -127,14 +106,7 @@ function Corporate() {
 
   const getEditCorporate = (data) => {
     setMode('edit')
-
-    axios({
-      method: 'GET',
-      url: `${base_url}/corporate/corporatebyid?corporate_id=` + data?.id,
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) => {
+    getSingleCorporateAPI(data?.id).then((response) => {
       var data = response?.data?.data
       reset({ ...data, admin_id: { value: data?.admin_id?.user_id, label: data?.admin_id?.name }, })
 
@@ -163,13 +135,7 @@ function Corporate() {
       width: 400
     }).then((result) => {
       if (result.isConfirmed) {
-        axios({
-          method: 'DELETE',
-          url: `${base_url}/corporate/` + id,
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        }).then((response) => {
+        deleteCorporateAPI(id).then((response) => {
           getCorporateList()
 
         }).catch((error) => {
@@ -286,13 +252,7 @@ function Corporate() {
   }
   const searchCorporate = (e) => {
 
-    axios({
-      method: 'GET',
-      url: `${base_url}/corporate/search/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`,
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) => {
+    searchCorporateAPI(e?.target?.value,skip,limit).then((response) => {
       setCorporateList(response?.data?.data)
     }).catch((error) => {
       console.log(error)
@@ -306,7 +266,7 @@ function Corporate() {
       </div>
       <div className='container card mt-5'>
         <ul className="nav nav-tabs" >
-          <li className="nav-item " id="corporttab" onClick={() => setSelectedTab('corporate')}>
+          <li className="nav-item " id="corporatetab" onClick={() => setSelectedTab('corporate')}>
             <span className="nav-link " aria-current="page" role='button'>Corporate</span>
           </li>
           <li className="nav-item" id="usertab" onClick={() => setSelectedTab('user')}>

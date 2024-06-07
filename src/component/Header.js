@@ -38,7 +38,7 @@ function Header() {
             <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
           </svg> */}
           <div className="btn-group">
-          <img src={profileicon} alt='profile' className="dropdown-toggle profile-icon" data-bs-toggle="dropdown" aria-expanded="false" />
+          <img src={profileicon} alt='profile' className="dropdown-toggle profile-icon" data-bs-toggle="dropdown" />
             <ul className="dropdown-menu">
               <li className='p-2 dropdown-header'><span >{user?.name}</span></li>
               <li><hr className="dropdown-divider mt-0 mb-0" /></li>

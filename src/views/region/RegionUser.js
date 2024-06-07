@@ -3,9 +3,9 @@ import DataTable from 'react-data-table-component';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import "./Region.css"
+import {getUserListAPI,getRoleDataAPI,addUpdateUserAPI,deleteUserAPI} from '../../apiService/ApiService';
 
 const customStyles = {
     headCells: {
@@ -44,8 +44,6 @@ const schema1 = yup.object().shape({
     role: yup.string().required('Role is required'),
 });
 function RegionUser({activeTab}) {
-    let base_url = process.env.REACT_APP_BASE_URL
-    var token = localStorage.getItem("access-token");
     const [title, setTile] = useState("Add User")
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(title === "Add User" ? schema : schema1),
@@ -135,13 +133,7 @@ function RegionUser({activeTab}) {
             width: 400
         }).then((result) => {
             if (result.isConfirmed) {
-                axios({
-                    method: 'delete',
-                    url: `${base_url}/users/${row?.id}`,
-                    headers: {
-                        "Authorization": "Bearer " + token
-                    }
-                }).then((response) => {
+                deleteUserAPI(row?.id).then((response) => {
                     let data = response?.data
                     if (data?.status) {
                         fetchUserListData()
@@ -169,13 +161,7 @@ function RegionUser({activeTab}) {
         });
     }
     const fetchUserListData = () => {
-        axios({
-            method: 'get',
-            url: `${base_url}/users/users/?user_type=region&skip=${skip}&limit=${limit}`,
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        }).then((response) => {
+        getUserListAPI(skip, limit).then((response) => {
             setUserData(response?.data?.data)
             setTotal(response?.data?.total_count)
         }).catch((error) => {
@@ -183,13 +169,7 @@ function RegionUser({activeTab}) {
         })
     }
     const fetchRoleData = () => {
-        axios({
-            method: 'get',
-            url: `${base_url}/users/roles/`,
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        }).then((response) => {
+        getRoleDataAPI().then((response) => {
             var data = response?.data?.data
             var arr = []
             //eslint-disable-next-line
@@ -208,19 +188,15 @@ function RegionUser({activeTab}) {
         // eslint-disable-next-line
     }, [skip, limit,activeTab])
     const handleActiveStatus = (event, row) => {
-        axios({
-            method: 'put',
-            url: `${base_url}/users/${row?.id}`,
-            headers: {
-                "Authorization": "Bearer " + token
-            },
-            data: {
-                "name": row?.name,
-                "username": row?.username,
-                "role_id": Number(row?.role_id),
-                "active": event.target.checked
-            }
-        }).then((response) => {
+        var method = "PUT"
+        var url = `/users/${row?.id}`
+        var data ={
+            "name": row?.name,
+            "username": row?.username,
+            "role_id": Number(row?.role_id),
+            "active": event.target.checked
+        }
+        addUpdateUserAPI(method,url,data).then((response) => {
             let data = response?.data
             if (data?.status) {
                 fetchUserListData()
@@ -246,38 +222,30 @@ function RegionUser({activeTab}) {
         })
     }
     const onSubmit = (data) => {
+        var method;
+        var url;
         var postData;
         if (title === "Add User") {
-            postData = {
-                method: 'post',
-                url: `${base_url}/users/register/`,
-                headers: {
-                    "Authorization": "Bearer " + token
-                },
-                data: {
-                    "name": data?.name,
-                    "username": data?.username,
-                    "password": data?.password,
-                    "role_id": Number(data?.role),
-                    "active": true
-                }
+            method = "POST"
+            url = `/users/register/`
+            postData={
+                "name": data?.name,
+                "username": data?.username,
+                "password": data?.password,
+                "role_id": Number(data?.role),
+                "active": true
             }
         }
         else {
-            postData = {
-                method: 'put',
-                url: `${base_url}/users/${editData?.id}`,
-                headers: {
-                    "Authorization": "Bearer " + token
-                },
-                data: {
-                    "name": data?.name,
-                    "username": data?.username,
-                    "role_id": Number(data?.role)
-                }
+            method = "PUT"
+            url = `/users/${editData?.id}`
+            postData={
+                "name": data?.name,
+                "username": data?.username,
+                "role_id": Number(data?.role)
             }
         }
-        axios(postData).then((response) => {
+        addUpdateUserAPI(method,url,postData).then((response) => {
             let data = response?.data
             if (data?.status) {
                 handleCancel()
