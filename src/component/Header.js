@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './Header.css';
 import profileicon from '../Assets/profile.png';
-import axios from 'axios';
-
+import { getCurrentUser } from '../apiService/ApiService';
 function Header() {
 
   const [user, setUser]= useState({});
-  const base_url = process.env.REACT_APP_BASE_URL;
 
   const getUserData=()=>{
-    axios({
-      method:'GET',
-      url: `${base_url}/users/currentuser/`,
-      headers:{
-        'Authorization': `Bearer ${localStorage.getItem('access-token')}`
-      }
-    }).then((res)=>{
-      if (res.data.status){
-        setUser(res.data.data);
+    getCurrentUser().then((res)=>{
+      if (res.status){
+        setUser(res.data);
       }
     }).catch((err)=>{
       console.log(err);

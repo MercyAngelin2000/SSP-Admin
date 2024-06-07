@@ -1,31 +1,29 @@
 import React, { useEffect } from 'react';
 import './Login.css';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import background from '../../Assets/background.jpeg';
+import { loginAPI } from '../../apiService/ApiService';
 
 function Login() {
   const navigate = useNavigate();
   const { register, formState: { errors }, handleSubmit } = useForm();
-  let base_url = process.env.REACT_APP_BASE_URL
 
   const login = (data) => {
     const formData = new FormData();
     formData.append('username', data.username);
     formData.append('password', data.password);
-    axios.post(`${base_url}/users/login/`, formData)
-      .then((response) => {
-        if (response.data.status) {
-          localStorage.setItem('access-token', response.data.access_token);
+    loginAPI(formData).then((response) => {
+        if (response.status) {
+          localStorage.setItem('access-token', response.access_token);
           window.location.href = '/dashboard';
         } else {
           Swal.fire({
             toast: true,
             icon: "error",
             title: "Oops...",
-            text: response.data.message,
+            text: response.detail,
           });
         }
       })
@@ -38,6 +36,7 @@ function Login() {
     if (token) {
       navigate('/dashboard')
     }
+    // eslint-disable-next-line
   }, [])
   return (
     <div className="main login-background" style={{ backgroundImage: `url(${background})` }}>

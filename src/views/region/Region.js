@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import "./Region.css"
 import DataTable from 'react-data-table-component';
 import Select from 'react-select';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import RegionUser from './RegionUser';
 import { useForm } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
+import { getRegionListAPI,getRegionUserListAPI,addUpdateRegionAPI,getSingleRegionAPI,deleteRegionAPI,searchRegionAPI,deleteRegionUserAPI} from '../../apiService/ApiService';
 function Region() {
 
   const [selectedTab, setSelectedTab] = useState('region')
@@ -19,9 +19,6 @@ function Region() {
   const [total, setTotal] = useState(0)
 
   const { control, register, formState: { errors: formErrors }, reset, handleSubmit, setValue, getValues } = useForm();
-
-  var token = localStorage.getItem("access-token");
-  let base_url = process.env.REACT_APP_BASE_URL
 
   useEffect(() => {
     getUserList()
@@ -41,13 +38,7 @@ function Region() {
   }, [limit, skip])
 
   const getRegionList = () => {
-    axios({
-      method: 'GET',
-      url: `${base_url}/region/?skip=${skip}&limit=${limit}`,
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) => {
+    getRegionListAPI(skip, limit).then((response) => {
       setRegionList(response?.data?.data)
       setTotal(response?.data?.total_count)
     }).catch((error) => {
@@ -57,13 +48,7 @@ function Region() {
   }
 
   const getUserList = () => {
-    axios({
-      method: 'GET',
-      url: `${base_url}/region/regionusers`,
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) => {
+    getRegionUserListAPI().then((response) => {
 
       var data = response?.data?.data?.members
       const members = data?.map((item) => (
@@ -83,15 +68,14 @@ function Region() {
   }
 
   const addRegion = (data) => {
-
-    const userids = data?.member?.map((item) => ({ user_id: item.value }));
+    const userids = data?.member && data?.member?.map((item) => ({ user_id: item.value }));
     const values = {
       "code": data?.code,
       "name": data?.name,
       "admin_id": {
         "user_id": data?.admin.value
       },
-      "member_ids": userids,
+      "member_ids": userids ? userids : [],
       "active": true
     }
 
@@ -100,21 +84,14 @@ function Region() {
 
     if (mode === 'add') {
       method = "POST"
-      url = `${base_url}/region/`
+      url = `/region/`
     }
     else {
       method = "PUT"
-      url = `${base_url}/region/` + data?.id
+      url = `/region/` + data?.id
     }
 
-    axios({
-      method: method,
-      url: url,
-      data: values,
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) => {
+    addUpdateRegionAPI(method, url, values).then((response) => {
       if(response?.data?.status){
       getRegionList()
       clearModal()
@@ -127,6 +104,13 @@ function Region() {
         showConfirmButton: false,
         timer: 1500
       });
+    } else {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        title: "Oops...",
+        text: response?.data?.detail,
+      });
     }
     }).catch((error) => {
       console.log(error)
@@ -134,13 +118,7 @@ function Region() {
   }
 
   const getSingleRegion = (id) => {
-    axios({
-      method: 'GET',
-      url: `${base_url}/region/regionbyid/?region_id=` + id,
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) => {
+    getSingleRegionAPI(id).then((response) => {
       var data = response?.data?.data
       reset({
         code: data?.code,
@@ -177,15 +155,25 @@ function Region() {
       width: 400
     }).then((result) => {
       if (result.isConfirmed) {
-        axios({
-          method: 'DELETE',
-          url: `${base_url}/region/` + id,
-          headers: {
-            'Authorization': 'Bearer ' + token
+        deleteRegionAPI(id).then((response) => {
+          if(response?.data?.status){
+            getRegionList()
+            Swal.fire({
+              toast: true,
+              position: "center",
+              icon: "success",
+              title: "Region deleted successfully",
+              showConfirmButton: false,
+              timer: 1500
+            });
+          } else {
+            Swal.fire({
+              toast: true,
+              icon: "error",
+              title: "Oops...",
+              text: response?.data?.detail,
+            });
           }
-        }).then((response) => {
-          getRegionList()
-
         }).catch((error) => {
           console.log(error)
         })
@@ -196,14 +184,7 @@ function Region() {
   }
 
   const searchRegion = (e) => {
-
-    axios({
-      method: 'GET',
-      url: `${base_url}/region/search/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`,
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) => {
+  searchRegionAPI(e?.target?.value,skip,limit).then((response) => {
       setRegionList(response?.data?.data)
     }).catch((error) => {
       console.log(error)
@@ -285,13 +266,7 @@ function Region() {
         const dataIds = new Set(selectedOptions.map(dataItem => dataItem.value));
         const missingMembers = oldMembers.filter(member => !dataIds.has(member.value));
         if (missingMembers?.length > 0) {
-          axios({
-            method: 'DELETE',
-            url: `${base_url}/region/regionusers/` + missingMembers[0]?.value,
-            headers: {
-              'Authorization': 'Bearer ' + token
-            }
-          }).then((response) => {
+          deleteRegionUserAPI(missingMembers[0]?.value).then((response) => {
             getUserList()
           }).catch((error) => {
             console.log(error)

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './Menu.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 

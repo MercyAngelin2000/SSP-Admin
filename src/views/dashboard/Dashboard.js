@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react'
 import './Dashboard.css'
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import axios from 'axios';
+import { regionCountAPI } from '../../apiService/ApiService';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Dashboard() {
-  const base_url = process.env.REACT_APP_BASE_URL
   const [token]=useState(localStorage.getItem('access-token'))
   const [regionCount, setRegionCount] = useState([])
   const [data,setData] = useState({
@@ -38,18 +37,12 @@ useEffect(()=>{
   handleRegionCount()
 },[])
 const handleRegionCount=()=>{
-  axios({
-    method:'GET',
-    url:`${base_url}/region/regioncounts/`,
-    headers:{
-      'Authorization':`Bearer ${token}`
-    }
-  }).then((response)=>{
-    if(response?.data?.status){
+  regionCountAPI().then((response)=>{
+    if(response?.status){
       var arr = []
-      arr?.push(response?.data?.total_count)
-      arr?.push(response?.data?.active_count)
-      arr?.push(response?.data?.inactive_count)
+      arr?.push(response?.total_count)
+      arr?.push(response?.active_count)
+      arr?.push(response?.inactive_count)
       setRegionCount(arr)
     }
   }).catch((error)=>{
