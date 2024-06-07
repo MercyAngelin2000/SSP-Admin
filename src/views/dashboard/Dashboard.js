@@ -74,9 +74,9 @@ useEffect(()=>{
   return (
     <div>
       <div>
-        <h5 className='title fw-bold header-position  '>Dashboard</h5>
+        <h5 className='title fw-bold'>Dashboard</h5>
       </div>
-      <div className='card dashboard_card mt-5'>
+      <div className='card dashboard_card'>
       <Doughnut data={data}/>
       <label className='mt-2 text-center title'>Region</label>
       </div>

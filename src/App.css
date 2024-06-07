@@ -2,11 +2,23 @@
   text-align: center;
   font-size: medium;
 }
-/* default file css for sidebar */
-:root {
+
+:root{
+    /* sidebar */
   --sidebar-width: 210px;
   --sidebar-collapsed-width: 80px;
   --sidebar-mobile-width: 150px; /* Add a variable for mobile sidebar width */
+
+  /* colors */
+  --color-background: #d7dbe0;
+  --color-primary: #ffffff;
+  --color-secondary: #f1ece8;
+
+  --color-default: #000;
+  --color-light:#fff;
+
+  --nav-items:#525252;
+
 }
 
 .wrapper {
@@ -61,17 +73,14 @@
 }
 
 /* For module design  */
-.header-position{
-  top: 0px;
-  position: fixed;
-  z-index: 1111;
-}
 
 .tab_search{
   border-left: 0;
   border-radius: 0;
   border-right: 0;
   border-top: 0;
+  background-color: #e8e8ed;
+  border-bottom: 1px solid #bebec2;
 }
 .tab_search::placeholder{
   font-size: small;
@@ -93,9 +102,25 @@
   color: black !important;
   border-bottom: 2px solid;
 }
-.nav-item.active:hover{
+.nav-item .nav-link{
+  color: var(--nav-items) !important;
+  font-weight: bold !important;
+  font-size: 15px;
+}
+
+.nav-item.active{
   border-color: #02095c !important;
 }
+
+.nav-item.active .nav-link{
+  color: #02095c !important;
+
+}
+
 .nav-tabs .nav-link:hover{
   border-color: transparent !important;
+}
+
+.container-card{
+  background-color: #e8e8ed;
 }

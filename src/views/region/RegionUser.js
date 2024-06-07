@@ -303,10 +303,10 @@ function RegionUser({activeTab}) {
                     <input type="text" className='form-control me-2 tab_search' placeholder='Search'/>
                     </div>
                     <div>
-                    <button className='btn btn-success btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
+                    <button className='btn btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
                     </div>
                 </div>
-                <div className='container card tablecard my-3'>
+                <div className='container-fluid card tablecard my-3'>
                 <DataTable
                     columns={columns}
                     data={userdata}

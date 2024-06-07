@@ -1,3 +1,51 @@
+/* New css */
+/* login */
+.img_side_login {
+
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  height: 40%;
+  align-self: end;
+
+
+}
+
+.img_side_login img {
+  height: 250px;
+  width: 250px;
+  mix-blend-mode: darken;
+}
+
+
+.logo_left_bgcolor {
+  background-color: var(--color-secondary);
+}
+
+.logo_left {
+  height: 100px;
+  width: 100px;
+  object-fit: contain;
+}
+
+.login_background {
+  /* / background: #ee07553d; / */
+  background: var(--color-light);
+}
+
+.logo_left_textsize {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.login_logo {
+  height: 134px;
+  width: 172px;
+  object-fit: contain;
+}
+
+
+/* Login old css */
 div.main{
     background: #0264d6;
 background: -moz-radial-gradient(center, ellipse cover,  #0264d6 1%, #1c2b5a 100%);
@@ -46,14 +94,13 @@ input:focus{
 	height: 50px;
 }
 
-#login form input[type="text"], input[type="password"] {
+/* #login form input[type="text"], input[type="password"] {
 	background-color: #fff;
 	border-radius: 0px 3px 3px 0px;
 	color: #000;
-	/* margin-bottom: 1em; */
 	padding: 0 16px;
 	width: 200px;
-}
+} */
 
 #login form input[type="submit"] {
   border-radius: 3px;

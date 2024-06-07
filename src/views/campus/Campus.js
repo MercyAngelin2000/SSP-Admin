@@ -303,7 +303,7 @@ function Campus() {
     return (
         <div>
           <div className=''>
-            <h5 className='title fw-bold header-position'>Corporate</h5>
+            <h5 className='title fw-bold'>Corporate</h5>
           </div>
           <div className='container card mt-5'>
             <ul className="nav nav-tabs" >
