@@ -15,16 +15,16 @@ function DefaultLayout() {
         <Header />
       </div>
       <div className='content'>
-        <div className={`sidebarmenucol ${sidebarOpen ? 'open':''}`}>
-          <Menu onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-        </div>
-        <div className='addcontentcol px-4 pt-4'>
+        {/* <div className={`sidebarmenucol ${sidebarOpen ? 'open':''}`}>
+          <Menu onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} barStatus={sidebarOpen} />
+        </div> */}
+        <div className='addcontentcol px-4 pt-4 mt-5'>
           <AppContent />
         </div>
       </div>
-      <div>
+      {/* <div>
         <Footer />
-      </div>
+      </div> */}
     </div>
   );
 }

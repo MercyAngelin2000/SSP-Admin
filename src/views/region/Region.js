@@ -295,14 +295,14 @@ function Region() {
 
   return (
     <div>
-      <div className=''>
-        <h5 className='title fw-bold header-position'>Region</h5>
+      <div className='container-fluid p-0'>
+        <h5 className='title fw-bold'>Region</h5>
 
       </div>
-      <div className='container card mt-5'>
+      <div className='container-fluid card mb-5 container-card'>
         <ul className="nav nav-tabs" >
           <li className="nav-item " id="regiontab" onClick={() => setSelectedTab('region')}>
-            <span className="nav-link " aria-current="page" role='button'>Region</span>
+            <span className="nav-link" aria-current="page" role='button'>Region</span>
           </li>
           <li className="nav-item" id="usertab" onClick={() => setSelectedTab('user')}>
             <span className="nav-link" role='button'>User</span>
@@ -316,10 +316,10 @@ function Region() {
                 <input type="text" className='form-control me-2 tab_search' placeholder='Search' onChange={(e) => searchRegion(e)} />
               </div>
               <div>
-                <button className='btn btn-success btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
+                <button className='btn btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
               </div>
             </div>
-            <div className='container card my-3 tablecard'>
+            <div className='container-fluid card my-3 tablecard'>
               <DataTable
                 pagination
                 customStyles={customStyles}

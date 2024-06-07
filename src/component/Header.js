@@ -2,16 +2,23 @@ import React, { useEffect, useState } from 'react';
 import './Header.css';
 import profileicon from '../Assets/profile.png';
 import { getCurrentUser } from '../apiService/ApiService';
+import { Link } from 'react-router-dom';
 function Header() {
 
-  const [user, setUser]= useState({});
+  const [user, setUser] = useState({});
+  const location = window.location.pathname;
 
-  const getUserData=()=>{
-    getCurrentUser().then((res)=>{
-      if (res.status){
+  const services = [
+    { name: 'Region', path: '/region' },
+    { name: 'Corporate', path: '/corporate' },
+  ]
+
+  const getUserData = () => {
+    getCurrentUser().then((res) => {
+      if (res.status) {
         setUser(res.data);
       }
-    }).catch((err)=>{
+    }).catch((err) => {
       console.log(err);
     })
   }
@@ -23,38 +30,59 @@ function Header() {
 
   useEffect(() => {
     getUserData();
-  },[])
+  }, [])
   return (
-    <div className=''>
-      <div className='d-flex justify-content-end align-items-center '>
-        <div className='me-3 fw-bold'>
-          {user?.name}
-          <div className='text-secondary' style={{fontSize:'x-small'}}> {user?.role?.name} </div>
-          {/* <p className='text-secondary small'> {user?.role?.name}</p> */}
-        </div>
-        <span className='me-3'>
-          {/* <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-circle" viewBox="0 0 16 16">
-            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-            <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-          </svg> */}
-          <div className="btn-group">
-          <img src={profileicon} alt='profile' className="dropdown-toggle profile-icon" data-bs-toggle="dropdown" />
-            <ul className="dropdown-menu">
-              <li className='p-2 dropdown-header'><span >{user?.name}</span></li>
-              <li><hr className="dropdown-divider mt-0 mb-0" /></li>
-              <li><span className="dropdown-item d-flex align-items-center p-2" > <i className='bx bx-user-circle me-2'></i> <span className='text-secondary'>Profile </span></span></li>
-              <li onClick={()=>handleLogout()}><span className="dropdown-item d-flex align-items-center p-2" ><i className='bx bx-log-in-circle me-2'></i> <span className='text-secondary'>Logout</span></span></li>
-            </ul>
+    <nav class="navbar navbar-expand-lg border border-bottom p-1">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">SSP 3.0</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mx-auto">
+            <li className="nav-item">
+              <Link className="nav-link" to='/dashboard'>Home </Link>
+            </li>
+            <li className="nav-item dropdown">
+              <div className="tn-group">
+                <Link className="nav-link dropdown-toggle" data-bs-toggle="dropdown" >Services </Link>
+                <ul className="dropdown-menu">
+                  {
+                    services.map((service, index) => {
+                      return <li key={index}>
+                        <Link className={`dropdown-item d-flex align-items-center ${location == service.path ? 'active' : ''}`} to={service.path}>
+                          {service.name}
+                        </Link>
+                      </li>
+                    })
+                  }
+                </ul>
+              </div >
+            </li>
+          </ul>
+          <div className="tn-group">
+            <div className='d-flex align-items-center'>
+              {/* user name & role */}
+              <div className='me-3 fw-bold'>
+                {user?.name}
+                <div className='text-secondary' style={{ fontSize: 'x-small' }}> {user?.role?.name} </div>
+              </div>
+              {/* user profile */}
+              <div className="tn-group">
+                <img src={profileicon} alt='profile' className="dropdown-toggle profile-icon" data-bs-toggle="dropdown" />
+                <ul className="dropdown-menu dropdown-menu-end me-2">
+                  <li className='p-2 dropdown-header'><span >{user?.name}</span></li>
+                  <li><hr className="dropdown-divider mt-0 mb-0" /></li>
+                  <li><span className="dropdown-item d-flex align-items-center p-2" > <i className='bx bx-user-circle me-2'></i> <span className='text-secondary'>Profile </span></span></li>
+                  <li onClick={() => handleLogout()}><span className="dropdown-item d-flex align-items-center p-2" ><i className='bx bx-log-in-circle me-2'></i> <span className='text-secondary'>Logout</span></span></li>
+                </ul>
+              </div>
+              <div />
+            </div>
           </div>
-        </span>
-        {/* <span onClick={()=>handleLogout()} role='button' title='Logout'>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-box-arrow-right" viewBox="0 0 16 16">
-            <path fillRule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
-            <path fillRule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
-          </svg>
-        </span> */}
+        </div>
       </div>
-    </div>
+    </nav>
   )
 }
 

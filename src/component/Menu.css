@@ -1,21 +1,5 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap'); */
 
-:root{
-  --color-default:#301470;
-  --color-second:#301470;
-  --color-white:#fff;
-  --color-body:#e4e9f7;
-  --color-light:#e0e0e0;
-}
-
-
-/* *{
-  padding: 0%;
-  margin: 0%;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-} */
-
 .sidebar{
   min-height: 100vh;
   width: 78px;

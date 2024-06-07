@@ -1,16 +1,19 @@
-.title{
-    color: #02095c !important;
-    padding: 10px;
-  }
-  .nav-link{
-    color: #02095c !important;
-    font-weight: bold;
-  }
-  .nav-tabs{
-    margin-top: 3px;
-  }
-  .add{
-    background-color:  var(--color-default) !important; 
-    color: white !important;
-    font-weight: bold;
-  }
+.title {
+  color: #02095c !important;
+  padding: 10px;
+}
+
+.nav-link.active {
+  color: #02095c !important;
+  font-weight: bold;
+}
+
+.nav-tabs {
+  margin-top: 3px;
+}
+
+.add {
+  background-color: var(--color-default) !important;
+  color: white !important;
+  font-weight: bold;
+}

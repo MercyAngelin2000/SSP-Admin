@@ -261,10 +261,10 @@ function Corporate() {
 
   return (
     <div>
-      <div className=''>
-        <h5 className='title fw-bold header-position'>Corporate</h5>
+      <div>
+        <h5 className='title fw-bold'>Corporate</h5>
       </div>
-      <div className='container card mt-5'>
+      <div className='container'>
         <ul className="nav nav-tabs" >
           <li className="nav-item " id="corporatetab" onClick={() => setSelectedTab('corporate')}>
             <span className="nav-link " aria-current="page" role='button'>Corporate</span>
