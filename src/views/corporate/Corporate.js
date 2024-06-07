@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import CorporateUser from './CorporateUser';
 import { useForm } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
-import { getCorporateListAPI, getCorporateUserListAPI, addUpdateCorporateAPI, getSingleCorporateAPI, deleteCorporateAPI, searchCorporateAPI } from '../../apiService/ApiService';
+import { getAPI, addUpdateAPI,deleteAPI} from '../../apiService/ApiService';
 function Corporate() {
   const [selectedTab, setSelectedTab] = useState('corporate')
   const [corporateList, setCorporateList] = useState()
@@ -36,7 +36,8 @@ function Corporate() {
   }, [limit, skip])
 
   const getCorporateList = () => {
-    getCorporateListAPI(skip, limit).then((response) => {
+    var url= `/corporate/?skip=${skip}&limit=${limit}`
+    getAPI(url).then((response) => {
       setCorporateList(response?.data?.data)
       setTotal(response?.data?.total_count)
     }).catch((error) => {
@@ -46,7 +47,8 @@ function Corporate() {
   }
 
   const getUserList = () => {
-    getCorporateUserListAPI().then((response) => {
+    var url=`/corporate/corporateusers`
+    getAPI(url).then((response) => {
 
       var data = response?.data?.data?.admin
       var list = data?.map((item) => ({ value: item?.id, label: item?.name }))
@@ -83,7 +85,7 @@ function Corporate() {
       url = `/corporate/` + data?.id
     }
 
-    addUpdateCorporateAPI(method, url, values).then((response) => {
+    addUpdateAPI(method, url, values).then((response) => {
       if(response?.data?.status){
         getCorporateList()
       clearModal()
@@ -106,7 +108,8 @@ function Corporate() {
 
   const getEditCorporate = (data) => {
     setMode('edit')
-    getSingleCorporateAPI(data?.id).then((response) => {
+    var url=`/corporate/corporatebyid/?corporate_id=${data?.id}`
+    getAPI(url).then((response) => {
       var data = response?.data?.data
       reset({ ...data, admin_id: { value: data?.admin_id?.user_id, label: data?.admin_id?.name }, })
 
@@ -135,7 +138,8 @@ function Corporate() {
       width: 400
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteCorporateAPI(id).then((response) => {
+        var url=`/corporate/${id}`
+        deleteAPI(url).then((response) => {
           getCorporateList()
 
         }).catch((error) => {
@@ -251,8 +255,8 @@ function Corporate() {
     setSkip((currentpage - 1) * limit)
   }
   const searchCorporate = (e) => {
-
-    searchCorporateAPI(e?.target?.value,skip,limit).then((response) => {
+    var url=`/corporate/search/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`
+    getAPI(url).then((response) => {
       setCorporateList(response?.data?.data)
     }).catch((error) => {
       console.log(error)

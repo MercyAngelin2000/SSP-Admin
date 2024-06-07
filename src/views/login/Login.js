@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import background from '../../Assets/background.jpeg';
-import { loginAPI } from '../../apiService/ApiService';
+import { addUpdateAPI } from '../../apiService/ApiService';
 
 function Login() {
   const navigate = useNavigate();
@@ -14,16 +14,18 @@ function Login() {
     const formData = new FormData();
     formData.append('username', data.username);
     formData.append('password', data.password);
-    loginAPI(formData).then((response) => {
-        if (response.status) {
-          localStorage.setItem('access-token', response.access_token);
+    var method="POST"
+    var url=`/users/login/`
+    addUpdateAPI(method,url,formData).then((response) => {
+        if (response?.data?.status) {
+          localStorage.setItem('access-token', response?.data?.access_token);
           window.location.href = '/dashboard';
         } else {
           Swal.fire({
             toast: true,
             icon: "error",
             title: "Oops...",
-            text: response.detail,
+            text: response?.data?.detail,
           });
         }
       })

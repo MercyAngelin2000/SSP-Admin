@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Swal from 'sweetalert2';
 import "./Region.css"
-import {getUserListAPI,getRoleDataAPI,addUpdateUserAPI,deleteUserAPI} from '../../apiService/ApiService';
+import {getAPI,addUpdateAPI,deleteAPI} from '../../apiService/ApiService';
 
 const customStyles = {
     headCells: {
@@ -133,7 +133,8 @@ function RegionUser({activeTab}) {
             width: 400
         }).then((result) => {
             if (result.isConfirmed) {
-                deleteUserAPI(row?.id).then((response) => {
+                var url=`/users/${row?.id}`
+                deleteAPI(url).then((response) => {
                     let data = response?.data
                     if (data?.status) {
                         fetchUserListData()
@@ -161,7 +162,8 @@ function RegionUser({activeTab}) {
         });
     }
     const fetchUserListData = () => {
-        getUserListAPI(skip, limit).then((response) => {
+        var url=`/users/users/?user_type=region&skip=${skip}&limit=${limit}`
+        getAPI(url).then((response) => {
             setUserData(response?.data?.data)
             setTotal(response?.data?.total_count)
         }).catch((error) => {
@@ -169,7 +171,8 @@ function RegionUser({activeTab}) {
         })
     }
     const fetchRoleData = () => {
-        getRoleDataAPI().then((response) => {
+        var url=`/users/roles/`
+        getAPI(url).then((response) => {
             var data = response?.data?.data
             var arr = []
             //eslint-disable-next-line
@@ -196,7 +199,7 @@ function RegionUser({activeTab}) {
             "role_id": Number(row?.role_id),
             "active": event.target.checked
         }
-        addUpdateUserAPI(method,url,data).then((response) => {
+        addUpdateAPI(method,url,data).then((response) => {
             let data = response?.data
             if (data?.status) {
                 fetchUserListData()
@@ -245,7 +248,7 @@ function RegionUser({activeTab}) {
                 "role_id": Number(data?.role)
             }
         }
-        addUpdateUserAPI(method,url,postData).then((response) => {
+        addUpdateAPI(method,url,postData).then((response) => {
             let data = response?.data
             if (data?.status) {
                 handleCancel()

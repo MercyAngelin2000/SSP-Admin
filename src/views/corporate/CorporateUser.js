@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Swal from 'sweetalert2';
 import "./Corporate.css"
-import { deleteCorporateUserAPI,getcorporatUserListAPI,getcorporatRoleAPI,addUpdateCorporateUserAPI} from '../../apiService/ApiService';
+import { deleteAPI,getAPI,addUpdateAPI} from '../../apiService/ApiService';
 
 const customStyles = {
   headCells: {
@@ -137,7 +137,8 @@ function CorporateUser({ activeTab }) {
       width: 400
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteCorporateUserAPI(row?.id).then((response) => {
+        var url=`/users/${row?.id}`
+        deleteAPI(url).then((response) => {
           let data = response?.data
           if (data?.status) {
             fetchUserListData()
@@ -165,7 +166,8 @@ function CorporateUser({ activeTab }) {
     });
   }
   const fetchUserListData = () => {
-    getcorporatUserListAPI(skip, limit).then((response) => {
+    var url=`/users/users/?user_type=corporate&skip=${skip}&limit=${limit}`
+    getAPI(url).then((response) => {
       setUserData(response?.data?.data)
       setTotal(response?.data?.total_count)
     }).catch((error) => {
@@ -173,7 +175,8 @@ function CorporateUser({ activeTab }) {
     })
   }
   const fetchRoleData = () => {
-    getcorporatRoleAPI().then((response) => {
+    var url = `/users/roles/`
+    getAPI(url).then((response) => {
       var data = response?.data?.data
       var arr = []
       //eslint-disable-next-line
@@ -201,7 +204,7 @@ function CorporateUser({ activeTab }) {
         "role_id": Number(row?.role_id),
         "active": event.target.checked
     }
-    addUpdateCorporateUserAPI(method, url, data).then((response) => {
+    addUpdateAPI(method, url, data).then((response) => {
       let data = response?.data
       if (data?.status) {
         fetchUserListData()
@@ -250,7 +253,7 @@ function CorporateUser({ activeTab }) {
           "role_id": Number(defaultRoleValue)
       }
     }
-    addUpdateCorporateUserAPI(method, url, postData).then((response) => {
+    addUpdateAPI(method, url, postData).then((response) => {
       let data = response?.data
       if (data?.status) {
         handleCancel()

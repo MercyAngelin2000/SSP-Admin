@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import './Header.css';
 import profileicon from '../Assets/profile.png';
-import { getCurrentUser } from '../apiService/ApiService';
+import { getAPI } from '../apiService/ApiService';
 function Header() {
 
   const [user, setUser]= useState({});
 
   const getUserData=()=>{
-    getCurrentUser().then((res)=>{
-      if (res.status){
-        setUser(res.data);
+    var url=`/users/currentuser/`
+    getAPI(url).then((res)=>{
+      if (res.data?.status){
+        setUser(res?.data?.data);
       }
     }).catch((err)=>{
       console.log(err);

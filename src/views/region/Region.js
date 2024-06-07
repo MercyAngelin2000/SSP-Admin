@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import RegionUser from './RegionUser';
 import { useForm } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
-import { getRegionListAPI,getRegionUserListAPI,addUpdateRegionAPI,getSingleRegionAPI,deleteRegionAPI,searchRegionAPI,deleteRegionUserAPI} from '../../apiService/ApiService';
+import { getAPI,addUpdateAPI,deleteAPI} from '../../apiService/ApiService';
 function Region() {
 
   const [selectedTab, setSelectedTab] = useState('region')
@@ -38,7 +38,8 @@ function Region() {
   }, [limit, skip])
 
   const getRegionList = () => {
-    getRegionListAPI(skip, limit).then((response) => {
+    var url=`/region/?skip=${skip}&limit=${limit}`
+    getAPI(url).then((response) => {
       setRegionList(response?.data?.data)
       setTotal(response?.data?.total_count)
     }).catch((error) => {
@@ -48,7 +49,8 @@ function Region() {
   }
 
   const getUserList = () => {
-    getRegionUserListAPI().then((response) => {
+    var url=`/region/regionusers`
+    getAPI(url).then((response) => {
 
       var data = response?.data?.data?.members
       const members = data?.map((item) => (
@@ -91,7 +93,7 @@ function Region() {
       url = `/region/` + data?.id
     }
 
-    addUpdateRegionAPI(method, url, values).then((response) => {
+    addUpdateAPI(method, url, values).then((response) => {
       if(response?.data?.status){
       getRegionList()
       clearModal()
@@ -118,7 +120,8 @@ function Region() {
   }
 
   const getSingleRegion = (id) => {
-    getSingleRegionAPI(id).then((response) => {
+    var url=`/region/regionbyid/?region_id=${id}`
+    getAPI(url).then((response) => {
       var data = response?.data?.data
       reset({
         code: data?.code,
@@ -155,7 +158,8 @@ function Region() {
       width: 400
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteRegionAPI(id).then((response) => {
+        var url =`/region/${id}`
+        deleteAPI(url).then((response) => {
           if(response?.data?.status){
             getRegionList()
             Swal.fire({
@@ -184,7 +188,8 @@ function Region() {
   }
 
   const searchRegion = (e) => {
-  searchRegionAPI(e?.target?.value,skip,limit).then((response) => {
+    var url=`/region/search/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`
+  getAPI(url).then((response) => {
       setRegionList(response?.data?.data)
     }).catch((error) => {
       console.log(error)
@@ -266,7 +271,8 @@ function Region() {
         const dataIds = new Set(selectedOptions.map(dataItem => dataItem.value));
         const missingMembers = oldMembers.filter(member => !dataIds.has(member.value));
         if (missingMembers?.length > 0) {
-          deleteRegionUserAPI(missingMembers[0]?.value).then((response) => {
+          var url=`/region/regionusers/${missingMembers[0]?.value}`
+          deleteAPI(url).then((response) => {
             getUserList()
           }).catch((error) => {
             console.log(error)

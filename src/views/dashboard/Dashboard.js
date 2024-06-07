@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './Dashboard.css'
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { regionCountAPI } from '../../apiService/ApiService';
+import { getAPI } from '../../apiService/ApiService';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -37,12 +37,13 @@ useEffect(()=>{
   handleRegionCount()
 },[])
 const handleRegionCount=()=>{
-  regionCountAPI().then((response)=>{
-    if(response?.status){
+  var url=`/region/regioncounts/`
+  getAPI(url).then((response)=>{
+    if(response?.data?.status){
       var arr = []
-      arr?.push(response?.total_count)
-      arr?.push(response?.active_count)
-      arr?.push(response?.inactive_count)
+      arr?.push(response?.data?.total_count)
+      arr?.push(response?.data?.active_count)
+      arr?.push(response?.data?.inactive_count)
       setRegionCount(arr)
     }
   }).catch((error)=>{
