@@ -9,7 +9,6 @@ import Swal from 'sweetalert2';
 import './Login.css';
 
 export default function Login() {
-    let base_url = process.env.REACT_APP_BASE_URL;
 
     const navigate = useNavigate();
 
@@ -28,15 +27,15 @@ export default function Login() {
         var method = "POST";
         var url=`/users/login/`;
         addUpdateAPI(method, url, formData).then((response) => {
-            if (response.status) {
-                localStorage.setItem('access-token', response.access_token);
+            if (response?.data?.status) {
+                localStorage.setItem('access-token', response?.data?.access_token);
                 window.location.href = '/dashboard';
             } else {
                 Swal.fire({
                     toast: true,
                     icon: "error",
                     title: "Oops...",
-                    text: response.detail,
+                    text: response?.data?.detail,
                 });
             }
         })
