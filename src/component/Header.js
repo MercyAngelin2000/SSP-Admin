@@ -3,11 +3,11 @@ import './Header.css';
 import profileicon from '../Assets/profile.png';
 import { Link } from 'react-router-dom';
 import { getAPI } from '../apiService/ApiService';
+import { useLocation } from 'react-router-dom';
 function Header() {
 
   const [user, setUser] = useState({});
-  const location = window.location.pathname;
-
+  const location=useLocation()
   const services = [
     { name: 'Region', path: '/region' },
     { name: 'Corporate', path: '/corporate' },
@@ -54,7 +54,7 @@ function Header() {
                   {
                     services.map((service, index) => {
                       return <li key={index}>
-                        <Link className={`dropdown-item d-flex align-items-center ${location == service.path ? 'active' : ''}`} to={service.path}>
+                        <Link className={`dropdown-item d-flex align-items-center ${location?.pathname == service?.path ? 'active' : ''}`} to={service?.path}>
                           {service.name}
                         </Link>
                       </li>

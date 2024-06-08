@@ -6,6 +6,7 @@ import * as yup from 'yup';
 import Swal from 'sweetalert2';
 import "./Corporate.css"
 import { deleteAPI,getAPI,addUpdateAPI} from '../../apiService/ApiService';
+import { tableHeaderBackground } from '../../Utils/utils';
 
 const customStyles = {
   headCells: {
@@ -13,6 +14,7 @@ const customStyles = {
       fontSize: '14px', // Decrease font size
       fontWeight: 'bold', // Make font weight bold
       color: '#333', // Change font color
+      background: tableHeaderBackground
     },
   },
   cells: {
@@ -303,15 +305,15 @@ function CorporateUser({ activeTab }) {
   return (
     <div>
       <div className='mt-1'>
-        <div className='d-flex justify-content-between'>
+        <div className='d-flex justify-content-between align-items-end'>
           <div className=''>
             <input type="text" className='form-control me-2 tab_search' placeholder='Search' />
           </div>
           <div>
-            <button className='btn btn-success btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
+            <button className='btn btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
           </div>
         </div>
-        <div className='container card my-3 tablecard'>
+        <div className='card my-3 tablecard'>
           <DataTable
             columns={columns}
             data={userdata}
