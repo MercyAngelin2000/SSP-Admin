@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import "../../index.css"
 import "./Region.css"
 import DataTable from 'react-data-table-component';
 import Select from 'react-select';
@@ -6,7 +7,7 @@ import Swal from 'sweetalert2';
 import RegionUser from './RegionUser';
 import { useForm } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
-import { getAPI,addUpdateAPI,deleteAPI} from '../../apiService/ApiService';
+import { getAPI, addUpdateAPI, deleteAPI } from '../../apiService/ApiService';
 import { activeStatus, tableHeaderBackground } from '../../Utils/utils';
 function Region() {
 
@@ -39,7 +40,7 @@ function Region() {
   }, [limit, skip])
 
   const getRegionList = () => {
-    var url=`/region/?skip=${skip}&limit=${limit}`
+    var url = `/region/?skip=${skip}&limit=${limit}`
     getAPI(url).then((response) => {
       setRegionList(response?.data?.data)
       setTotal(response?.data?.total_count)
@@ -50,7 +51,7 @@ function Region() {
   }
 
   const getUserList = () => {
-    var url=`/region/regionusers`
+    var url = `/region/regionusers`
     getAPI(url).then((response) => {
 
       var data = response?.data?.data?.members
@@ -95,33 +96,33 @@ function Region() {
     }
 
     addUpdateAPI(method, url, values).then((response) => {
-      if(response?.data?.status){
-      getRegionList()
-      clearModal()
-      document.getElementById('modalClose').click()
-      Swal.fire({
-        toast: true,
-        position: "center",
-        icon: "success",
-        title: mode === 'add' ? "Region added successfully" : "Region updated successfully",
-        showConfirmButton: false,
-        timer: 1500
-      });
-    } else {
-      Swal.fire({
-        toast: true,
-        icon: "error",
-        title: "Oops...",
-        text: response?.data?.detail,
-      });
-    }
+      if (response?.data?.status) {
+        getRegionList()
+        clearModal()
+        document.getElementById('modalClose').click()
+        Swal.fire({
+          toast: true,
+          position: "center",
+          icon: "success",
+          title: mode === 'add' ? "Region added successfully" : "Region updated successfully",
+          showConfirmButton: false,
+          timer: 1500
+        });
+      } else {
+        Swal.fire({
+          toast: true,
+          icon: "error",
+          title: "Oops...",
+          text: response?.data?.detail,
+        });
+      }
     }).catch((error) => {
       console.log(error)
     })
   }
 
   const getSingleRegion = (id) => {
-    var url=`/region/regionbyid/?region_id=${id}`
+    var url = `/region/regionbyid/?region_id=${id}`
     getAPI(url).then((response) => {
       var data = response?.data?.data
       reset({
@@ -159,9 +160,9 @@ function Region() {
       width: 400
     }).then((result) => {
       if (result.isConfirmed) {
-        var url =`/region/${id}`
+        var url = `/region/${id}`
         deleteAPI(url).then((response) => {
-          if(response?.data?.status){
+          if (response?.data?.status) {
             getRegionList()
             Swal.fire({
               toast: true,
@@ -189,8 +190,8 @@ function Region() {
   }
 
   const searchRegion = (e) => {
-    var url=`/region/search/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`
-  getAPI(url).then((response) => {
+    var url = `/region/search/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`
+    getAPI(url).then((response) => {
       setRegionList(response?.data?.data)
     }).catch((error) => {
       console.log(error)
@@ -227,7 +228,7 @@ function Region() {
               <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
             </svg>
           </button>
-          <button className='btn text-danger btn-sm me-2' onClick={() => deleteRegion(row?.id)}>
+          <button className='deletebtn btn  btn-sm me-2' onClick={() => deleteRegion(row?.id)}>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
               <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
             </svg>
@@ -270,7 +271,7 @@ function Region() {
         const dataIds = new Set(selectedOptions.map(dataItem => dataItem.value));
         const missingMembers = oldMembers.filter(member => !dataIds.has(member.value));
         if (missingMembers?.length > 0) {
-          var url=`/region/regionusers/${missingMembers[0]?.value}`
+          var url = `/region/regionusers/${missingMembers[0]?.value}`
           deleteAPI(url).then((response) => {
             getUserList()
           }).catch((error) => {
@@ -279,7 +280,7 @@ function Region() {
         }
       }
     }
-    else{
+    else {
       setValue(name, selectedOptions)
     }
 

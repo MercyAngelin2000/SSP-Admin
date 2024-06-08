@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Swal from 'sweetalert2';
 import "./Region.css"
-import {getAPI,addUpdateAPI,deleteAPI} from '../../apiService/ApiService';
+import { getAPI, addUpdateAPI, deleteAPI } from '../../apiService/ApiService';
 import { tableHeaderBackground } from '../../Utils/utils';
 
 const customStyles = {
@@ -45,7 +45,7 @@ const schema1 = yup.object().shape({
     username: yup.string().required('Username is required'),
     role: yup.string().required('Role is required'),
 });
-function RegionUser({activeTab}) {
+function RegionUser({ activeTab }) {
     const [title, setTile] = useState("Add User")
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(title === "Add User" ? schema : schema1),
@@ -135,7 +135,7 @@ function RegionUser({activeTab}) {
             width: 400
         }).then((result) => {
             if (result.isConfirmed) {
-                var url=`/users/${row?.id}`
+                var url = `/users/${row?.id}`
                 deleteAPI(url).then((response) => {
                     let data = response?.data
                     if (data?.status) {
@@ -164,7 +164,7 @@ function RegionUser({activeTab}) {
         });
     }
     const fetchUserListData = () => {
-        var url=`/users/users/?user_type=region&skip=${skip}&limit=${limit}`
+        var url = `/users/users/?user_type=region&skip=${skip}&limit=${limit}`
         getAPI(url).then((response) => {
             setUserData(response?.data?.data)
             setTotal(response?.data?.total_count)
@@ -173,7 +173,7 @@ function RegionUser({activeTab}) {
         })
     }
     const fetchRoleData = () => {
-        var url=`/users/roles/`
+        var url = `/users/roles/`
         getAPI(url).then((response) => {
             var data = response?.data?.data
             var arr = []
@@ -191,17 +191,17 @@ function RegionUser({activeTab}) {
     useEffect(() => {
         fetchUserListData()
         // eslint-disable-next-line
-    }, [skip, limit,activeTab])
+    }, [skip, limit, activeTab])
     const handleActiveStatus = (event, row) => {
         var method = "PUT"
         var url = `/users/${row?.id}`
-        var data ={
+        var data = {
             "name": row?.name,
             "username": row?.username,
             "role_id": Number(row?.role_id),
             "active": event.target.checked
         }
-        addUpdateAPI(method,url,data).then((response) => {
+        addUpdateAPI(method, url, data).then((response) => {
             let data = response?.data
             if (data?.status) {
                 fetchUserListData()
@@ -233,7 +233,7 @@ function RegionUser({activeTab}) {
         if (title === "Add User") {
             method = "POST"
             url = `/users/register/`
-            postData={
+            postData = {
                 "name": data?.name,
                 "username": data?.username,
                 "password": data?.password,
@@ -244,13 +244,13 @@ function RegionUser({activeTab}) {
         else {
             method = "PUT"
             url = `/users/${editData?.id}`
-            postData={
+            postData = {
                 "name": data?.name,
                 "username": data?.username,
                 "role_id": Number(data?.role)
             }
         }
-        addUpdateAPI(method,url,postData).then((response) => {
+        addUpdateAPI(method, url, postData).then((response) => {
             let data = response?.data
             if (data?.status) {
                 handleCancel()
@@ -302,23 +302,23 @@ function RegionUser({activeTab}) {
             <div className='mt-1'>
                 <div className='d-flex justify-content-between align-items-end'>
                     <div className='d-flex'>
-                    <input type="text" className='form-control me-2 tab_search' placeholder='Search'/>
+                        <input type="text" className='form-control me-2 tab_search' placeholder='Search' />
                     </div>
                     <div>
-                    <button className='btn btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
+                        <button className='btn btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
                     </div>
                 </div>
                 <div className='card tablecard my-3'>
-                <DataTable
-                    columns={columns}
-                    data={userdata}
-                    customStyles={customStyles}
-                    pagination
-                    paginationServer
-                    paginationTotalRows={total}
-                    onChangeRowsPerPage={handlePerRowsChange}
-                    onChangePage={handlePageChange}
-                />
+                    <DataTable
+                        columns={columns}
+                        data={userdata}
+                        customStyles={customStyles}
+                        pagination
+                        paginationServer
+                        paginationTotalRows={total}
+                        onChangeRowsPerPage={handlePerRowsChange}
+                        onChangePage={handlePageChange}
+                    />
                 </div>
             </div>
             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -362,7 +362,7 @@ function RegionUser({activeTab}) {
                                         <option value="">Select Role</option>
                                         {
                                             roleData?.map((item, index) => {
-                                                return <option key={index} value={item?.id} selected={item?.id===editData?.role_id ? true : false}>{item?.name}</option>
+                                                return <option key={index} value={item?.id} selected={item?.id === editData?.role_id ? true : false}>{item?.name}</option>
                                             })
                                         }
                                     </select>
