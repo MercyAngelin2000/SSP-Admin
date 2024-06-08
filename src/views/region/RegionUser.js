@@ -6,6 +6,7 @@ import * as yup from 'yup';
 import Swal from 'sweetalert2';
 import "./Region.css"
 import {getAPI,addUpdateAPI,deleteAPI} from '../../apiService/ApiService';
+import { tableHeaderBackground } from '../../Utils/utils';
 
 const customStyles = {
     headCells: {
@@ -13,6 +14,7 @@ const customStyles = {
             fontSize: '14px', // Decrease font size
             fontWeight: 'bold', // Make font weight bold
             color: '#333', // Change font color
+            background: tableHeaderBackground
         },
     },
     cells: {
@@ -306,7 +308,7 @@ function RegionUser({activeTab}) {
                     <button className='btn btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
                     </div>
                 </div>
-                <div className='container-fluid card tablecard my-3'>
+                <div className='card tablecard my-3'>
                 <DataTable
                     columns={columns}
                     data={userdata}

@@ -88,10 +88,11 @@
 .tab_search:focus {
   box-shadow: none !important;
   border-color: #02095c !important;
+  background-color: transparent;
 }
 
 .tablecard{
-  box-shadow: 0px 0px 5px 2px #c9c9c9c0 !important;
+  box-shadow: 0px 0px 6px 2px #0000005e !important;
   border-radius: 0px !important;
 }
 
@@ -123,4 +124,24 @@
 
 .container-card{
   background-color: #e8e8ed;
+}
+
+.active-status{
+  background-color: #a8efa8;
+  color: #000000;
+  border-radius: 20px;
+  padding: 6px;
+  padding-left: 27px;
+  padding-right: 27px;  
+  text-align: center !;
+}
+
+.inactive-status{
+  background-color: var(--color-secondary);
+  color: #000000;
+  border-radius: 20px;
+  padding: 6px;
+  padding-left: 20px;
+  padding-right: 20px; 
+  text-align: center;
 }

@@ -7,6 +7,7 @@ import RegionUser from './RegionUser';
 import { useForm } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 import { getAPI,addUpdateAPI,deleteAPI} from '../../apiService/ApiService';
+import { activeStatus, tableHeaderBackground } from '../../Utils/utils';
 function Region() {
 
   const [selectedTab, setSelectedTab] = useState('region')
@@ -212,10 +213,7 @@ function Region() {
     {
       name: 'Active Status',
       selector: row => row.active,
-      cell: row => <div className="form-check form-switch mt-2">
-        <input className="form-check-input" disabled type="checkbox" role="switch" id="flexSwitchCheckChecked" defaultChecked={row?.active} />
-        <label className="form-check-label" htmlFor="flexSwitchCheckChecked"></label>
-      </div>,
+      cell: row => activeStatus(row.active),
       sortable: true,
     },
     {
@@ -245,6 +243,7 @@ function Region() {
         fontSize: '14px',
         fontWeight: 'bold',
         color: '#333',
+        backgroundColor: tableHeaderBackground,
       },
     },
     cells: {
@@ -325,7 +324,7 @@ function Region() {
                 <button className='btn btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
               </div>
             </div>
-            <div className='container-fluid card my-3 tablecard'>
+            <div className='card my-3 tablecard'>
               <DataTable
                 pagination
                 customStyles={customStyles}
