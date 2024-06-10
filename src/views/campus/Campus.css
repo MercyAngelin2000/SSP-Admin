@@ -1,0 +1,5 @@
+.add {
+    background-color: var(--color-default) !important;
+    color: white !important;
+    font-weight: bold;
+  }
