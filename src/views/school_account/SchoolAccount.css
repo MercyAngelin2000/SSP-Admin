@@ -1,0 +1,14 @@
+.add {
+    /* background-color: #f0c6f5 !important; */
+    background:linear-gradient(100deg, #c6f2fb, #f0c6f5 100%);
+      color: black !important;
+      font-weight: bold;
+      border-radius: 30px;
+  }
+  .rdt_Table {
+    border: none !important;
+  }
+  
+  .rdt_TableRow {
+    border: none !important;
+  }
