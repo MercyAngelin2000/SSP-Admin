@@ -70,7 +70,7 @@ function Campus() {
         });
         swalWithBootstrapButtons.fire({
             title: "Are you sure?",
-            text: "You won't be able to revert this corporate!",
+            text: "You won't be able to revert this campus!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Yes, delete it!",
@@ -183,14 +183,14 @@ function Campus() {
     const handlePageChange = (currentpage) => {
         setSkip((currentpage - 1) * limit)
     }
-    // const searchCorporate = (e) => {
-
-    //     searchCorporateAPI(e?.target?.value, skip, limit).then((response) => {
-    //         setCampusList(response?.data?.data)
-    //     }).catch((error) => {
-    //         console.log(error)
-    //     })
-    // }
+    const searchCampus = (e) => {
+    var url = `/campus/search/?value=${e?.target?.value}`
+    getAPI(url).then((response) => {
+        setCampusList(response?.data?.data)
+    }).catch((error) => {
+      console.log(error)
+    })
+    }
 
     return (
         <div>
@@ -212,7 +212,7 @@ function Campus() {
                         <div className='d-flex justify-content-between align-items-end mt-1 p-0'>
                             <div className=''>
                                 <input type="text" className='form-control me-2 tab_search' placeholder='Search'
-                                //  onChange={(e) => searchCorporate(e)}
+                                 onChange={(e) => searchCampus(e)}
                                 />
                             </div>
                             <div>

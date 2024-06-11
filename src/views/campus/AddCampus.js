@@ -211,7 +211,6 @@ function AddCampus() {
     }
 
 
-    var num = 912837464362
     return (
         <div>
             <div className='container-fluid p-0'>
@@ -332,6 +331,7 @@ function AddCampus() {
                                             <div className='col'>
                                                 <Select
                                                     options={campusUserList}
+                                                    placeholder="Select campus user"
                                                     value={formEntries[index]?.user}
                                                     onChange={(selectedOption) => handleInputChange(index, 'user', selectedOption)}
                                                 />
@@ -393,7 +393,7 @@ function AddCampus() {
 
                         </div>
                         <div className="modal-footer mt-2 mb-3">
-                            <button type="submit" className="btn btn-sm add">Save</button>
+                            <button type="submit" className="btn btn-sm add">{mode === "edit" ? "Update" : "Save"} </button>
                         </div>
 
                     </div>

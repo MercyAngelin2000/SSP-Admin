@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import CorporateUser from './CorporateUser';
 import { useForm } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
-import { getAPI, addUpdateAPI,deleteAPI} from '../../apiService/ApiService';
+import { getAPI, addUpdateAPI, deleteAPI } from '../../apiService/ApiService';
 import { activeStatus, tableHeaderBackground } from '../../Utils/utils';
 import '../../index.css';
 function Corporate() {
@@ -17,8 +17,8 @@ function Corporate() {
   const [skip, setSkip] = useState(0)
   const [limit, setLimit] = useState(10)
   const [total, setTotal] = useState(0)
-  const [regionList,setRegionList]=useState()
-  const { control, register, formState: { errors }, reset, handleSubmit, setValue, getValues } = useForm();
+  const [regionList, setRegionList] = useState()
+  const { control, register, formState: { errors }, reset, handleSubmit, setValue, getValues, clearErrors } = useForm();
 
   useEffect(() => {
     getUserList()
@@ -38,7 +38,7 @@ function Corporate() {
   }, [limit, skip])
 
   const getCorporateList = () => {
-    var url= `/corporate/?skip=${skip}&limit=${limit}`
+    var url = `/corporate/?skip=${skip}&limit=${limit}`
     getAPI(url).then((response) => {
       setCorporateList(response?.data?.data)
       setTotal(response?.data?.total_count)
@@ -49,7 +49,7 @@ function Corporate() {
   }
 
   const getUserList = () => {
-    var url=`/corporate/corporateusers`
+    var url = `/corporate/corporateusers`
     getAPI(url).then((response) => {
 
       var data = response?.data?.data?.admin
@@ -62,7 +62,7 @@ function Corporate() {
   }
   const addCorporate = (data) => {
     const values = {
-      "region_id":Number(data?.region),
+      "region_id": Number(data?.region),
       "corporate_group_code": data?.corporate_group_code,
       "name": data?.name,
       "address": data?.address,
@@ -89,20 +89,20 @@ function Corporate() {
     }
 
     addUpdateAPI(method, url, values).then((response) => {
-      if(response?.data?.status){
+      if (response?.data?.status) {
         getCorporateList()
-      clearModal()
-      document.getElementById('modalClose').click()
-      Swal.fire({
-        toast: true,
-        position: "center",
-        icon: "success",
-        title: mode === 'add' ? "Corporate added successfully" : "Corporate updated successfully",
-        showConfirmButton: false,
-        timer: 1500
-      });
+        clearModal()
+        document.getElementById('modalClose').click()
+        Swal.fire({
+          toast: true,
+          position: "center",
+          icon: "success",
+          title: mode === 'add' ? "Corporate added successfully" : "Corporate updated successfully",
+          showConfirmButton: false,
+          timer: 1500
+        });
 
-      }else{
+      } else {
         Swal.fire({
           toast: true,
           position: "center",
@@ -112,7 +112,7 @@ function Corporate() {
           timer: 1500
         });
       }
-      
+
     }).catch((error) => {
       console.log(error)
     })
@@ -121,10 +121,10 @@ function Corporate() {
   const getEditCorporate = (data) => {
     setMode('edit')
     getRegionList()
-    var url=`/corporate/corporatebyid/?corporate_id=${data?.id}`
+    var url = `/corporate/corporatebyid/?corporate_id=${data?.id}`
     getAPI(url).then((response) => {
       var data = response?.data?.data
-      reset({ ...data,region:response?.data?.data?.region_id, admin_id: { value: data?.admin_id?.user_id, label: data?.admin_id?.name }, })
+      reset({ ...data, region: response?.data?.data?.region_id, admin_id: { value: data?.admin_id?.user_id, label: data?.admin_id?.name }, })
 
     }).catch((error) => {
       console.log(error)
@@ -151,9 +151,28 @@ function Corporate() {
       width: 400
     }).then((result) => {
       if (result.isConfirmed) {
-        var url=`/corporate/${id}`
+        var url = `/corporate/${id}`
         deleteAPI(url).then((response) => {
-          getCorporateList()
+          
+          if (response?.data?.status) {
+            Swal.fire({
+              toast: true,
+              position: "center",
+              icon: "success",
+              title: "Corporate deleted successfully",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            getCorporateList()
+          }
+          else {
+            Swal.fire({
+              toast: true,
+              icon: "error",
+              title: "Oops...",
+              text: response?.data?.detail,
+            });
+          }
 
         }).catch((error) => {
           console.log(error)
@@ -163,11 +182,11 @@ function Corporate() {
     })
 
   }
-const handleViewCorporate=(row)=>{
-  getAPI(`/corporate/corporatebyid?corporate_id=${row?.id}`).then((response) => {
-  setSelectedCorporate(response?.data?.data)
-})
-}
+  const handleViewCorporate = (row) => {
+    getAPI(`/corporate/corporatebyid?corporate_id=${row?.id}`).then((response) => {
+      setSelectedCorporate(response?.data?.data)
+    })
+  }
   const columns = [
     {
       width: '100px',
@@ -237,15 +256,17 @@ const handleViewCorporate=(row)=>{
 
 
   const handleChange = (selectedOptions) => {
-    if (mode === 'edit') {
-      var oldAdmin = getValues('admin_id')
-      var newAdminList = userList.filter((item) => item.value !== selectedOptions?.value);
-      setUserList([...newAdminList, oldAdmin])
-      setValue("admin_id", selectedOptions)
-
-    }
-    else{
-      setValue("admin_id", selectedOptions)
+    if (selectedOptions) {
+      if (mode === 'edit') {
+        var oldAdmin = getValues('admin_id');
+        var newAdminList = userList.filter((item) => item.value !== selectedOptions?.value);
+        setUserList([...newAdminList, oldAdmin]);
+        setValue("admin_id", selectedOptions);
+       
+      } else {
+        setValue("admin_id", selectedOptions);
+      }
+      clearErrors("admin_id");
     }
   }
 
@@ -259,7 +280,7 @@ const handleViewCorporate=(row)=>{
       "state": '',
       "pincode": '',
       "admin_id": '',
-      "region":''
+      "region": ''
     })
   }
 
@@ -271,26 +292,26 @@ const handleViewCorporate=(row)=>{
     setSkip((currentpage - 1) * limit)
   }
   const searchCorporate = (e) => {
-    var url=`/corporate/search/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`
+    var url = `/corporate/search/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`
     getAPI(url).then((response) => {
       setCorporateList(response?.data?.data)
     }).catch((error) => {
       console.log(error)
     })
   }
-  const getRegionList=()=>{
+  const getRegionList = () => {
     getAPI('/region/activeregions/').then((response) => {
-      var arr=[]
+      var arr = []
       response?.data?.data?.map((item) => {
-        arr?.push({name:`${item?.code} - ${item?.name}`,value:item?.id})
+        arr?.push({ name: `${item?.code} - ${item?.name}`, value: item?.id })
       })
       setRegionList(arr)
     })
   }
-const handleAddCorporate = () => {
-  setMode('add')
-  getRegionList()
-}
+  const handleAddCorporate = () => {
+    setMode('add')
+    getRegionList()
+  }
   return (
     <div>
       <div className='container-fluid p-0'>
@@ -310,7 +331,7 @@ const handleAddCorporate = () => {
           <section id='regiontbl'>
             <div className='d-flex justify-content-between align-items-end mt-1 p-0'>
               <div className=''>
-                <input type="text" className='form-control me-2 tab_search' placeholder='Search' onChange={(e)=>searchCorporate(e)}/>
+                <input type="text" className='form-control me-2 tab_search' placeholder='Search' onChange={(e) => searchCorporate(e)} />
               </div>
               <div>
                 <button className='btn btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => handleAddCorporate()}>Add</button>
@@ -347,39 +368,39 @@ const handleAddCorporate = () => {
             <div className="modal-body">
               <div className="row mb-3">
                 <div className="col-sm-4 fw-bold">Region:</div>
-                <div className="col-sm-8">{`${selectedCorporate?.region?.code ? selectedCorporate?.region?.code:""}${selectedCorporate?.region?.code ? ' - ':''}${selectedCorporate?.region?.name ? selectedCorporate?.region?.name:''}`}</div>
+                <div className="col-sm-8">{`${selectedCorporate?.region?.code ? selectedCorporate?.region?.code : ""}${selectedCorporate?.region?.code ? ' - ' : ''}${selectedCorporate?.region?.name ? selectedCorporate?.region?.name : ''}`}</div>
               </div>
               <div className="row mb-3">
                 <div className="col-sm-4 fw-bold">Code:</div>
-                <div className="col-sm-8">{selectedCorporate?.corporate_group_code ? selectedCorporate?.corporate_group_code:'-'}</div>
+                <div className="col-sm-8">{selectedCorporate?.corporate_group_code ? selectedCorporate?.corporate_group_code : '-'}</div>
               </div>
               <div className="row mb-3">
                 <div className="col-sm-4 fw-bold">Name:</div>
-                <div className="col-sm-8">{selectedCorporate?.name ? selectedCorporate?.name:'-'}</div>
+                <div className="col-sm-8">{selectedCorporate?.name ? selectedCorporate?.name : '-'}</div>
               </div>
               <div className="row mb-3">
                 <div className="col-sm-4 fw-bold">Address:</div>
-                <div className="col-sm-8">{selectedCorporate?.address ? selectedCorporate?.address:'-'}</div>
+                <div className="col-sm-8">{selectedCorporate?.address ? selectedCorporate?.address : '-'}</div>
               </div>
               <div className="row mb-3">
                 <div className="col-sm-4 fw-bold">City:</div>
-                <div className="col-sm-8">{selectedCorporate?.city ? selectedCorporate?.city:'-'}</div>
+                <div className="col-sm-8">{selectedCorporate?.city ? selectedCorporate?.city : '-'}</div>
               </div>
               <div className="row mb-3">
                 <div className="col-sm-4 fw-bold">District:</div>
-                <div className="col-sm-8">{selectedCorporate?.district ? selectedCorporate?.district:'-'}</div>
+                <div className="col-sm-8">{selectedCorporate?.district ? selectedCorporate?.district : '-'}</div>
               </div>
               <div className="row mb-3">
                 <div className="col-sm-4 fw-bold">Pincode:</div>
-                <div className="col-sm-8">{selectedCorporate?.pincode ? selectedCorporate?.pincode:"-"}</div>
+                <div className="col-sm-8">{selectedCorporate?.pincode ? selectedCorporate?.pincode : "-"}</div>
               </div>
               <div className="row mb-3">
                 <div className="col-sm-4 fw-bold">State:</div>
-                <div className="col-sm-8">{selectedCorporate?.state ? selectedCorporate?.state:'-'}</div>
+                <div className="col-sm-8">{selectedCorporate?.state ? selectedCorporate?.state : '-'}</div>
               </div>
               <div className="row mb-3">
                 <div className="col-sm-4 fw-bold">Corporate Admin:</div>
-                <div className="col-sm-8">{selectedCorporate?.admin_id?.name ? selectedCorporate?.admin_id?.name:'-'}</div>
+                <div className="col-sm-8">{selectedCorporate?.admin_id?.name ? selectedCorporate?.admin_id?.name : '-'}</div>
               </div>
             </div>
           </div>
@@ -396,7 +417,7 @@ const handleAddCorporate = () => {
             <form onSubmit={handleSubmit(addCorporate)}>
               <div className="modal-body">
                 <div className="row">
-                <div className="col-lg-6">
+                  <div className="col-lg-6">
                     <label className="mt-2">Region <span className="text-danger">*</span></label>
                     <select className="form-select" {...register('region', { required: true })}>
                       <option value="">Select Region</option>
@@ -472,17 +493,18 @@ const handleAddCorporate = () => {
                           isClearable
                           onChange={(selectedOptions) => {
                             handleChange(selectedOptions);
+
                           }}
                         />
                       )}
                     />
-                    {errors.admin_id && <span className="text-danger">Admin is required</span>}
+                    {errors?.admin_id && <span className="text-danger">Admin is required</span>}
                   </div>
                 </div>
               </div>
               <div className="modal-footer">
                 <button type="button" onClick={() => clearModal()} className="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" className="btn btn-primary btn-sm add">Save</button>
+                <button type="submit" className="btn  btn-sm add">Save</button>
               </div>
             </form>
 

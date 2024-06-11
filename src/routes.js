@@ -6,6 +6,8 @@ const Corporate =React.lazy(() => import('./views/corporate/Corporate'))
 const Campus =React.lazy(() => import('./views/campus/Campus'))
 const AddCampus =React.lazy(() => import('./views/campus/AddCampus'))
 const SchoolAccount =React.lazy(() => import('./views/school_account/SchoolAccount'))
+const SchoolAdmin =React.lazy(() => import('./views/schoolAdmin/SchoolAdmin'))
+const AddSchoolAdmin =React.lazy(() => import('./views/schoolAdmin/AddSchoolAdmin'))
 // const User = React.lazy(() => import('./views/User'))
 const routes = [
     { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -14,6 +16,8 @@ const routes = [
     { path: '/campus', name: 'Campus', element: Campus },
     { path: '/addcampus', name: 'AddCampus', element: AddCampus },
     { path: '/schoolaccount', name: 'School Account', element: SchoolAccount },
+    { path: '/schooladmin', name: 'SchoolAdmin', element: SchoolAdmin },
+    { path: '/addschooladmin', name: 'AddSchoolAdmin', element: AddSchoolAdmin },
 
     // { path: '/users', name: 'User', element: User },
 ]

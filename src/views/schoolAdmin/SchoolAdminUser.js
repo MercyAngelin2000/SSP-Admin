@@ -5,54 +5,42 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Swal from 'sweetalert2';
-import "./Campus.css"
+import "./SchoolAdmin.css"
 import "../../index.css"
 import { deleteAPI,getAPI,addUpdateAPI} from '../../apiService/ApiService';
 
-const customStyles = {
-  headCells: {
-    style: {
-      fontSize: '14px', // Decrease font size
-      fontWeight: 'bold', // Make font weight bold
-      color: '#333', // Change font color
-    },
-  },
-  cells: {
-    style: {
-      fontSize: '13px', // Decrease font size
-    },
-  },
-};
-// Define the validation schema using Yup
-const schema = yup.object().shape({
-  name: yup.string().required('Name is required'),
-  username: yup.string().required('Username is required'),
-  password: yup
-    .string()
-    .required('Password is required')
-    .min(8, 'Password must be at least 8 characters')
-    .matches(/[a-zA-Z]/, 'Password must contain at least one letter')
-    .matches(/[0-9]/, 'Password must contain at least one number')
-    .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Password must contain at least one special character'),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref('password'), null], 'Passwords must match')
-    .required('Confirm password is required'),
-  role: yup.string().optional(),
-});
-const schema1 = yup.object().shape({
-  name: yup.string().required('Name is required'),
-  username: yup.string().required('Username is required'),
-  role: yup.string().optional(),
-});
-function CampusUser({ activeTab }) {
+
+function SchoolAdminUser({ activeTab }) {
   const [title, setTile] = useState("Add User")
   const [editData, setEditData] = useState()
   const [roleData, setRoleData] = useState()
   const [defaultRoleValue, setDefaultRoleValue] = useState()
+
+  const schema = yup.object().shape({
+    name: yup.string().required('Name is required'),
+    username: yup.string().required('Username is required'),
+    password: yup
+      .string()
+      .required('Password is required')
+      .min(8, 'Password must be at least 8 characters')
+      .matches(/[a-zA-Z]/, 'Password must contain at least one letter')
+      .matches(/[0-9]/, 'Password must contain at least one number')
+      .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Password must contain at least one special character'),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm password is required'),
+    role: yup.string().optional(),
+  });
+  const schema1 = yup.object().shape({
+    name: yup.string().required('Name is required'),
+    username: yup.string().required('Username is required'),
+    role: yup.string().optional(),
+  });
+
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(title === "Add User" ? schema : schema1), defaultValues: {
-      role: defaultRoleValue, // Set default value for role
+      role: defaultRoleValue, 
     }
   });
   const [userdata, setUserData] = useState()
@@ -60,6 +48,23 @@ function CampusUser({ activeTab }) {
   const [skip, setSkip] = useState(0);
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
+
+  const customStyles = {
+    headCells: {
+      style: {
+        fontSize: '14px', // Decrease font size
+        fontWeight: 'bold', // Make font weight bold
+        color: '#333', // Change font color
+      },
+    },
+    cells: {
+      style: {
+        fontSize: '13px', // Decrease font size
+      },
+    },
+  };
+  
+
   const columns = [
     {
       width: '100px',
@@ -168,7 +173,7 @@ function CampusUser({ activeTab }) {
     });
   }
   const fetchUserListData = () => {
-    var url=`/users/users/?user_type=campus&skip=${skip}&limit=${limit}`
+    var url=`/users/users/?user_type=school admin&skip=${skip}&limit=${limit}`
     getAPI(url).then((response) => {
       setUserData(response?.data?.data)
       setTotal(response?.data?.total_count)
@@ -305,8 +310,8 @@ function CampusUser({ activeTab }) {
   }
   return (
     <div>
-      <div className='mt-1'>
-        <div className='d-flex justify-content-between'>
+      <div className='container-fluid card mb-5 container-card'>
+        <div className='d-flex justify-content-between align-items-end mt-1 p-0'>
           <div className=''>
             <input type="text" className='form-control me-2 tab_search' placeholder='Search' />
           </div>
@@ -387,4 +392,4 @@ function CampusUser({ activeTab }) {
   )
 }
 
-export default CampusUser
+export default SchoolAdminUser
