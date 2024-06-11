@@ -5,9 +5,9 @@ import * as yup from 'yup';
 import Swal from 'sweetalert2';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import { getAPI, addUpdateAPI } from '../../apiService/ApiService';
+import { getAPI, addUpdateAPI, deleteAPI } from '../../apiService/ApiService';
 
-function AddSchoolAccount({ title ,getData,editMethod}) {
+function AddSchoolAccount({ title ,getData,editMethod,viewmethod}) {
     const schema = yup.object().shape({
         region: yup.string().required('Region is required'),
         corporateGroupCode: yup.string().required('Corporate Group Code is required'),
@@ -120,7 +120,6 @@ function AddSchoolAccount({ title ,getData,editMethod}) {
                 email: field?.email
 
             })
-            console.log(data);
             setFormFieldsErr([...formFieldsErr, { nameErr: '', designationErr: '', phoneErr: '', emailErr: '' }]);
         })
         setFormFields(data);
@@ -188,9 +187,19 @@ function AddSchoolAccount({ title ,getData,editMethod}) {
 
     const handleRemoveFields = (index) => {
         const values = [...formFields];
+        const itemToRemove = values[index];
+
         values.splice(index, 1);
         setFormFields(values);
 
+    if (itemToRemove?.id) {
+        deleteAPI(`/schools/client/${itemToRemove.id}`)
+            .then((response) => {
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
         const errors = [...formFieldsErr];
         errors.splice(index, 1);
         setFormFieldsErr(errors);
@@ -258,7 +267,7 @@ function AddSchoolAccount({ title ,getData,editMethod}) {
             var url ;
             if(title === "Add School Account"){
                 method="POST"
-                url="/schools"
+                url="/schools/"
             }
             else{
                 method="PUT"
@@ -291,11 +300,66 @@ function AddSchoolAccount({ title ,getData,editMethod}) {
         }
     };
     return (
-        <div><div className='card'>
+        <div><div className='schoolCard card'>
             <label className='d-flex justify-content-center align-items-center m-2 fw-bold'>
                 {title}
             </label>
             <div className='card-body'>
+                {
+                    title==="View School Account"?
+                    <div className=" viewCard card">
+                        <div className='row p-2'>
+                        <div className='col-lg-4'>
+                        <p><strong>Region:</strong> {viewmethod?.region?.name? viewmethod?.region?.name:""} ({viewmethod?.region?.code? viewmethod?.region?.code:""})</p>
+                        </div>
+                        <div className='col-lg-4'>
+                        <p><strong>Corporate Group:</strong> {viewmethod?.corporate_group?.name? viewmethod?.corporate_group?.name:""} ({viewmethod?.corporate_group?.corporate_group_code? viewmethod?.corporate_group?.corporate_group_code:""})</p>
+                        </div>
+                        <div className='col-lg-4'>
+                        <p><strong>Campus:</strong> {viewmethod?.campus?.name? viewmethod?.campus?.name:""} ({viewmethod?.campus?.campus_code? viewmethod?.campus?.campus_code:""})</p>
+                        </div>
+                        </div>
+                        <div className='row p-2'>
+                        <div className='col-lg-4'>
+                        <p><strong>School Name:</strong> {viewmethod?.school_name ? viewmethod?.school_name:""}</p>
+                        </div>
+                        <div className='col-lg-4'>
+                        <p><strong>School Code:</strong> {viewmethod?.school_code ? viewmethod?.school_code:""}</p>
+                        </div>
+                        <div className='col-lg-4'>
+                        <p><strong>School Type:</strong> {viewmethod?.school_types.name ? viewmethod?.school_types.name:""}</p>
+                        </div>
+                        </div>
+                        <div className='row p-2'>
+                        <div className='col-lg-4'>
+                        <p><strong>Phone Number:</strong> {viewmethod?.phone_number ? viewmethod?.phone_number:""}</p>
+                        </div>
+                        <div className='col-lg-4'>
+                        <p><strong>Email:</strong> {viewmethod?.email ? viewmethod?.email:""}</p>
+                        </div>
+                        <div className='col-lg-4'>
+                        <p><strong>License:</strong> {viewmethod?.license ? viewmethod?.license:""}</p>
+                        </div>
+                        </div>
+                        {
+                            viewmethod?.clients?.length>0?
+                            <div className='row p-2'>
+                        <label className='fw-bold mb-2'><u>Clients</u></label>
+                        <ul className='row'style={{listStyleType: 'none'}}>
+                        {viewmethod?.clients?.map(client => (
+                            <li key={client?.id} className='col-lg-4' style={{marginLeft:'10px'}}>
+                                <p className='mb-1'><strong>Name:</strong> {client?.name}</p>
+                                <p className='mb-1'><strong>Designation:</strong> {client?.designation}</p>
+                                <p className='mb-1'><strong>Phone:</strong> {client?.phone}</p>
+                                <p className='mb-1'><strong>Email:</strong> {client?.email}</p>
+                            </li>
+                        ))}
+                    </ul>
+                        </div>:""
+                        }
+                        
+                </div>
+                    :
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className='row'>
                         <div className='col-lg-4'>
@@ -517,6 +581,7 @@ function AddSchoolAccount({ title ,getData,editMethod}) {
                         <button type="submit" className="btn add mt-3">Submit</button>
                     </div>
                 </form>
+                }
             </div>
         </div></div>
     )

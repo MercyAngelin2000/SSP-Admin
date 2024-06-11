@@ -12,3 +12,16 @@
   .rdt_TableRow {
     border: none !important;
   }
+
+/* View school account */
+.schoolCard{
+  background:linear-gradient(100deg, #c6f2fb, #f0c6f5 100%);
+}
+.viewCard {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+}
