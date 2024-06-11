@@ -12,6 +12,7 @@ function Header() {
     { name: 'Region', path: '/region' },
     { name: 'Corporate', path: '/corporate' },
     { name: 'Campus', path: '/campus' },
+    {name:'School Account',path:'/schoolaccount'}
   ]
 
   const getUserData=()=>{
