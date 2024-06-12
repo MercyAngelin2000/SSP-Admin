@@ -280,7 +280,7 @@ function AddSchoolAccount({ title ,getData,editMethod,viewmethod}) {
                         toast: true,
                         position: "center",
                         icon: "success",
-                        title: "School Acoount created successfully",
+                        title: "School Account created successfully",
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -521,7 +521,7 @@ function AddSchoolAccount({ title ,getData,editMethod,viewmethod}) {
                             </div>
                             {
                                 formFields?.length < 3 ?
-                                    <button type="button" className="btn add mt-3" onClick={handleAddFields}>Add Client</button>
+                                    <button type="button" className="btn add mt-3 btn-sm" onClick={handleAddFields}>Add Client</button>
                                     : null
                             }
                         </>
@@ -572,13 +572,13 @@ function AddSchoolAccount({ title ,getData,editMethod,viewmethod}) {
                                     <span className='text-danger'>{formFieldsErr[index]?.phoneErr}</span>
                                 </div>
                                 <div className='d-flex justify-content-end align-items-center'>
-                                    <button type="button" className="btn add mt-3" onClick={() => handleRemoveFields(index)}>Remove</button>
+                                    <button type="button" className="btn add mt-3 btn-sm" onClick={() => handleRemoveFields(index)}>Remove</button>
                                 </div>
                             </div>
                         </>
                     ))}
                     <div className='d-flex justify-content-end align-items-center'>
-                        <button type="submit" className="btn add mt-3">Submit</button>
+                        <button type="submit" className="btn add mt-3 btn-sm">Submit</button>
                     </div>
                 </form>
                 }

@@ -3,10 +3,12 @@ import './Dashboard.css'
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { getAPI } from '../../apiService/ApiService';
+import { useNavigate } from 'react-router-dom';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Dashboard() {
+  const navigate = useNavigate()
   const [token] = useState(localStorage.getItem('access-token'))
   const [regionCount, setRegionCount] = useState([])
   const [data, setData] = useState({
@@ -30,7 +32,8 @@ function Dashboard() {
   })
   useEffect(() => {
     if (!token) {
-      window.location.href = '/login'
+      // window.location.href = '/login'
+      navigate('/login')
     }
   }, [token])
   useEffect(() => {

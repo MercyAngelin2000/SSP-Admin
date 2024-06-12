@@ -1,9 +1,8 @@
 .add {
-    /* background-color: #f0c6f5 !important; */
-    background:linear-gradient(100deg, #c6f2fb, #f0c6f5 100%);
-      color: black !important;
+  background-color: var(--color-default) !important;
+    /* background:linear-gradient(100deg, #c6f2fb, #f0c6f5 100%); */
+      color: white !important;
       font-weight: bold;
-      border-radius: 30px;
   }
   .rdt_Table {
     border: none !important;
@@ -12,16 +11,22 @@
   .rdt_TableRow {
     border: none !important;
   }
+  .ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
 
 /* View school account */
-.schoolCard{
+/* .schoolCard{
   background:linear-gradient(100deg, #c6f2fb, #f0c6f5 100%);
-}
-.viewCard {
+} */
+/* .viewCard {
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
   margin: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   
-}
+} */

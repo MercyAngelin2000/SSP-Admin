@@ -5,7 +5,8 @@
   width: 78px;
   /* padding: 6px 14px; */
   z-index: 99;
-  background-color: var(--color-default);
+  /* background-color: var(--color-default); */
+  box-shadow: 10px 8px 16px 0px rgba(0,0,0,0.2);
   transition: all .5s ease;
   position: fixed;
   top:0;
@@ -91,7 +92,8 @@
   top:-20px;
   left:calc(100% + 15px);
   z-index: 3;
-  background-color: white;
+  color: white;
+  background-color: #1eaeca;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
   padding: 6px 14px;
   font-size: 15px;
@@ -164,7 +166,7 @@
 .sidebar.open li p .link_name{
   opacity: 1;
   pointer-events: auto;
-  color: white;
+  color: black;
 }
 
 .sidebar li i{
@@ -175,14 +177,14 @@
   color: #1eaeca;
 }
 .active p{
-  background-color: white !important;
+  background-color: #1eaeca !important;
   border-radius: 10px;
 }
 
 .active p i{
-  color: black !important;
+  color: white !important;
 }
 
 .active p span{
-  color: black !important;
+  color: white !important;
 }

@@ -59,9 +59,9 @@
 }
 
 @media only screen and (max-width: 400px) {
-  .sidebarmenucol {
+  /* .sidebarmenucol {
     width: 30%;
-  }
+  } */
 
   .addcontentcol {
     width: 70%;

@@ -4,8 +4,9 @@ import profileicon from '../Assets/profile.png';
 import sspLogo from '../Assets/sspLogo.png'
 import { Link } from 'react-router-dom';
 import { getAPI } from '../apiService/ApiService';
-import { useLocation } from 'react-router-dom';
+import { useLocation ,useNavigate} from 'react-router-dom';
 function Header() {
+  const navigate=useNavigate()
   const [open, setOpen] = useState(false)
   const [user, setUser] = useState({});
   const location = useLocation()
@@ -30,7 +31,8 @@ function Header() {
 
   const handleLogout = () => {
     localStorage.removeItem('access-token')
-    window.location.href = '/';
+    // window.location.href = '/';
+    navigate('/login')
   }
 
   useEffect(() => {
@@ -39,9 +41,9 @@ function Header() {
   return (
     <nav class="navbar navbar-expand-lg border border-bottom p-1 navbarhead">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        {/* <a class="navbar-brand" href="#">
           <img src={sspLogo} width={40} height={30} alt='logo' />
-        </a>
+        </a> */}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>

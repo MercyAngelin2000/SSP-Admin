@@ -12,7 +12,7 @@
   /* colors */
   --color-background: #d7dbe0;
   --color-primary: #ffffff;
-  --color-secondary: #f1ece8;
+  --color-secondary: #d8d5d2;
 
   --color-default: #000;
   --color-light:#fff;
@@ -130,13 +130,12 @@
 }
 
 .active-status{
-  /* background-color: #f0c6f5; */
-  background:linear-gradient(100deg, #c6f2fb, #f0c6f5 100%);
+  background-color: #a8efa8;
   color: #000000;
-  border-radius: 56px;
-  padding: 4px;
-  padding-left: 12px;
-  padding-right: 12px;  
+  border-radius: 20px;
+  padding: 6px;
+  padding-left: 26px;
+  padding-right: 26px; 
   text-align: center !important;
 }
 
@@ -147,5 +146,5 @@
   padding: 6px;
   padding-left: 20px;
   padding-right: 20px; 
-  text-align: center;
+  text-align: center !important;
 }

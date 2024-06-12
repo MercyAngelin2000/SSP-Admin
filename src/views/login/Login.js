@@ -29,7 +29,7 @@ export default function Login() {
         addUpdateAPI(method, url, formData).then((response) => {
             if (response?.data?.status) {
                 localStorage.setItem('access-token', response?.data?.access_token);
-                window.location.href = '/dashboard';
+                navigate('/dashboard')
             } else {
                 Swal.fire({
                     toast: true,

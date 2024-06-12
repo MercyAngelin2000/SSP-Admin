@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Menu.css';
+import sspLogo from '../Assets/sspLogo.png';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function Menu({ onToggleSidebar, barStatus }) {
@@ -29,8 +30,8 @@ function Menu({ onToggleSidebar, barStatus }) {
 
   return (
     <div className={"sidebar " + (barStatus ? "open" : "")}>
-      <div className="logo_details px-3">
-        <div className="logo_name">SSP 3.0</div>
+      <div className="logo_details px-2">
+        <div className="logo_name"><img src={sspLogo} width={50} height={30} alt='logo' /> SSP 3.0</div>
         <i className="bx bx-menu-alt-right" id="btn" onClick={onToggleSidebar}></i>
       </div>
       <ul className="nav-list px-3">

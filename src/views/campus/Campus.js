@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAPI, deleteAPI } from '../../apiService/ApiService';
 import "./Campus.css";
 import "../../index.css";
+import { tableHeaderBackground } from '../../Utils/utils';
 function Campus() {
 
     const [selectedTab, setSelectedTab] = useState('campus')
@@ -167,6 +168,7 @@ function Campus() {
                 fontSize: '14px', // Decrease font size
                 fontWeight: 'bold', // Make font weight bold
                 color: '#333', // Change font color
+                backgroundColor: tableHeaderBackground,
             },
         },
         cells: {
