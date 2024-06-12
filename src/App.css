@@ -17,7 +17,7 @@
   --color-default: #000;
   --color-light:#fff;
 
-  --nav-items:#525252;
+  --nav-items:black;
 
 }
 
@@ -79,7 +79,7 @@
   border-radius: 0;
   border-right: 0;
   border-top: 0;
-  background-color: #e8e8ed;
+  background-color: #9c27b01c;
   border-bottom: 1px solid #bebec2;
 }
 .tab_search::placeholder{
@@ -87,13 +87,14 @@
 }
 .tab_search:focus {
   box-shadow: none !important;
-  border-color: #02095c !important;
+  border-color: #844fda !important;
   background-color: transparent;
 }
 
 .tablecard{
-  box-shadow: 0px 0px 6px 2px #0000005e !important;
+  /* box-shadow: 0px 0px 6px 2px #0000002e !important; */
   border-radius: 0px !important;
+  border-color: #f4e7f6;
 }
 
 .nav-item.active span {
@@ -123,17 +124,20 @@
 }
 
 .container-card{
-  background-color: #e8e8ed;
+  /* background-color: #e8e8ed; */
+  border: none;
+  box-shadow: 0px 0px 6px 2px #ecb0f5 !important;
 }
 
 .active-status{
-  background-color: #a8efa8;
+  /* background-color: #f0c6f5; */
+  background:linear-gradient(100deg, #c6f2fb, #f0c6f5 100%);
   color: #000000;
-  border-radius: 20px;
-  padding: 6px;
-  padding-left: 27px;
-  padding-right: 27px;  
-  text-align: center !;
+  border-radius: 56px;
+  padding: 4px;
+  padding-left: 12px;
+  padding-right: 12px;  
+  text-align: center !important;
 }
 
 .inactive-status{

@@ -67,16 +67,30 @@
     width: 70%;
   }
 }
-
+/* .dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px #d6ecf3;
+  padding: 12px 16px;
+  z-index: 1;
+}
 .dropdown-menu {
   padding: 0px;
   overflow: hidden;
-  /* animation: dropdownanimate 200ms ease-in; */
-}
+} */
 
 
-.dropdown-item:hover {
-  background-color: #d3d3d38f;
+/* .dropdown-item:hover {
+  background-color: #ebf9fc;
   cursor: pointer;
 
 }
@@ -84,17 +98,105 @@
 .dropdown-header {
   text-align: center;
   font-weight: bold;
-  /* color: white;
-  background-color: #a758fd; */
   background-color: #bed8ff !important;
   color: black !important;
-}
+} */
 
 .header {
-  background-color: #e8e8ed !important;
+  left: 30vh !important;
+}
+.headerMenuClose{
+  left: 10vh !important;
 }
 
-.dropdown-item.active{
-  background-color: #bed8ff !important;
+/* .dropdown-item.active{
+  background-color: #d1eaf3 !important;
   color: black !important;
+} */
+
+/* dropdown changes */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-button {
+  background-color: #3498db;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-button:hover {
+  background-color: #2980b9;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.dropdown-content {
+  /* for full page view*/
+  /* starts */
+  /* top: 20;
+  left: 0;
+  width: 100%;
+  height: 100%; */
+  /* ends */
+  animation: fadeIn 0.5s ease-in-out;
+  display: flex;
+  flex-wrap: wrap;
+  position: fixed;
+  background-color: #f9f9f9;
+  min-width: 250px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content .dropdown-item {
+  width:33.33%;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.dropdown-content .dropdown-item h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.dropdown-content .dropdown-item p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #666;
+}
+.dropdown-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+}
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.dropdown-item p {
+  margin: 5px 0 0;
+  font-size: 12px !important;
+  color: #666;
+  font-weight: 400;
+}
+.navText:hover{
+  color: rgb(8 166 197) !important;
+}
+.otherNav{
+  color: rgb(8 166 197) !important;
 }

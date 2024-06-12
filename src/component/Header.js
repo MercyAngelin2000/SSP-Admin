@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import './Header.css';
 import profileicon from '../Assets/profile.png';
+import sspLogo from '../Assets/sspLogo.png'
 import { Link } from 'react-router-dom';
 import { getAPI } from '../apiService/ApiService';
 import { useLocation } from 'react-router-dom';
 function Header() {
-
+  const [open, setOpen] = useState(false)
   const [user, setUser] = useState({});
-  const location=useLocation()
+  const location = useLocation()
   const services = [
     { name: 'Region', path: '/region' },
     { name: 'Corporate', path: '/corporate' },
     { name: 'Campus', path: '/campus' },
-    {name:'School Account',path:'/schoolaccount'},
+    { name: 'School Account', path: '/schoolaccount' },
     { name: 'School Admin', path: '/schooladmin' },
   ]
 
-  const getUserData=()=>{
-    var url=`/users/currentuser/`
-    getAPI(url).then((res)=>{
-      if (res.data?.status){
+  const getUserData = () => {
+    var url = `/users/currentuser/`
+    getAPI(url).then((res) => {
+      if (res.data?.status) {
         setUser(res?.data?.data);
       }
     }).catch((err) => {
@@ -36,10 +37,10 @@ function Header() {
     getUserData();
   }, [])
   return (
-    <nav class="navbar navbar-expand-lg border border-bottom p-1">
+    <nav class="navbar navbar-expand-lg border border-bottom p-1 navbarhead">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
-          <img src={profileicon} width={30} alt='logo' />
+          <img src={sspLogo} width={40} height={30} alt='logo' />
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -47,12 +48,56 @@ function Header() {
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto">
             <li className="nav-item">
-              <Link className="nav-link" to='/dashboard'>Home </Link>
+              <Link className="nav-link" to='/dashboard'><span className='navText' title='Dashboard'>Dashboard</span> </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='/region'><span className='navText' title='Region'>Analytics</span> </Link>
+            </li>
+            {/* <li className="nav-item">
+              <Link className="nav-link" to='/corporate'><span className='navText' title='Corporate'>Corporate </span></Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='/campus'><span className='navText' title='Campus'>Campus </span></Link>
+            </li> */}
             <li className="nav-item dropdown">
               <div className="tn-group">
-                <Link className="nav-link dropdown-toggle" data-bs-toggle="dropdown" >Services </Link>
-                <ul className="dropdown-menu">
+                <Link className="nav-link" onClick={() => { setOpen(!open) }}><span className={open ? 'otherNav' : 'navText'} title='Other Services'>Other Services</span>
+                  {!open ?
+                    <span className={open ? 'otherNav p-2' : 'p-2'}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708" />
+                      </svg>
+                    </span> :
+                    <span className={open ? 'otherNav p-2' : 'p-2'}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z" />
+                      </svg>
+                    </span>
+                  }
+                </Link>
+                {open && (
+                  <>
+                    {/* <div className='d-flex justify-content-end p-4'>
+                      <span role='button' title='Close' onClick={() => { setOpen(!open) }}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                        </svg>
+                      </span>
+                    </div> */}
+                    <div className="dropdown-content" onClick={() => { setOpen(!open) }}>
+                      <DropdownItem label="Region" description="Description goes here" img={sspLogo} path='/region' />
+                      <DropdownItem label="Corporate" description="Description goes here" img={sspLogo} path={'/corporate'} />
+                      <DropdownItem label="Campus" description="Description goes here" img={sspLogo} path={'/campus'} />
+                      <DropdownItem label="School Account" description="Description goes here" img={sspLogo} path={'/schoolaccount'} />
+                      <DropdownItem label="School Admin" description="Description goes here" img={sspLogo} path={'/schooladmin'} />
+                      <DropdownItem label="Others" description="Description goes here" img={sspLogo} />
+                      <DropdownItem label="Others" description="Description goes here" img={sspLogo} />
+                      <DropdownItem label="Others" description="Description goes here" img={sspLogo} />
+                      <DropdownItem label="Others" description="Description goes here" img={sspLogo} />
+                    </div>
+                  </>
+                )}
+                {/* <ul className="dropdown-menu">
                   {
                     services.map((service, index) => {
                       return <li key={index}>
@@ -62,7 +107,7 @@ function Header() {
                       </li>
                     })
                   }
-                </ul>
+                </ul> */}
               </div >
             </li>
           </ul>
@@ -93,3 +138,21 @@ function Header() {
 }
 
 export default Header
+
+const DropdownItem = ({ label, description, img, path }) => {
+  return (
+    <div className="dropdown-item">
+      <Link className="nav-link" to={path}>
+        <div className='row p-4'>
+          <div className='col-lg-4'>
+            <img src={img} alt={label} height={50} width={60} />
+          </div>
+          <div className='col-lg-8'>
+            <h4>{label}</h4>
+            <p>{description}</p>
+          </div>
+        </div>
+      </Link>
+    </div>
+  );
+};

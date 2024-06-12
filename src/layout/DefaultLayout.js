@@ -11,13 +11,13 @@ function DefaultLayout() {
 
   return (
     <div className={`wrapper ${sidebarOpen ? 'sidebar-open' : ''}`}>
-      <div className='header fixed-top'>
+      <div className={sidebarOpen ? "header fixed-top" : "headerMenuClose fixed-top" }>
         <Header />
       </div>
       <div className='content'>
-        {/* <div className={`sidebarmenucol ${sidebarOpen ? 'open':''}`}>
+        <div className={`sidebarmenucol ${sidebarOpen ? 'open':''}`}>
           <Menu onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} barStatus={sidebarOpen} />
-        </div> */}
+        </div>
         <div className='addcontentcol px-4 pt-4 mt-5'>
           <AppContent />
         </div>
