@@ -7,7 +7,7 @@ import * as yup from 'yup';
 import Swal from 'sweetalert2';
 import "./SchoolAdmin.css"
 import "../../index.css"
-import { deleteAPI,getAPI,addUpdateAPI} from '../../apiService/ApiService';
+import { deleteAPI, getAPI, addUpdateAPI } from '../../apiService/ApiService';
 
 
 function SchoolAdminUser({ activeTab }) {
@@ -40,7 +40,7 @@ function SchoolAdminUser({ activeTab }) {
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(title === "Add User" ? schema : schema1), defaultValues: {
-      role: defaultRoleValue, 
+      role: defaultRoleValue,
     }
   });
   const [userdata, setUserData] = useState()
@@ -63,7 +63,7 @@ function SchoolAdminUser({ activeTab }) {
       },
     },
   };
-  
+
 
   const columns = [
     {
@@ -144,7 +144,7 @@ function SchoolAdminUser({ activeTab }) {
       width: 400
     }).then((result) => {
       if (result.isConfirmed) {
-        var url=`/users/${row?.id}`
+        var url = `/users/${row?.id}`
         deleteAPI(url).then((response) => {
           let data = response?.data
           if (data?.status) {
@@ -173,7 +173,7 @@ function SchoolAdminUser({ activeTab }) {
     });
   }
   const fetchUserListData = () => {
-    var url=`/users/users/?user_type=school admin&skip=${skip}&limit=${limit}`
+    var url = `/users/users/?user_type=school admin&skip=${skip}&limit=${limit}`
     getAPI(url).then((response) => {
       setUserData(response?.data?.data)
       setTotal(response?.data?.total_count)
@@ -185,11 +185,10 @@ function SchoolAdminUser({ activeTab }) {
     var url = `/users/roles/`
     getAPI(url).then((response) => {
       var data = response?.data?.data
-      console.log(data);
       var arr = []
       //eslint-disable-next-line
       data.map(it => {
-        if (it?.name === "Campus Admin") {
+        if (it?.name === "School Admin") {
           arr.push(it)
         }
       })
@@ -204,13 +203,13 @@ function SchoolAdminUser({ activeTab }) {
     // eslint-disable-next-line
   }, [skip, limit, activeTab])
   const handleActiveStatus = (event, row) => {
-    var method="PUT"
-    var url=`/users/${row?.id}`
+    var method = "PUT"
+    var url = `/users/${row?.id}`
     var data = {
       "name": row?.name,
-        "username": row?.username,
-        "role_id": Number(row?.role_id),
-        "active": event.target.checked
+      "username": row?.username,
+      "role_id": Number(row?.role_id),
+      "active": event.target.checked
     }
     addUpdateAPI(method, url, data).then((response) => {
       let data = response?.data
@@ -242,23 +241,23 @@ function SchoolAdminUser({ activeTab }) {
     var url;
     var postData;
     if (title === "Add User") {
-      method="POST"
-      url=`/users/register/`
-      postData={
+      method = "POST"
+      url = `/users/register/`
+      postData = {
         "name": data?.name,
-          "username": data?.username,
-          "password": data?.password,
-          "role_id": Number(defaultRoleValue),
-          "active": true
+        "username": data?.username,
+        "password": data?.password,
+        "role_id": Number(defaultRoleValue),
+        "active": true
       }
     }
     else {
-      method="PUT"
-      url=`/users/${editData?.id}`
-      postData={
+      method = "PUT"
+      url = `/users/${editData?.id}`
+      postData = {
         "name": data?.name,
-          "username": data?.username,
-          "role_id": Number(defaultRoleValue)
+        "username": data?.username,
+        "role_id": Number(defaultRoleValue)
       }
     }
     addUpdateAPI(method, url, postData).then((response) => {

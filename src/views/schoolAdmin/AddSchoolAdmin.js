@@ -249,9 +249,9 @@ function AddSchoolAdmin() {
                             </div>
                             <div className="row">
 
-                                <div className="col">
+                                <div className="col-4">
                                     <label className="mt-2">Address <span className="text-danger">*</span></label>
-                                    <input className="form-control" {...register('address', { required: true })} />
+                                    <textarea className="form-control" {...register('address', { required: true })} />
                                     {errors.address && <span className="text-danger">Address is required</span>}
                                 </div>
 
