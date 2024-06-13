@@ -2,8 +2,8 @@ import React, { useEffect} from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import loginside from '../../Assets/login-side.jpg'
+import { Link, useNavigate } from 'react-router-dom';
+import loginside from '../../Assets/login-side.jpg';
 import { addUpdateAPI } from '../../apiService/ApiService';
 import Swal from 'sweetalert2';
 import './Login.css';
@@ -11,9 +11,15 @@ import './Login.css';
 export default function Login() {
 
     const navigate = useNavigate();
+    const loginOptions = [
+        { id: 1, name: 'Username' },
+        { id: 2, name: 'Email ID' },
+        { id: 3, name: 'School ID' }
+    ]
+    const [loginType, setLoginType] = React.useState(1);
 
     const loginForm = yup.object().shape({
-        username: yup.string().required(`Username is required *`),
+        username: yup.string().required(`${loginOptions.filter(item => item.id == loginType)[0].name} is required *`),
         password: yup.string().required("Password is required *")
     });
     const { register, handleSubmit, formState: { errors } } = useForm({
@@ -54,7 +60,7 @@ export default function Login() {
     return (
 
         <div >
-            <div className="d-flex g-0 align-items-center justify-content-center vh-100 login_background">
+            <div className="d-flex g-0 align-items-center justify-content-center vh-100 login_background cardView">
                 <div className="col-lg-3 vh-100 logo_left_bgcolor">
                     {/* <img src={jotter} alt="sideimg" className="img-fluid logo_left p-3 ms-3" /> */}
                     <div className='p-3 ms-3'>
@@ -68,8 +74,8 @@ export default function Login() {
                 </div>
 
                 <div className="col-xl-9 col-md-4 col-sm-11 col-xs-11">
-                    <div className="login_card d-flex align-items-center justify-content-center">
-                        <div className="login_field_part col-lg-5">
+                    <div className="login_card d-flex align-items-center justify-content-evenly">
+                        <div className="login_field_part col-lg-5 card p-5 py-3">
                             <div className="logo">
                                 <div className='quadnomics'>
                                     {/* <img src={quadnomics} className="img-fluid login_logo" alt="logo" /> */}
@@ -79,13 +85,24 @@ export default function Login() {
                             <form onSubmit={handleSubmit(login)}>
                                 <div className="">
                                     <div className="">
-                                        <div className=" mt-3">
+                                        <div className="mb-3">
                                             <h3 className="fw-bold P_tag_loginletter">Login</h3>
                                             <p className='text-muted mb-3'>Welcome Back to SSP!</p>
                                         </div>
-
+                                        <div className='login-menu mb-5'>
+                                            <ul class="nav nav-pills justify-content-between">
+                                                {loginOptions.map((item, index) => {
+                                                    return (
+                                                        <li class="nav-item">
+                                                            <Link class={`nav-link nav-link-login ${loginType === item.id ? 'active' : ''}`} onClick={() => setLoginType(item.id)}>{item.name}</Link>
+                                                        </li>
+                                                    )
+                                                })
+                                                }
+                                            </ul>
+                                        </div>
                                         <div className="form-group mb-4">
-                                            <input type="text" className="form-control" id="username" placeholder="Username" {...register("username")} />
+                                            <input type="text" className="form-control form-control-login" id="username" placeholder={loginOptions.filter(item=> item.id == loginType)[0].name} {...register("username")} />
                                             <span style={{ color: "red" }}>{errors?.username != undefined && errors?.username?.message}</span>
 
                                         </div>
@@ -93,7 +110,7 @@ export default function Login() {
                                             <div>
                                                 <input
                                                     type={'password'}
-                                                    className="form-control"
+                                                    className="form-control form-control-login"
                                                     id="password"
                                                     placeholder="Password"
                                                     {...register("password")}
@@ -103,7 +120,7 @@ export default function Login() {
                                         </div>
                                     </div>
                                     <div className='mt-4 mb-4'>
-                                        <button className='btn btn-primary col-lg-12 btn' id='loginButton' type='submit'>Login</button>
+                                        <button className='btn loginBtn col-lg-12 btn' id='loginButton' type='submit'>Login</button>
                                     </div>
                                     {/* <hr />
                                     <div className="d-flex justify-content-center align-items-center p-2">

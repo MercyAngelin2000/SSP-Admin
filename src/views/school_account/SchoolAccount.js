@@ -210,7 +210,7 @@ function SchoolAccount() {
             {
                 title ? "" :
                     <>
-                        <div className='card p-2'>
+                        <div className='card p-2 container-card'>
                             <div className='d-flex justify-content-between align-items-end mb-3'>
                                 <div className='d-flex'>
                                     <input type="text" className='form-control mt-2  me-2 tab_search' placeholder='Search' onChange={handleSearch} />
@@ -219,6 +219,7 @@ function SchoolAccount() {
                                     <button className='btn btn-sm add px-3' title='Add' onClick={() => handleAdd()}>Add</button>
                                 </div>
                             </div>
+                            <div className='card tablecard'>
                             <DataTable
                                 pagination
                                 customStyles={customStyles}
@@ -229,6 +230,7 @@ function SchoolAccount() {
                                 onChangeRowsPerPage={handlePerRowsChange}
                                 onChangePage={handlePageChange}
                             />
+                            </div>
                         </div>
                     </>
             }

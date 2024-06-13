@@ -5,6 +5,16 @@ import sspLogo from '../Assets/sspLogo.png'
 import { Link } from 'react-router-dom';
 import { getAPI } from '../apiService/ApiService';
 import { useLocation ,useNavigate} from 'react-router-dom';
+import chatbot from '../Assets/chatbot.jpg'
+import crm from '../Assets/crm.jpg'
+import personalized from '../Assets/personalized.jpg'
+import push from '../Assets/push.png'
+import recommand from '../Assets/recommand.png'
+import smart from '../Assets/smart.jpg'
+import sms from '../Assets/sms.jpg'
+import vision from '../Assets/vision.jpg'
+import voice from '../Assets/voice.jpg'
+import analytics from '../Assets/analytics.jpg'
 function Header() {
   const navigate=useNavigate()
   const [open, setOpen] = useState(false)
@@ -87,15 +97,16 @@ function Header() {
                       </span>
                     </div> */}
                     <div className="dropdown-content" onClick={() => { setOpen(!open) }}>
-                      <DropdownItem label="Region" description="Description goes here" img={sspLogo} path='/region' />
-                      <DropdownItem label="Corporate" description="Description goes here" img={sspLogo} path={'/corporate'} />
-                      <DropdownItem label="Campus" description="Description goes here" img={sspLogo} path={'/campus'} />
-                      <DropdownItem label="School Account" description="Description goes here" img={sspLogo} path={'/schoolaccount'} />
-                      <DropdownItem label="School Admin" description="Description goes here" img={sspLogo} path={'/schooladmin'} />
-                      <DropdownItem label="Others" description="Description goes here" img={sspLogo} />
-                      <DropdownItem label="Others" description="Description goes here" img={sspLogo} />
-                      <DropdownItem label="Others" description="Description goes here" img={sspLogo} />
-                      <DropdownItem label="Others" description="Description goes here" img={sspLogo} />
+                      <DropdownItem label="Recommendation Systems" description="Description goes here" img={recommand} />
+                      <DropdownItem label="Data Analytics" description="Description goes here" img={analytics} />
+                      <DropdownItem label="Computer Vision" description="Description goes here" img={vision} />
+                      <DropdownItem label="ChatBot" description="Description goes here" img={chatbot} />
+                      <DropdownItem label="SMS/Email" description="Description goes here" img={sms} />
+                      <DropdownItem label="Voice" description="Description goes here" img={voice} />
+                      <DropdownItem label="Push Notifications" description="Description goes here" img={push} />
+                      <DropdownItem label="CRM" description="Description goes here" img={crm} />
+                      <DropdownItem label="Personalized learning" description="Description goes here" img={personalized} />
+                      <DropdownItem label="Smart Content" description="Description goes here" img={smart} />
                     </div>
                   </>
                 )}

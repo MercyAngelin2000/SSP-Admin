@@ -2,7 +2,7 @@
 
 .sidebar{
   min-height: 100vh;
-  width: 78px;
+  width: 70px !important;
   /* padding: 6px 14px; */
   z-index: 99;
   /* background-color: var(--color-default); */
@@ -11,12 +11,35 @@
   position: fixed;
   top:0;
   left: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100vh;
 }
+/* Custom scrollbar for WebKit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: white;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background:  #c1c1c2;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #bebdbd;
+}
+
 .sidebarmenucol{
   z-index: 1111;
 }
 .sidebar.open, .sidebarmenucol.open{
   width: 210px !important;
+  margin-left: 0px !important;
 }
 
 .sidebar .logo_details{
@@ -28,7 +51,8 @@
   display: flex;
   align-items: center;
   position: relative;
-  background-color: #1eaeca;
+  background-color: #e7e4e4;
+  /* color: white; */
 }
 
 .sidebar .logo_details .icon{
@@ -57,7 +81,7 @@
   right: 0;
   transform: translateY(-50%);
   font-size: 23px;
-  text-align: justify !important;
+  /* text-align: justify !important; */
   cursor: pointer;
   transition: all .5s ease;
 }
@@ -85,13 +109,15 @@
   position: relative;
   margin:8px 0;
   list-style: none;
+  position: relative;
+  /* padding: 6px; */
 }
 
 .sidebar li .tooltip{
   position: absolute;
   top:-20px;
   left:calc(100% + 15px);
-  z-index: 3;
+  z-index: 999;
   color: white;
   background-color: #1eaeca;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
@@ -148,7 +174,7 @@
 
 .sidebar li p .link_name{
   color:var(--color-white);
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 400;
   white-space: nowrap;
   pointer-events: auto;
@@ -174,7 +200,7 @@
   line-height: 35px;
   font-size: 18px;
   border-radius: 5px;
-  color: #1eaeca;
+  color: rgb(54, 53, 53);
 }
 .active p{
   background-color: #1eaeca !important;
@@ -187,4 +213,15 @@
 
 .active p span{
   color: white !important;
+}
+.sub_menuitem{
+  background-color: #e5f7fa !important;
+  box-shadow:inset 0 2px 10px rgba(12, 12, 12, 0.3);
+  padding: 3px;
+}
+.subItem{
+  padding: 2px !important;
+}
+.sidebar li:hover{
+  background-color: #dfe2e2 !important;
 }

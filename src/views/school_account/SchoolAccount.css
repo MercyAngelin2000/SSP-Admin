@@ -4,13 +4,6 @@
       color: white !important;
       font-weight: bold;
   }
-  .rdt_Table {
-    border: none !important;
-  }
-  
-  .rdt_TableRow {
-    border: none !important;
-  }
   .ellipsis {
     white-space: nowrap;
     overflow: hidden;

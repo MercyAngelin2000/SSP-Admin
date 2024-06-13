@@ -114,7 +114,9 @@ input:focus{
   padding: 5px 20px;
   height: 30px;
 }
-
+.form-control-login{
+  border-color: #cecccc;
+}
 #login form input[type="submit"]:hover {
 	background-color: #d44179;
 }
@@ -153,4 +155,48 @@ p{
     padding-bottom: 55px;
     border-radius: 20px;
     background: linear-gradient(25deg, #ba47ff, #f1a0a0ab 100%);
+}
+.login_field_part{
+  box-shadow: 3px 3px 7px 1px #9d9d9d;
+  border: none;
+}
+
+ /* login menu  */
+.login-menu{
+  font-weight: normal !important;
+  border: 2px solid #c5c5c5;
+  border-radius: 30px !important;
+  padding: 2px;
+
+  /* margin-left: 6rem !important;
+  margin-right: 6rem !important; */
+}
+
+
+.nav-pills .nav-link-login{
+  border-radius: 30px !important;
+  padding: 5px;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  font-weight: normal !important;
+}
+
+.nav-link-login.active{
+  color: white !important;
+}
+
+.nav-link-login:hover{
+  background-color: #0d6efd !important;
+  color: white !important;
+}
+.loginBtn{
+  background-color: #6e06a7 !important;
+  color: white;
+}
+.loginBtn:hover{
+  background-color: #6e06a7 !important;
+  color: white;
+}
+.cardView{
+  background:linear-gradient(100deg, #e0e0e0,#e0e0e0 100%);
 }
