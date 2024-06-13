@@ -203,7 +203,7 @@ const navigate = useNavigate();
                                 <button className='btn  btn-sm add px-3' onClick={() => navigate('/addSchoolAdmin', { state: { mode: 'add' } })}>Add</button>
                             </div>
                         </div>
-                        <div className='container-fluid card my-3 tablecard'>
+                        <div className='card my-3 tablecard'>
                             <DataTable
                                 pagination
                                 customStyles={customStyles}

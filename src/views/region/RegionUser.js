@@ -372,7 +372,7 @@ function RegionUser({ activeTab }) {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary btn-sm" data-bs-dismiss="modal" title='Cancel' onClick={() => handleCancel()}>Cancel</button>
-                                <button type="submit" className="btn btn-success btn-sm add">{title === "Add User" ? "Save" : "Update"}</button>
+                                <button type="submit" className="btn  btn-sm add">{title === "Add User" ? "Save" : "Update"}</button>
                             </div>
                         </form>
                     </div>

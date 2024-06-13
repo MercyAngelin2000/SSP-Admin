@@ -218,10 +218,10 @@ function Campus() {
                                 />
                             </div>
                             <div>
-                                <button className='btn btn-success btn-sm add px-3' onClick={() => navigate('/addCampus', { state: { mode: 'add' } })}>Add</button>
+                                <button className='btn btn-sm add px-3' onClick={() => navigate('/addCampus', { state: { mode: 'add' } })}>Add</button>
                             </div>
                         </div>
-                        <div className='container-fluid card my-3 tablecard'>
+                        <div className='card my-3 tablecard'>
                             <DataTable
                                 pagination
                                 customStyles={customStyles}

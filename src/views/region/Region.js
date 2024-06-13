@@ -408,7 +408,7 @@ function Region() {
               </div>
               <div className="modal-footer">
                 <button type="button" onClick={() => clearModal()} className="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" className="btn btn-primary btn-sm add">Save</button>
+                <button type="submit" className="btn  btn-sm add">Save</button>
               </div>
             </form>
           </div>
