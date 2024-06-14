@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAPI, deleteAPI } from '../../apiService/ApiService';
 import "./Campus.css";
 import "../../index.css";
-import { tableHeaderBackground } from '../../Utils/utils';
+import { tableHeaderBackground } from '../../utils/Utils';
 function Campus() {
 
     const [selectedTab, setSelectedTab] = useState('campus')

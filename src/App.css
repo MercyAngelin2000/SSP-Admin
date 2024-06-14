@@ -79,7 +79,7 @@
   border-radius: 0;
   border-right: 0;
   border-top: 0;
-  background-color: #9c27b01c;
+  /* background-color: #9c27b01c; */
   border-bottom: 1px solid #bebec2;
 }
 .tab_search::placeholder{
@@ -130,7 +130,7 @@
 }
 
 .active-status{
-  background-color: #a8efa8;
+  background-color: #97BC62;
   color: #000000;
   border-radius: 20px;
   padding: 6px;

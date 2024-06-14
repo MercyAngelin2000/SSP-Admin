@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import "./SchoolAccount.css"
 import { getAPI,deleteAPI } from '../../apiService/ApiService';
-import { tableHeaderBackground } from '../../Utils/utils';
+import { tableHeaderBackground } from '../../utils/Utils';
 import AddSchoolAccount from './AddSchoolAccount';
 import Swal from 'sweetalert2';
 

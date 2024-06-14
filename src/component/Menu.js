@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Menu.css';
-import sspLogo from '../Assets/sspLogo.png';
+import sspLogo from '../assets/sspLogo.png';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function Menu({ onToggleSidebar, barStatus }) {

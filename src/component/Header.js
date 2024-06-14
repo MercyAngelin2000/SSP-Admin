@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import './Header.css';
-import profileicon from '../Assets/profile.png';
-import sspLogo from '../Assets/sspLogo.png'
+import profileicon from '../assets/profile.png';
+import sspLogo from '../assets/sspLogo.png'
 import { Link } from 'react-router-dom';
 import { getAPI } from '../apiService/ApiService';
 import { useLocation ,useNavigate} from 'react-router-dom';
-import chatbot from '../Assets/chatbot.jpg'
-import crm from '../Assets/crm.jpg'
-import personalized from '../Assets/personalized.jpg'
-import push from '../Assets/push.png'
-import recommand from '../Assets/recommand.png'
-import smart from '../Assets/smart.jpg'
-import sms from '../Assets/sms.jpg'
-import vision from '../Assets/vision.jpg'
-import voice from '../Assets/voice.jpg'
-import analytics from '../Assets/analytics.jpg'
+import chatbot from '../assets/chatbot.jpg'
+import crm from '../assets/crm.jpg'
+import personalized from '../assets/personalized.jpg'
+import push from '../assets/push.png'
+import recommand from '../assets/recommand.png'
+import smart from '../assets/smart.jpg'
+import sms from '../assets/sms.jpg'
+import vision from '../assets/vision.jpg'
+import voice from '../assets/voice.jpg'
+import analytics from '../assets/analytics.jpg'
 function Header() {
   const navigate=useNavigate()
   const [open, setOpen] = useState(false)
@@ -49,7 +49,7 @@ function Header() {
     getUserData();
   }, [])
   return (
-    <nav class="navbar navbar-expand-lg border border-bottom p-1 navbarhead">
+    <nav class="navbar navbar-expand-lg border border-bottom p-1 navbarhead bg-white">
       <div class="container-fluid">
         {/* <a class="navbar-brand" href="#">
           <img src={sspLogo} width={40} height={30} alt='logo' />
@@ -63,7 +63,7 @@ function Header() {
               <Link className="nav-link" to='/dashboard'><span className='navText' title='Dashboard'>Dashboard</span> </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to='/region'><span className='navText' title='Region'>Analytics</span> </Link>
+              <Link className="nav-link"><span className='navText' title='Analytics'>Analytics</span> </Link>
             </li>
             {/* <li className="nav-item">
               <Link className="nav-link" to='/corporate'><span className='navText' title='Corporate'>Corporate </span></Link>
@@ -97,16 +97,16 @@ function Header() {
                       </span>
                     </div> */}
                     <div className="dropdown-content" onClick={() => { setOpen(!open) }}>
-                      <DropdownItem label="Recommendation Systems" description="Description goes here" img={recommand} />
-                      <DropdownItem label="Data Analytics" description="Description goes here" img={analytics} />
-                      <DropdownItem label="Computer Vision" description="Description goes here" img={vision} />
-                      <DropdownItem label="ChatBot" description="Description goes here" img={chatbot} />
-                      <DropdownItem label="SMS/Email" description="Description goes here" img={sms} />
-                      <DropdownItem label="Voice" description="Description goes here" img={voice} />
-                      <DropdownItem label="Push Notifications" description="Description goes here" img={push} />
-                      <DropdownItem label="CRM" description="Description goes here" img={crm} />
-                      <DropdownItem label="Personalized learning" description="Description goes here" img={personalized} />
-                      <DropdownItem label="Smart Content" description="Description goes here" img={smart} />
+                      <DropdownItem label="Recommendation Systems" description="The best way to predict the future is to create it" img={recommand} />
+                      <DropdownItem label="Data Analytics" description="The goal is to turn data into information, and information into insight" img={analytics} />
+                      <DropdownItem label="Computer Vision" description="Seeing is believing, but with computer vision, believing is seeing" img={vision} />
+                      <DropdownItem label="ChatBot" description="Chatbots are the bridge between humans and the vast world of digital information" img={chatbot} />
+                      <DropdownItem label="SMS/Email" description="Effective communication can enhance customer engagement and loyalty" img={sms} />
+                      <DropdownItem label="Voice" description="It's about creating a dialogue between humans and machines" img={voice} />
+                      <DropdownItem label="Push Notifications" description="It can enhance user experience and drive retention" img={push} />
+                      <DropdownItem label="CRM" description="CRM is the art of listening to your customers and responding with relevance" img={crm} />
+                      <DropdownItem label="Personalized learning" description="Education becomes a collaborative journey between student, teacher, and technology" img={personalized} />
+                      <DropdownItem label="Smart Content" description="Delivering the right message to the right person at the right time" img={smart} />
                     </div>
                   </>
                 )}
@@ -156,7 +156,7 @@ const DropdownItem = ({ label, description, img, path }) => {
   return (
     <div className="dropdown-item">
       <Link className="nav-link" to={path}>
-        <div className='row p-4'>
+        <div className='row d-flex align-items-center p-2'>
           <div className='col-lg-4'>
             <img src={img} alt={label} height={50} width={60} />
           </div>

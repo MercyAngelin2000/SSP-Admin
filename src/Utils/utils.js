@@ -7,4 +7,4 @@ export const activeStatus = (status) => {
     }
 }
 
-export const tableHeaderBackground= '#bed8ff'
+export const tableHeaderBackground= '#1eaeca63'

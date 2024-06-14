@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import Swal from 'sweetalert2';
 import "./Region.css"
 import { getAPI, addUpdateAPI, deleteAPI } from '../../apiService/ApiService';
-import { tableHeaderBackground } from '../../Utils/utils';
+import { tableHeaderBackground } from '../../utils/Utils';
 
 const customStyles = {
     headCells: {

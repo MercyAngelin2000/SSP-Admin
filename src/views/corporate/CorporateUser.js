@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import "./Corporate.css";
 import "../../index.css"
 import { deleteAPI,getAPI,addUpdateAPI} from '../../apiService/ApiService';
-import { tableHeaderBackground } from '../../Utils/utils';
+import { tableHeaderBackground } from '../../utils/Utils';
 
 const customStyles = {
   headCells: {

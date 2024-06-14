@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import loginside from '../../Assets/login-side.jpg';
+import loginside from '../../assets/login-side.jpg';
 import { addUpdateAPI } from '../../apiService/ApiService';
 import Swal from 'sweetalert2';
 import './Login.css';

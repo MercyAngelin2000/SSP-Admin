@@ -13,7 +13,7 @@
 }
 
 .add {
-  background-color: var(--color-default) !important;
+  background-color: #1eaeca !important;
   color: white !important;
   font-weight: bold;
 }

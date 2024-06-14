@@ -8,7 +8,7 @@ import RegionUser from './RegionUser';
 import { useForm } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 import { getAPI, addUpdateAPI, deleteAPI } from '../../apiService/ApiService';
-import { activeStatus, tableHeaderBackground } from '../../Utils/utils';
+import { activeStatus, tableHeaderBackground } from '../../utils/Utils';
 function Region() {
 
   const [selectedTab, setSelectedTab] = useState('region')

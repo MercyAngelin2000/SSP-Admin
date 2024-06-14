@@ -6,7 +6,7 @@ import CorporateUser from './CorporateUser';
 import { useForm } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 import { getAPI, addUpdateAPI, deleteAPI } from '../../apiService/ApiService';
-import { activeStatus, tableHeaderBackground } from '../../Utils/utils';
+import { activeStatus, tableHeaderBackground } from '../../utils/Utils';
 import '../../index.css';
 function Corporate() {
   const [selectedTab, setSelectedTab] = useState('corporate')
