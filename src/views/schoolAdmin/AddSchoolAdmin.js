@@ -151,8 +151,9 @@ function AddSchoolAdmin() {
 
     return (
         <div>
+            <small className='text-muted'>Home / System admin / <span className='text-primary' onClick={() => navigate('/schooladmin')} role='button' title='Navigate to School Admin'>School Admin</span></small>
             <div className='container-fluid p-0'>
-                <h5 className='title fw-bold'>{mode === 'add' ? 'Add ' : 'Edit '}School Admin</h5>
+                <h6 className='title fw-bold mt-1'>{mode === 'add' ? 'Add ' : 'Edit '}School Admin</h6>
             </div>
             <div
                 className='container-fluid card mb-5 container-card'>

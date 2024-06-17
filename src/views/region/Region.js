@@ -8,7 +8,7 @@ import RegionUser from './RegionUser';
 import { useForm } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 import { getAPI, addUpdateAPI, deleteAPI } from '../../apiService/ApiService';
-import { activeStatus, tableHeaderBackground } from '../../utils/Utils';
+import { activeStatus, tableStyle } from '../../utils/Utils';
 function Region() {
 
   const [selectedTab, setSelectedTab] = useState('region')
@@ -238,23 +238,6 @@ function Region() {
     },
   ];
 
-  const customStyles = {
-    headCells: {
-      style: {
-        fontSize: '14px',
-        fontWeight: 'bold',
-        color: '#333',
-        backgroundColor: tableHeaderBackground,
-      },
-    },
-    cells: {
-      style: {
-        fontSize: '13px',
-      },
-    },
-  };
-
-
   const handleChange = (selectedOptions, name) => {
 
     if (mode === 'edit') {
@@ -300,10 +283,10 @@ function Region() {
 
 
   return (
-    <div>
-      <div className='container-fluid p-0'>
-        <h5 className='title fw-bold'>Region</h5>
-
+    <div className='mt-2'>
+       <small className='text-gray'>Home / System admin / <span className='text-primary'>Region</span></small>
+      <div className='container-fluid p-0 mt-3'>
+        {/* <h6 className='title fw-bold mt-1'>Region</h6> */}
       </div>
       <div className='container-fluid card mb-5 container-card'>
         <ul className="nav nav-tabs" >
@@ -328,7 +311,7 @@ function Region() {
             <div className='card my-3 tablecard'>
               <DataTable
                 pagination
-                customStyles={customStyles}
+                customStyles={tableStyle}
                 columns={columns}
                 data={regionList}
                 paginationTotalRows={total}

@@ -94,7 +94,7 @@ export default function Login() {
                                                 {loginOptions.map((item, index) => {
                                                     return (
                                                         <li class="nav-item">
-                                                            <Link class={`nav-link nav-link-login ${loginType === item.id ? 'active' : ''}`} onClick={() => setLoginType(item.id)}>{item.name}</Link>
+                                                            <Link class={`nav-link-login ${loginType === item.id ? 'active' : ''}`} onClick={() => setLoginType(item.id)}>{item.name}</Link>
                                                         </li>
                                                     )
                                                 })

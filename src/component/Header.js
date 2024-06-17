@@ -15,7 +15,7 @@ import sms from '../assets/sms.jpg'
 import vision from '../assets/vision.jpg'
 import voice from '../assets/voice.jpg'
 import analytics from '../assets/analytics.jpg'
-function Header() {
+function Header({Dropdown}) {
   const navigate=useNavigate()
   const [open, setOpen] = useState(false)
   const [user, setUser] = useState({});
@@ -28,6 +28,11 @@ function Header() {
     { name: 'School Admin', path: '/schooladmin' },
   ]
 
+  useEffect(() => {
+    if(Dropdown===true){
+      setOpen(false)
+    }
+  },[Dropdown])
   const getUserData = () => {
     var url = `/users/currentuser/`
     getAPI(url).then((res) => {

@@ -76,8 +76,9 @@ function Dashboard() {
   }, [regionCount])
   return (
     <div>
+      <small className='text-muted'>Home / <span className='text-primary'>Dashboard</span></small>
       <div>
-        <h5 className='title fw-bold'>Dashboard</h5>
+        <h6 className='title fw-bold mt-1'>Dashboard</h6>
       </div>
       <div className='card dashboard_card'>
         <Doughnut data={data} />

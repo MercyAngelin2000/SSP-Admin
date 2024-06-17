@@ -7,23 +7,8 @@ import Swal from 'sweetalert2';
 import "./Corporate.css";
 import "../../index.css"
 import { deleteAPI,getAPI,addUpdateAPI} from '../../apiService/ApiService';
-import { tableHeaderBackground } from '../../utils/Utils';
+import { tableStyle } from '../../utils/Utils';
 
-const customStyles = {
-  headCells: {
-    style: {
-      fontSize: '14px', // Decrease font size
-      fontWeight: 'bold', // Make font weight bold
-      color: '#333', // Change font color
-      background: tableHeaderBackground
-    },
-  },
-  cells: {
-    style: {
-      fontSize: '13px', // Decrease font size
-    },
-  },
-};
 // Define the validation schema using Yup
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
@@ -318,7 +303,7 @@ function CorporateUser({ activeTab }) {
           <DataTable
             columns={columns}
             data={userdata}
-            customStyles={customStyles}
+            customStyles={tableStyle}
             pagination
             paginationServer
             paginationTotalRows={total}

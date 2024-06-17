@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAPI, deleteAPI } from '../../apiService/ApiService';
 import "./Campus.css";
 import "../../index.css";
-import { tableHeaderBackground } from '../../utils/Utils';
+import { tableStyle } from '../../utils/Utils';
 function Campus() {
 
     const [selectedTab, setSelectedTab] = useState('campus')
@@ -162,22 +162,6 @@ function Campus() {
         },
     ];
 
-    const customStyles = {
-        headCells: {
-            style: {
-                fontSize: '14px', // Decrease font size
-                fontWeight: 'bold', // Make font weight bold
-                color: '#333', // Change font color
-                backgroundColor: tableHeaderBackground,
-            },
-        },
-        cells: {
-            style: {
-                fontSize: '13px', // Decrease font size
-            },
-        },
-    };
-
     const handlePerRowsChange = (newPerPage, page) => {
         setLimit(newPerPage);
 
@@ -196,8 +180,9 @@ function Campus() {
 
     return (
         <div>
+            <small className='text-muted'>Home / System admin / <span className='text-primary'>Campus</span></small>
             <div className='container-fluid p-0'>
-                <h5 className='title fw-bold'>Campus</h5>
+                <h6 className='title fw-bold mt-1'>Campus</h6>
             </div>
             <div className='container-fluid card mb-5 container-card'>
                 <ul className="nav nav-tabs" >
@@ -224,7 +209,7 @@ function Campus() {
                         <div className='card my-3 tablecard'>
                             <DataTable
                                 pagination
-                                customStyles={customStyles}
+                                customStyles={tableStyle}
                                 columns={columns}
                                 data={campusList}
                                 paginationTotalRows={total}

@@ -6,7 +6,7 @@ import CorporateUser from './CorporateUser';
 import { useForm } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 import { getAPI, addUpdateAPI, deleteAPI } from '../../apiService/ApiService';
-import { activeStatus, tableHeaderBackground } from '../../utils/Utils';
+import { activeStatus, tableStyle } from '../../utils/Utils';
 import '../../index.css';
 function Corporate() {
   const [selectedTab, setSelectedTab] = useState('corporate')
@@ -238,23 +238,6 @@ function Corporate() {
     },
   ];
 
-  const customStyles = {
-    headCells: {
-      style: {
-        fontSize: '14px', // Decrease font size
-        fontWeight: 'bold', // Make font weight bold
-        color: '#333', // Change font color
-        backgroundColor: tableHeaderBackground,
-      },
-    },
-    cells: {
-      style: {
-        fontSize: '13px', // Decrease font size
-      },
-    },
-  };
-
-
   const handleChange = (selectedOptions) => {
     if (selectedOptions) {
       if (mode === 'edit') {
@@ -314,8 +297,9 @@ function Corporate() {
   }
   return (
     <div>
+       <small className='text-muted'>Home / System admin / <span className='text-primary'>Corporate</span></small>
       <div className='container-fluid p-0'>
-        <h5 className='title fw-bold'>Corporate</h5>
+        <h6 className='title fw-bold mt-1'>Corporate</h6>
       </div>
       <div className='container-fluid card mb-5 container-card'>
         <ul className="nav nav-tabs" >
@@ -340,7 +324,7 @@ function Corporate() {
             <div className='card my-3 tablecard'>
               <DataTable
                 pagination
-                customStyles={customStyles}
+                customStyles={tableStyle}
                 columns={columns}
                 data={corporateList}
                 paginationTotalRows={total}

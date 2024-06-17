@@ -213,8 +213,9 @@ function AddCampus() {
 
     return (
         <div>
+        <small className='text-muted'>Home / System admin / <span className='text-primary' onClick={() => navigate('/campus')} role='button' title='Navigate to Campus'>Campus</span></small>
             <div className='container-fluid p-0'>
-                <h5 className='title fw-bold'>Campus</h5>
+                <h6 className='title fw-bold mt-1'>Campus</h6>
             </div>
             <div
                 className='container-fluid card mb-5 container-card'>

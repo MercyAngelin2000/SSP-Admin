@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Swal from 'sweetalert2';
 import { getAPI, deleteAPI } from '../../apiService/ApiService';
-import {  tableHeaderBackground } from '../../utils/Utils';
+import {  tableStyle } from '../../utils/Utils';
 import {useNavigate} from 'react-router-dom';
 import SchoolAdminUser from './SchoolAdminUser';
 import '../../index.css';
@@ -142,24 +142,6 @@ const navigate = useNavigate();
     },
   ];
 
-  const customStyles = {
-    headCells: {
-      style: {
-        fontSize: '14px', // Decrease font size
-        fontWeight: 'bold', // Make font weight bold
-        color: '#333', // Change font color
-        backgroundColor: tableHeaderBackground,
-      },
-    },
-    cells: {
-      style: {
-        fontSize: '13px', // Decrease font size
-      },
-    },
-  };
-
-
-
   const handlePerRowsChange = (newPerPage, page) => {
     setLimit(newPerPage);
 
@@ -178,8 +160,9 @@ const navigate = useNavigate();
 
   return (
     <div>
+      <small className='text-muted'>Home / System admin / <span className='text-primary'>School Admin</span></small>
       <div className='container-fluid p-0'>
-        <h5 className='title fw-bold'>School Admin</h5>
+        <h6 className='title fw-bold mt-1'>School Admin</h6>
       </div>
       <div className='container-fluid card mb-5 container-card'>
                 <ul className="nav nav-tabs" >
@@ -206,7 +189,7 @@ const navigate = useNavigate();
                         <div className='card my-3 tablecard'>
                             <DataTable
                                 pagination
-                                customStyles={customStyles}
+                                customStyles={tableStyle}
                                 columns={columns}
                                 data={schoolAdminList}
                                 paginationTotalRows={total}
