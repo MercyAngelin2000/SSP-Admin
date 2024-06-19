@@ -108,6 +108,9 @@
 .headerMenuClose{
   left: 10vh !important;
 }
+.headerInput{
+  right: 300px !important;
+}
 
 /* .dropdown-item.active{
   background-color: #d1eaf3 !important;
@@ -200,4 +203,15 @@
 }
 .otherNav{
   color: rgb(8 166 197) !important;
+}
+.globalSearchColour{
+  background-color: #2980b9;
+  color:white;
+  position: fixed;
+  bottom: 20px;
+  right: 10px;
+}
+.globalSearchColour:hover{
+  background-color: #2980b9;
+  color:white;
 }

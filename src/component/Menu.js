@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import './Menu.css';
 import sspLogo from '../assets/sspLogo.png';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { inputContext } from '../layout/DefaultLayout';
+import { setSessionStorageItem } from '../utils/Utils';
 
 function Menu({ onToggleSidebar, barStatus }) {
+  const {setInputObj } = useContext(inputContext);
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location?.pathname?.split("/")?.[1];
@@ -302,6 +305,9 @@ function Menu({ onToggleSidebar, barStatus }) {
     },
   ]
   const handleTabChange = (id) => {
+    setSessionStorageItem('inputBar', false)
+    setInputObj({})
+  
     setActiveTab(id);
     if (id === "dashboard") {
       navigate('/dashboard');

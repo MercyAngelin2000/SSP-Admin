@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState ,useContext} from 'react'
 import "../../index.css"
 import "./Region.css"
 import DataTable from 'react-data-table-component';
-import Select from 'react-select';
 import Swal from 'sweetalert2';
 import RegionUser from './RegionUser';
 import { useForm } from 'react-hook-form';
-import { Controller } from 'react-hook-form';
 import { getAPI, addUpdateAPI, deleteAPI } from '../../apiService/ApiService';
-import { activeStatus, tableStyle } from '../../utils/Utils';
-function Region() {
+import { activeStatus, tableStyle ,setSessionStorageItem } from '../../utils/Utils';
+import {inputContext} from '../../layout/DefaultLayout';
 
+function Region() {
   const [selectedTab, setSelectedTab] = useState('region')
   const [regionList, setRegionList] = useState()
   const [adminList, setAdminList] = useState()
@@ -19,15 +18,19 @@ function Region() {
   const [skip, setSkip] = useState(0)
   const [limit, setLimit] = useState(10)
   const [total, setTotal] = useState(0)
-
+  const inputContextObj= useContext(inputContext);
   const { control, register, formState: { errors: formErrors }, reset, handleSubmit, setValue, getValues } = useForm();
 
   useEffect(() => {
     getUserList()
     if (selectedTab === 'region') {
+      inputContextObj?.setInputObj({})
+      setSessionStorageItem('inputBar',false);
       document.getElementById("regiontab").classList.add("active")
       document.getElementById("usertab").classList.remove("active")
     } else {
+      inputContextObj?.setInputObj({})
+      setSessionStorageItem('inputBar',false);
       document.getElementById("regiontab").classList.remove("active")
       document.getElementById("usertab").classList.add("active")
     }
@@ -72,12 +75,12 @@ function Region() {
   }
 
   const addRegion = (data) => {
-    const userids = data?.member && data?.member?.map((item) => ({ user_id: item.value }));
+    const userids = memberSelectedList && memberSelectedList?.map((item) => ({ user_id: item?.value }));
     const values = {
       "code": data?.code,
       "name": data?.name,
       "admin_id": {
-        "user_id": data?.admin.value
+        "user_id": adminSelectedList?.[0]?.value
       },
       "member_ids": userids ? userids : [],
       "active": true
@@ -99,7 +102,7 @@ function Region() {
       if (response?.data?.status) {
         getRegionList()
         clearModal()
-        document.getElementById('modalClose').click()
+        // document.getElementById('modalClose').click()
         Swal.fire({
           toast: true,
           position: "center",
@@ -120,20 +123,23 @@ function Region() {
       console.log(error)
     })
   }
-
+const [editData,setEditData]=useState();
   const getSingleRegion = (id) => {
     var url = `/region/regionbyid/?region_id=${id}`
     getAPI(url).then((response) => {
       var data = response?.data?.data
-      reset({
-        code: data?.code,
-        id: data?.id,
-        name: data?.name,
-        admin: { value: data?.admin_id?.user_id, label: data?.admin_id?.name },
-        member: data?.member_ids?.map((item) => (
-          { value: item.user_id, label: item.name })
-        )
-      })
+      setEditData(data)
+      setAdminSelectedList([{ value: data?.admin_id?.user_id, label: data?.admin_id?.name }])
+      setMemberSelectedList(data?.member_ids?.map((item) => ({ value: item.user_id, label: item.name })))
+      // reset({
+      //   code: data?.code,
+      //   id: data?.id,
+      //   name: data?.name,
+      //   admin: { value: data?.admin_id?.user_id, label: data?.admin_id?.name },
+      //   member: data?.member_ids?.map((item) => (
+      //     { value: item.user_id, label: item.name })
+      //   )
+      // })
 
     }).catch((error) => {
       console.log(error)
@@ -222,7 +228,7 @@ function Region() {
       selector: row => row.status,
       cell: row =>
         <div className='d-flex'>
-          <button className='btn text-primary btn-sm me-2' onClick={() => [getSingleRegion(row?.id), setMode('edit')]} data-bs-toggle="modal" data-bs-target="#addRegionModal">
+          <button className='btn text-primary btn-sm me-2' onClick={() => handleEdit(row)}>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
               <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
               <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
@@ -237,20 +243,21 @@ function Region() {
 
     },
   ];
-
+  const [adminSelectedList,setAdminSelectedList]=useState([])
+  const [memberSelectedList,setMemberSelectedList]=useState([])
   const handleChange = (selectedOptions, name) => {
-
     if (mode === 'edit') {
       if (name === 'admin') {
-        var oldAdmin = getValues('admin')
+        var oldAdmin = adminSelectedList
         var newAdminList = adminList.filter((item) => item.value !== selectedOptions?.value);
         setAdminList([...newAdminList, oldAdmin])
-        setValue("admin", selectedOptions)
+        setAdminSelectedList([selectedOptions])
+        // setValue("admin", selectedOptions)
       }
       else {
-
-        var oldMembers = getValues('member')
-        setValue("member", selectedOptions)
+        setMemberSelectedList(selectedOptions)
+        var oldMembers = memberSelectedList
+        // setValue("member", selectedOptions)
         const dataIds = new Set(selectedOptions.map(dataItem => dataItem.value));
         const missingMembers = oldMembers.filter(member => !dataIds.has(member.value));
         if (missingMembers?.length > 0) {
@@ -264,11 +271,19 @@ function Region() {
       }
     }
     else {
-      setValue(name, selectedOptions)
+      if (name === 'admin') {
+        setAdminSelectedList(selectedOptions)
+      }
+      else{
+        setMemberSelectedList(selectedOptions)
+      }
+      // setValue(name, selectedOptions)
     }
 
   }
-
+  useEffect(() => {
+    inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title:mode==="edit"? "Edit Region" : "Add Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList,adminSelected:adminSelectedList,memberSelected:memberSelectedList,editData:editData})
+  },[adminSelectedList,memberSelectedList,editData])
   const clearModal = () => {
     reset({ code: '', name: '', admin: '', member: '' })
   }
@@ -280,8 +295,18 @@ function Region() {
   const handlePageChange = (currentpage) => {
     setSkip((currentpage - 1) * limit)
   }
+const handleAdd = () => {
+  setMode('add')
+  setSessionStorageItem('inputBar',true);
+  inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title:mode==="edit"? "Edit Region" : "Add Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList})
+}
+const handleEdit = (data) => {
+  getSingleRegion(data?.id) 
+  setMode('edit')
+  setSessionStorageItem('inputBar',true);
+  inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title:mode==="edit"? "Edit Region" : "Add Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList,adminSelected:adminSelectedList,memberSelected:memberSelectedList,editData:editData})
 
-
+}
   return (
     <div className='mt-2'>
        <small className='text-gray'>Home / System admin / <span className='text-primary'>Region</span></small>
@@ -305,7 +330,10 @@ function Region() {
                 <input type="text" className='form-control me-2 tab_search' placeholder='Search' onChange={(e) => searchRegion(e)} />
               </div>
               <div>
-                <button className='btn btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => setMode('add')}>Add</button>
+                <button className='btn btn-sm add px-2' onClick={() => handleAdd()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                        </svg></button>
               </div>
             </div>
             <div className='card my-3 tablecard'>
@@ -328,7 +356,7 @@ function Region() {
           </section>}
 
       </div>
-      <div className="modal fade" id="addRegionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      {/* <div className="modal fade" id="addRegionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
@@ -396,7 +424,7 @@ function Region() {
             </form>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

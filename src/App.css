@@ -162,3 +162,11 @@
   background-color: #e9e8e8 !important;
   padding: 5px;
 }
+
+.form-check-input:checked {
+  background-color: #009688;
+  border-color: #009688;
+}
+.form-control {
+   font-size: 12px !important;
+}

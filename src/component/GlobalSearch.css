@@ -1,0 +1,35 @@
+.globalSearch{
+    font-size: smaller;
+    height: calc(100vh - 60px);
+}
+.global{
+    border: solid 2px rgb(219, 218, 218);
+    border-radius: 10px;
+    height: 90%;
+    width: 100%;
+}
+.history{
+    border-right: solid 1px rgb(219, 218, 218);
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden
+}
+.searchList{
+    padding: 3px;
+    width: 250px;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+.searchContent{
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden
+}
+.searchList:hover{
+    color: blue;
+    cursor: pointer;
+}
+.searchGroup{
+    border-color: blue !important;
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -6,7 +6,8 @@ import * as yup from 'yup';
 import Swal from 'sweetalert2';
 import "./Region.css"
 import { getAPI, addUpdateAPI, deleteAPI } from '../../apiService/ApiService';
-import { tableStyle } from '../../utils/Utils';
+import { tableStyle,setSessionStorageItem } from '../../utils/Utils';
+import {inputContext} from '../../layout/DefaultLayout';
 
 // Define the validation schema using Yup
 const schema = yup.object().shape({
@@ -42,6 +43,7 @@ function RegionUser({ activeTab }) {
     const [skip, setSkip] = useState(0);
     const [limit, setLimit] = useState(10);
     const [total, setTotal] = useState(0);
+    const inputContextObj= useContext(inputContext);
     const columns = [
         {
             width: '100px',
@@ -76,7 +78,7 @@ function RegionUser({ activeTab }) {
             selector: row => row.status,
             cell: row =>
                 <div>
-                    <button className='btn text-primary btn-sm me-2' data-bs-toggle="modal" data-bs-target="#staticBackdrop" title='Edit' onClick={() => handleEdit(row)}>
+                    <button className='btn text-primary btn-sm me-2' title='Edit' onClick={() => handleEdit(row)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
@@ -90,9 +92,15 @@ function RegionUser({ activeTab }) {
                 </div>,
         },
     ];
+    useEffect(() => {
+        if(editData){
+        setSessionStorageItem('inputBar',true);
+        inputContextObj?.setInputObj({from:"RegionUser", roleData:roleData,schema:schema,schema1:schema1,onSubmit:onSubmit,title:title,editData:editData,handleCancel:handleCancel})
+        }
+         },[editData])
     const handleEdit = (row) => {
-        setTile("Edit User")
         setEditData(row)
+        setTile("Edit User")
         fetchRoleData()
         reset({
             name: row?.name,
@@ -240,7 +248,8 @@ function RegionUser({ activeTab }) {
             if (data?.status) {
                 handleCancel()
                 fetchUserListData()
-                document.getElementById("close").click()
+               inputContextObj?.setInputObj({})
+                setSessionStorageItem('inputBar',false);
                 Swal.fire({
                     toast: true,
                     position: "center",
@@ -279,8 +288,13 @@ function RegionUser({ activeTab }) {
     const handlePerRowsChange = (newPerPage, page) => {
         setLimit(newPerPage)
     }
+    useEffect(() => {
+        inputContextObj?.setInputObj({from:"RegionUser", roleData:roleData,schema:schema,schema1:schema1,onSubmit:onSubmit,title:title,editData:editData,handleCancel:handleCancel}) 
+    },[roleData])
     const handleAdd = () => {
         fetchRoleData()
+        setSessionStorageItem('inputBar',true);
+        inputContextObj?.setInputObj({from:"RegionUser", roleData:roleData,schema:schema,schema1:schema1,onSubmit:onSubmit,title:title,editData:editData,handleCancel:handleCancel})
     }
     return (
         <div>
@@ -290,7 +304,12 @@ function RegionUser({ activeTab }) {
                         <input type="text" className='form-control me-2 tab_search' placeholder='Search' />
                     </div>
                     <div>
-                        <button className='btn btn-sm add px-3' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}>Add</button>
+                        <button className='btn btn-sm add px-2' type='button'
+                        //  data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                          onClick={() => handleAdd()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                        </svg></button>
                     </div>
                 </div>
                 <div className='card tablecard my-3'>
@@ -304,63 +323,6 @@ function RegionUser({ activeTab }) {
                         onChangeRowsPerPage={handlePerRowsChange}
                         onChangePage={handlePageChange}
                     />
-                </div>
-            </div>
-            <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h1 className="modal-title fs-5" id="staticBackdropLabel">{title}</h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close" onClick={() => handleCancel()}></button>
-                        </div>
-                        <form onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
-                            <div className="modal-body">
-                                <div>
-                                    <label htmlFor="name">Name<span className='text-danger'>*</span></label>
-                                    <input id="name" className='form-control' {...register('name')} />
-                                    {errors.name && <span className='text-danger'>{errors.name.message}</span>}
-                                </div>
-
-                                <div>
-                                    <label htmlFor="username">Username<span className='text-danger'>*</span></label>
-                                    <input id="username" className='form-control' {...register('username')} autoComplete='off' />
-                                    {errors.username && <span className='text-danger'>{errors.username.message}</span>}
-                                </div>
-                                {
-                                    title === "Edit User" ? "" :
-                                        <>
-                                            <div>
-                                                <label htmlFor="password">Password<span className='text-danger'>*</span></label>
-                                                <input id="password" className='form-control' type="text" {...register('password')} autoComplete='off' />
-                                                {errors.password && <span className='text-danger'>{errors.password.message}</span>}
-                                            </div>
-                                            <div>
-                                                <label htmlFor="confirmPassword">Confirm Password<span className='text-danger'>*</span></label>
-                                                <input id="confirmPassword" className='form-control' type="text" {...register('confirmPassword')} />
-                                                {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword.message}</span>}
-                                            </div>
-                                        </>
-                                }
-                                <div>
-                                    <label htmlFor="role">Role<span className='text-danger'>*</span></label>
-                                    <select className='form-control' id="role" {...register('role')}>
-                                        <option value="">Select Role</option>
-                                        {
-                                            roleData?.map((item, index) => {
-                                                return <option key={index} value={item?.id} selected={item?.id === editData?.role_id ? true : false}>{item?.name}</option>
-                                            })
-                                        }
-                                    </select>
-                                    {errors.role && <span className='text-danger'>{errors.role.message}</span>}
-                                </div>
-
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary btn-sm" data-bs-dismiss="modal" title='Cancel' onClick={() => handleCancel()}>Cancel</button>
-                                <button type="submit" className="btn  btn-sm add">{title === "Add User" ? "Save" : "Update"}</button>
-                            </div>
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>

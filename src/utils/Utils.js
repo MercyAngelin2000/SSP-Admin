@@ -11,16 +11,17 @@ export const activeStatus = (status) => {
 export const tableStyle = {
     headRow: {
         style:{
-            minHeight:  '45px'
+            minHeight:  '30px'
         }
     },
     headCells: {
         style: {
-            fontSize: '14px',
+            fontSize: '12px',
             fontWeight: 'bold',
             color: '#fff',
             // #8b2949 
-            backgroundColor: '#762942',
+            // backgroundColor: '#762942',
+            backgroundColor:'hsl(241.41deg 60.95% 58.82%)'
         },
     },
     rows: {
@@ -29,18 +30,24 @@ export const tableStyle = {
             marginTop: '10px',
             borderBottom: '1px solid lightgray',
             boxShadow: "0px 3px 4px -5px grey",
-            minHeight:  '45px',
+            minHeight:  '5px',
             backgroundColor: '#ffff', // Background color for rows
             '&:hover': {
                 // backgroundColor: '#e9ecef', // Background color for row on hover
-                boxShadow: "0px 9px 4px -6px grey",
+                boxShadow: "0px 1px 6px 2px #cfcfcf",
                 transform: "scaleX(1.01)",
+                transition: ".5s"
             },
         },
     },
     cells: {
         style: {
-            fontSize: '13px',
+            fontSize: '12px',
         },
     },
 }
+export function setSessionStorageItem(key, value) {
+    sessionStorage.setItem(key, value);
+    const event = new Event('sessionStorageChanged');
+    window.dispatchEvent(event);
+  }

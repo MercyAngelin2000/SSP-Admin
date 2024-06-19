@@ -4,7 +4,7 @@ import profileicon from '../assets/profile.png';
 import sspLogo from '../assets/sspLogo.png'
 import { Link } from 'react-router-dom';
 import { getAPI } from '../apiService/ApiService';
-import { useLocation ,useNavigate} from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import chatbot from '../assets/chatbot.jpg'
 import crm from '../assets/crm.jpg'
 import personalized from '../assets/personalized.jpg'
@@ -15,8 +15,12 @@ import sms from '../assets/sms.jpg'
 import vision from '../assets/vision.jpg'
 import voice from '../assets/voice.jpg'
 import analytics from '../assets/analytics.jpg'
-function Header({Dropdown}) {
-  const navigate=useNavigate()
+import { setSessionStorageItem } from '../utils/Utils';
+import { useContext } from 'react';
+import { inputContext } from '../layout/DefaultLayout';
+function Header({ Dropdown }) {
+  const inputContextObj = useContext(inputContext);
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [user, setUser] = useState({});
   const location = useLocation()
@@ -28,11 +32,11 @@ function Header({Dropdown}) {
     { name: 'School Admin', path: '/schooladmin' },
   ]
 
-  useEffect(() => {
-    if(Dropdown===true){
-      setOpen(false)
-    }
-  },[Dropdown])
+  // useEffect(() => {
+  //   if(Dropdown===true){
+  //     setOpen(!open)
+  //   }
+  // },[Dropdown])
   const getUserData = () => {
     var url = `/users/currentuser/`
     getAPI(url).then((res) => {
@@ -53,6 +57,10 @@ function Header({Dropdown}) {
   useEffect(() => {
     getUserData();
   }, [])
+  const handleClick = () => {
+    setSessionStorageItem('inputBar', false);
+    inputContextObj?.setInputObj({ from: "Header" })
+  }
   return (
     <nav class="navbar navbar-expand-lg border border-bottom p-1 navbarhead bg-white">
       <div class="container-fluid">
@@ -131,6 +139,12 @@ function Header({Dropdown}) {
           </ul>
           <div className="tn-group">
             <div className='d-flex align-items-center'>
+              <div className='me-3 fw-bold'>
+                <button className='btn globalSearchColour' title='Search' onClick={() => { handleClick() }}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-opencollective" viewBox="0 0 16 16">
+                  <path fill-opacity=".4" d="M12.995 8.195c0 .937-.312 1.912-.78 2.693l1.99 1.99c.976-1.327 1.6-2.966 1.6-4.683 0-1.795-.624-3.434-1.561-4.76l-2.068 2.028c.468.781.78 1.679.78 2.732z" />
+                  <path d="M8 13.151a4.995 4.995 0 1 1 0-9.99c1.015 0 1.951.273 2.732.82l1.95-2.03a7.805 7.805 0 1 0 .04 12.449l-1.951-2.03a5.07 5.07 0 0 1-2.732.781z" />
+                </svg></button>
+              </div>
               {/* user name & role */}
               <div className='me-3 fw-bold'>
                 {user?.name}

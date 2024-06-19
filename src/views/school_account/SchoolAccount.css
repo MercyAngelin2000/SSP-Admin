@@ -1,6 +1,5 @@
 .add {
-  background-color: #1eaeca !important;
-    /* background:linear-gradient(100deg, #c6f2fb, #f0c6f5 100%); */
+  background-color: #9C27B0 !important;
       color: white !important;
       font-weight: bold;
   }
@@ -10,16 +9,3 @@
     text-overflow: ellipsis;
     max-width: 150px;
 }
-
-/* View school account */
-/* .schoolCard{
-  background:linear-gradient(100deg, #c6f2fb, #f0c6f5 100%);
-} */
-/* .viewCard {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 16px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  
-} */
