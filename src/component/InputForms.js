@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './InputForms.css';
 import { inputContext } from '../layout/DefaultLayout';
 import { useForm } from 'react-hook-form';
@@ -12,6 +12,7 @@ function InputForms({ handleClose }) {
   const { control, register, handleSubmit, formState: { errors }, reset, setValue } = useForm(from === "RegionUser" ? {
     resolver: yupResolver(title === "Add User" ? schema : schema1),
   } : '');
+  const [first,setFirst]=useState(true)
   useEffect(() => {
     if (from === "RegionUser") {
       reset({
@@ -21,9 +22,9 @@ function InputForms({ handleClose }) {
       })
     }
     else if (from === "Region") {
-      if(editData){
-        setValue("admin", adminSelected)
-        setValue("member", memberSelected)
+      setValue("admin", adminSelected)
+      setValue("member", memberSelected)
+      if(editData && first){
         reset({
           code: editData?.code,
           id: editData?.id,
@@ -31,14 +32,14 @@ function InputForms({ handleClose }) {
           admin: adminSelected,
           member: memberSelected
         })
-      }else{
-        reset({ code: '', name: '', admin: '', member: '' })
+        setFirst(false)
       }
     }
   }, [inputObj])
   const handleCancelBtn = () => {
     handleCancel()
     handleClose()
+    setFirst(true)
     setInputObj({})
     if (from === "RegionUser") {
       reset({

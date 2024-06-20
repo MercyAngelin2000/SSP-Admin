@@ -20,6 +20,7 @@ function Region() {
   const [total, setTotal] = useState(0)
   const inputContextObj= useContext(inputContext);
   const { control, register, formState: { errors: formErrors }, reset, handleSubmit, setValue, getValues } = useForm();
+  const [editData,setEditData]=useState();
 
   useEffect(() => {
     getUserList()
@@ -80,7 +81,7 @@ function Region() {
       "code": data?.code,
       "name": data?.name,
       "admin_id": {
-        "user_id": adminSelectedList?.[0]?.value
+        "user_id": editData?adminSelectedList?.[0]?.value:adminSelectedList?.value
       },
       "member_ids": userids ? userids : [],
       "active": true
@@ -102,6 +103,7 @@ function Region() {
       if (response?.data?.status) {
         getRegionList()
         clearModal()
+        inputContextObj?.setInputObj({})
         // document.getElementById('modalClose').click()
         Swal.fire({
           toast: true,
@@ -123,7 +125,6 @@ function Region() {
       console.log(error)
     })
   }
-const [editData,setEditData]=useState();
   const getSingleRegion = (id) => {
     var url = `/region/regionbyid/?region_id=${id}`
     getAPI(url).then((response) => {
@@ -282,10 +283,17 @@ const [editData,setEditData]=useState();
 
   }
   useEffect(() => {
-    inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title:mode==="edit"? "Edit Region" : "Add Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList,adminSelected:adminSelectedList,memberSelected:memberSelectedList,editData:editData})
-  },[adminSelectedList,memberSelectedList,editData])
+    if(editData){
+      inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title:mode==="edit"? "Edit Region" : "Add Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList,adminSelected:adminSelectedList,memberSelected:memberSelectedList,editData:editData})
+    }
+    else{
+    inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title:mode==="edit"? "Edit Region" : "Add Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList,adminSelected:adminSelectedList,memberSelected:memberSelectedList})
+    }
+  },[adminSelectedList,memberSelectedList])
   const clearModal = () => {
     reset({ code: '', name: '', admin: '', member: '' })
+    setAdminSelectedList([])
+    setMemberSelectedList([])
   }
 
   const handlePerRowsChange = (newPerPage, page) => {
@@ -298,14 +306,16 @@ const [editData,setEditData]=useState();
 const handleAdd = () => {
   setMode('add')
   setSessionStorageItem('inputBar',true);
-  inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title:mode==="edit"? "Edit Region" : "Add Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList})
+  inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title:mode==="edit"? "Edit Region" : "Add Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList,adminSelected:adminSelectedList,memberSelected:memberSelectedList})
 }
+useEffect(() => {
+  if(editData){
+  setSessionStorageItem('inputBar',true);
+  inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title:mode==="edit"? "Edit Region" : "Add Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList,adminSelected:adminSelectedList,memberSelected:memberSelectedList,editData:editData})
+}},[editData])
 const handleEdit = (data) => {
   getSingleRegion(data?.id) 
   setMode('edit')
-  setSessionStorageItem('inputBar',true);
-  inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title:mode==="edit"? "Edit Region" : "Add Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList,adminSelected:adminSelectedList,memberSelected:memberSelectedList,editData:editData})
-
 }
   return (
     <div className='mt-2'>
