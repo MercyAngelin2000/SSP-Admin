@@ -69,6 +69,35 @@ function ForgotPassword() {
                                                     // {...register("password")}
                                                     />
                                                 </div>
+                                                <Link className='try_link' to='/forgotpassword'>Try Another Way</Link>
+
+                                            </div>
+
+                                            <div className="form-group mb-2">
+                                                <label>Mobile Number</label>
+                                                <div>
+                                                    <input
+                                                        type={'number'}
+                                                        className="form-control form-control-login"
+                                                        id="password"
+                                                        placeholder="Mobile Number"
+                                                    // {...register("password")}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="form-group mb-2">
+                                                <label>Enter OTP</label>
+                                                <div>
+                                                    <input
+                                                        type={'number'}
+                                                        className="form-control form-control-login"
+                                                        id="password"
+                                                        placeholder="Enter OTP"
+                                                    // {...register("password")}
+                                                    />
+                                                </div>
+                                                {/* <Link className='try_link' to='/forgotpassword'>Try Another Way</Link> */}
+
                                             </div>
                                         </div>
                                         <div className='mt-4 mb-4 d-flex justify-content-around'>

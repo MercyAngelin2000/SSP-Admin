@@ -176,10 +176,10 @@ const DropdownItem = ({ label, description, img, path }) => {
     <div className="dropdown-item">
       <Link className="nav-link" to={path}>
         <div className='row d-flex align-items-center p-2'>
-          <div className='col-lg-4'>
+          <div className='col-lg-3'>
             <img src={img} alt={label} height={50} width={60} />
           </div>
-          <div className='col-lg-8'>
+          <div className='col-lg-9'>
             <h4>{label}</h4>
             <p>{description}</p>
           </div>

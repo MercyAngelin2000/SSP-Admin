@@ -45,7 +45,13 @@
   justify-content: flex-end;
   font-size: 0.9rem;
 }
-
+.try_link{
+  margin-top: 10px;
+  color: #077aa7;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.9rem;
+}
 .content_left {
   display: flex;
   flex-direction: column;
