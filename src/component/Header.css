@@ -4,10 +4,10 @@
   height: 100vh;
 }
 
-.content {
+/* .content {
   display: flex;
   flex: 1;
-}
+} */
 
 .sidebarmenucol {
   width: 6%;
@@ -15,9 +15,15 @@
   /* Ensures a minimum width for very small screens */
   transition: width 0.3s;
 }
+.sidebar-open{
+  margin-left: 200px;
+}
+.sidebar-close{
+  margin-left: 68px;
+}
 
 .addcontentcol {
-  width: 94%;
+  /* width: 94%; */
   transition: width 0.3s;
   padding: 0;
 }
@@ -33,9 +39,9 @@
     width: 10%;
   }
 
-  .addcontentcol {
+  /* .addcontentcol {
     width: 90%;
-  }
+  } */
 }
 
 @media only screen and (max-width: 900px) {
@@ -43,9 +49,9 @@
     width: 15%;
   }
 
-  .addcontentcol {
+  /* .addcontentcol {
     width: 85%;
-  }
+  } */
 }
 
 @media only screen and (max-width: 600px) {
@@ -53,9 +59,18 @@
     width: 25%;
   }
 
-  .addcontentcol {
+  /* .addcontentcol {
     width: 75%;
+  } */
+  .sidebar-open{
+    margin-left: 0px !important;
   }
+  
+.sidebar.open,
+.sidebarmenucol.open {
+ 
+  margin-top: 3rem !important;
+}
 }
 
 @media only screen and (max-width: 400px) {
@@ -63,9 +78,9 @@
     width: 30%;
   } */
 
-  .addcontentcol {
+  /* .addcontentcol {
     width: 70%;
-  }
+  } */
 }
 /* .dropdown {
   position: relative;
@@ -103,7 +118,10 @@
 } */
 
 .header {
-  left: 35vh !important;
+  position: fixed;
+  width: -webkit-fill-available;
+  top: 0;
+  z-index: 1999;
 }
 .headerMenuClose{
   left: 10vh !important;

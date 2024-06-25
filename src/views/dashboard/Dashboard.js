@@ -80,7 +80,7 @@ function Dashboard() {
       <div>
         <h6 className='title fw-bold mt-1'>Dashboard</h6>
       </div>
-      <div className='card dashboard_card'>
+      <div className='card dashboard_card col-lg-4'>
         <Doughnut data={data} />
         <label className='mt-2 text-center title'>Region</label>
       </div>

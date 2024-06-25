@@ -19,7 +19,41 @@
 
 
 .logo_left_bgcolor {
-  background-color: var(--color-secondary);
+  /* background-color: var(--color-secondary); */
+  background: url(https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: -285px;
+}
+
+.logo_left_bgcolor::after {
+  content: '';
+  clip-path: polygon(70% 0, 100% 0, 100% 100%, 70% 100%, 80% 80%, 60% 60%, 80% 40%, 60% 20%, 70% 0);
+
+}
+
+.form-group label {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.forgot_link {
+  margin-top: 10px;
+  color: red;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.9rem;
+}
+
+.content_left {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+  justify-content: flex-end;
+  height: 100vh;
+  background: linear-gradient(3deg, black, transparent);
+  color: #c0bdbd;
 }
 
 .logo_left {
@@ -46,17 +80,17 @@
 
 
 /* Login old css */
-div.main{
-    background: #0264d6;
-background: -moz-radial-gradient(center, ellipse cover,  #0264d6 1%, #1c2b5a 100%);
-background: --webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(1%,#0264d6), color-stop(100%,#1c2b5a));
-background: -webkit-radial-gradient(center, ellipse cover,  #0264d6 1%,#1c2b5a 100%);
-background: -o-radial-gradient(center, ellipse cover,  #0264d6 1%,#1c2b5a 100%);
-background: -ms-radial-gradient(center, ellipse cover,  #0264d6 1%,#1c2b5a 100%);
-background: radial-gradient(ellipse at center,  #0264d6 1%,#1c2b5a 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0264d6', endColorstr='#1c2b5a',GradientType=1 );
-height:calc(100vh);
-width:100%;
+div.main {
+  background: #0264d6;
+  background: -moz-radial-gradient(center, ellipse cover, #0264d6 1%, #1c2b5a 100%);
+  background: --webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(1%, #0264d6), color-stop(100%, #1c2b5a));
+  background: -webkit-radial-gradient(center, ellipse cover, #0264d6 1%, #1c2b5a 100%);
+  background: -o-radial-gradient(center, ellipse cover, #0264d6 1%, #1c2b5a 100%);
+  background: -ms-radial-gradient(center, ellipse cover, #0264d6 1%, #1c2b5a 100%);
+  background: radial-gradient(ellipse at center, #0264d6 1%, #1c2b5a 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0264d6', endColorstr='#1c2b5a', GradientType=1);
+  height: calc(100vh);
+  width: 100%;
 }
 
 [class*="fontawesome-"]:before {
@@ -65,33 +99,33 @@ width:100%;
 
 
 input {
-	border: none;
-	font-family: 'Open Sans', Arial, sans-serif;
-	font-size: 14px;
-	line-height: 1.5em;
-	padding: 0;
-	--webkit-appearance: none;
+  border: none;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5em;
+  padding: 0;
+  --webkit-appearance: none;
 }
 
-input:focus{
+input:focus {
   outline: none !important;
 }
 
 #login form span.fa {
-	background-color: #fff;
-	border-radius: 3px 0px 0px 3px;
-	color: #000;
-	display: block;
-	float: left;
-	height: 50px;
-    font-size:24px;
-	line-height: 50px;
-	text-align: center;
-	width: 50px;
+  background-color: #fff;
+  border-radius: 3px 0px 0px 3px;
+  color: #000;
+  display: block;
+  float: left;
+  height: 50px;
+  font-size: 24px;
+  line-height: 50px;
+  text-align: center;
+  width: 50px;
 }
 
 #login form input {
-	height: 50px;
+  height: 50px;
 }
 
 /* #login form input[type="text"], input[type="password"] {
@@ -114,13 +148,16 @@ input:focus{
   padding: 5px 20px;
   height: 30px;
 }
-.form-control-login{
+
+.form-control-login {
   border-color: #cecccc;
 }
+
 #login form input[type="submit"]:hover {
-	background-color: #d44179;
+  background-color: #d44179;
 }
-p{
+
+p {
   margin-bottom: 0px !important;
 }
 
@@ -136,73 +173,88 @@ p{
   outline: 2px solid #d44179;
 } */
 
-.login-background{
+.login-background {
   background-size: cover !important;
   background-repeat: no-repeat !important;
   background-position-y: center !important;
 }
 
-.login-container{
-  right:10vh;
+.login-container {
+  right: 10vh;
   position: fixed;
   top: 50%;
   transform: translate(0%, -50%);
 }
 
-#login{
+#login {
   padding: 30px;
-    padding-top: 55px;
-    padding-bottom: 55px;
-    border-radius: 20px;
-    background: linear-gradient(25deg, #ba47ff, #f1a0a0ab 100%);
+  padding-top: 55px;
+  padding-bottom: 55px;
+  border-radius: 20px;
+  background: linear-gradient(25deg, #ba47ff, #f1a0a0ab 100%);
 }
-.login_field_part{
+
+.login_field_part {
   box-shadow: 3px 3px 7px 1px #9d9d9d;
   border: none;
 }
 
- /* login menu  */
-.login-menu{
+/* login menu  */
+.login-menu {
   font-weight: normal !important;
-  border: 2px solid #c5c5c5;
+  /* border: 2px solid #c5c5c5; */
   border-radius: 30px !important;
   padding: 2px;
-
+  background: #ebebeb;
   /* margin-left: 6rem !important;
   margin-right: 6rem !important; */
 }
 
 
-.nav-pills .nav-link-login{
+.nav-pills .nav-link-login {
   border-radius: 30px !important;
   padding: 5px;
   padding-right: 1rem;
   padding-left: 1rem;
   font-weight: normal !important;
 }
-.nav-link-login{
+
+.nav-link-login {
   display: block;
   color: black;
-  text-decoration:none !important;
+  text-decoration: none !important;
   font-size: 15px;
 }
 
-.nav-link-login.active{
+.nav-link-login.active {
   color: white !important;
   background-color: #0d6efd !important;
 }
-.nav-link-login:hover{
+
+.nav-link-login:hover {
   background-color: #0d6efd !important;
   color: white !important;
 }
-.loginBtn{
+
+.loginBtn {
   background-color: #6e06a7 !important;
   color: white;
 }
-.loginBtn:hover{
+
+.loginBtn:hover {
   background-color: #6e06a7 !important;
   color: white;
 }
-.cardView{
-  background:linear-gradient(100deg, #e0e0e0,#e0e0e0 100%);
+
+/* .cardView {
+  background: linear-gradient(100deg, #e0e0e0, #e0e0e0 100%);
+} */
+
+/* responsive media query */
+
+@media only screen and (max-width: 600px) {
+
+  .logo_left_bgcolor {
+    display: none;
+  }
 }
