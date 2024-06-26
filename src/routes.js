@@ -8,6 +8,7 @@ const AddCampus =React.lazy(() => import('./views/campus/AddCampus'))
 const SchoolAccount =React.lazy(() => import('./views/school_account/SchoolAccount'))
 const SchoolAdmin =React.lazy(() => import('./views/schoolAdmin/SchoolAdmin'))
 const AddSchoolAdmin =React.lazy(() => import('./views/schoolAdmin/AddSchoolAdmin'))
+const UserRole =React.lazy(() => import('./views/userRole/UserRole'))
 // const User = React.lazy(() => import('./views/User'))
 const routes = [
     { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -18,6 +19,7 @@ const routes = [
     { path: '/schoolaccount', name: 'School Account', element: SchoolAccount },
     { path: '/schooladmin', name: 'SchoolAdmin', element: SchoolAdmin },
     { path: '/addschooladmin', name: 'AddSchoolAdmin', element: AddSchoolAdmin },
+    { path: '/Userrole', name: 'AddSchoolAdmin', element: UserRole },
 
     // { path: '/users', name: 'User', element: User },
 ]
