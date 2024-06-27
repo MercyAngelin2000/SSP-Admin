@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import './InputForms.css';
 import { inputContext } from '../layout/DefaultLayout';
 import { useForm } from 'react-hook-form';
@@ -56,8 +56,16 @@ function InputForms({ handleClose }) {
           name: editData?.name,
           isactive: editData?.active
         })
-        setFirst(false)
+      } else {
+        reset({ code: '', name: '', admin: '', member: '' })
       }
+    }
+    else if(from === "Region" && title == "Add Region"){
+      regionReset({
+        name: "",
+        code:'',
+        isactive:''
+      })
     }
     else if(from === "Region" && title == "Add Region"){
       regionReset({
@@ -71,7 +79,6 @@ function InputForms({ handleClose }) {
     console.log("yes");
     handleCancel()
     handleClose()
-    setFirst(true)
     setInputObj({})
     if (from === "RegionUser") {
       regionUserReset({
@@ -82,7 +89,11 @@ function InputForms({ handleClose }) {
         confirmPassword: ""
       })
     } else if (from === "Region") {
-      regionReset({ code: '', name: '', isactive: false})
+      reset({ code: '', name: '', admin: '', member: '' })
+    }
+    else if (from === "userRole") {
+      handleClose()
+      setInputObj({})
     }
   }
 
@@ -270,8 +281,50 @@ function InputForms({ handleClose }) {
         </form>
       )
     }
-    else if (type === "corporate") {
-      return(<h4>uhbhj vbhvh</h4>)
+    else if (type === "userRole") {
+
+      return (
+        <>
+          <form autoComplete='off' style={{ fontSize: '12px' }}>
+
+            <div className='mt-4'>
+              <div className='form-group'>
+                <label className='mt-2'>Role Name <span className='text-danger'>*</span></label>
+                <input className='form-control' placeholder='Role Name' />
+
+              </div>
+              <div className='form-group'>
+                <label className='mt-2'>Role Description <span className='text-danger'>*</span></label>
+                <textarea className='form-control' rows={2} placeholder='Role Description' />
+
+              </div>
+              <div className='form-group'>
+                <label className='mt-2'>Applicable Scope <span className='text-danger'>*</span></label>
+                <select className='form-select'>
+                  <option>-- Select Applicable Scope --</option>
+                  <option>Region</option>
+                  <option>Corporate Office</option>
+                  <option>Campus</option>
+                  <option>School</option>
+
+                </select>
+
+              </div>
+
+              <div className='d-flex justify-content-end mt-3'>
+                <div className='mr-2'>
+                  <button type="button" onClick={() => handleCancelBtn()} style={{ marginRight: "10px", backgroundColor: "#e54e60" }} className="btn btn-sm text-white" >Cancel</button>
+                </div>
+                <div className='ml-2'>
+                  <button type="submit" className="btn  btn-sm btn-success">Save</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </>
+      )
+
+
     }
   }
   const handleCloseBtn = () => {
@@ -283,27 +336,27 @@ function InputForms({ handleClose }) {
     <>
       <div className="input_forms p-5">
         {
-            <>
-              <div className='d-flex justify-content-between align-items-center border-bottom mb-4'>
-                <div className="p-3" role='button' title='Close' onClick={handleCloseBtn}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg text-danger" viewBox="0 0 16 16">
-                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                  </svg>
-                </div>
-                <div className="small">{title}</div>
-                <div>
-                  <span className='p-2 text-primary' title='Back to home' role='button' onClick={handleCloseBtn}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-                    <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
-                  </svg></span>
-                </div>
+          <>
+            <div className='d-flex justify-content-between align-items-center border-bottom mb-4'>
+              <div className="p-3" role='button' title='Close' onClick={handleCloseBtn}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg text-danger" viewBox="0 0 16 16">
+                  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                </svg>
               </div>
-              {/* <div className="p-3" role='button' title='Close' onClick={handleClose}>
+              <div className="small">{title}</div>
+              <div>
+                <span className='p-2 text-primary' title='Back to home' role='button' onClick={handleCloseBtn}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+                  <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
+                </svg></span>
+              </div>
+            </div>
+            {/* <div className="p-3" role='button' title='Close' onClick={handleClose}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                   <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
                 </svg>
               </div> */}
-              {loadForm(from)}
-            </>
+            {loadForm(from)}
+          </>
         }
       </div>
     </>

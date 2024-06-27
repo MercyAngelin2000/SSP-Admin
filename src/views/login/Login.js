@@ -106,7 +106,7 @@ export default function Login() {
                                             </ul>
                                         </div> */}
                                         <div className="form-group mb-3">
-                                            <label>Username/Email ID/ Mobile Number</label>
+                                            <label>Username/ Email ID/ Mobile Number</label>
 
                                             <input type="text" className="form-control form-control-login" id="username" placeholder={loginOptions.filter(item => item.id == loginType)[0].name} {...register("username")} />
                                             <span style={{ color: "red" }}>{errors?.username != undefined && errors?.username?.message}</span>

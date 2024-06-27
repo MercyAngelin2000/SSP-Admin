@@ -20,11 +20,11 @@
 
 .logo_left_bgcolor {
   /* background-color: var(--color-secondary); */
-  background: url(https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+  background: url(https://i0.wp.com/www.proboai.com/wp-content/uploads/2024/03/image_AI-in-Education_-Shaping-the-Future-of-Education.png?fit=1536%2C640&ssl=1);
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
   background-attachment: fixed;
-  background-position: -285px;
+  background-position: top;
 }
 
 .logo_left_bgcolor::after {
@@ -45,7 +45,13 @@
   justify-content: flex-end;
   font-size: 0.9rem;
 }
-
+.try_link{
+  margin-top: 10px;
+  color: #077aa7;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.9rem;
+}
 .content_left {
   display: flex;
   flex-direction: column;
