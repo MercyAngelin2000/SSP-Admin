@@ -12,6 +12,10 @@ import {inputContext} from '../../layout/DefaultLayout';
 // Define the validation schema using Yup
 const schema = yup.object().shape({
     name: yup.string().required('Name is required'),
+    email: yup.string().email('Invalid email address').required('Email is required'),
+    mobile: yup.string().required('Mobile number is required').
+    min(10, 'Mobile number should be 10 digits').
+    max(10, 'Mobile number should be 10 digits'),
     username: yup.string().required('Username is required'),
     password: yup
         .string()
@@ -25,18 +29,26 @@ const schema = yup.object().shape({
         .oneOf([yup.ref('password'), null], 'Passwords must match')
         .required('Confirm password is required'),
     role: yup.string().required('Role is required'),
+    region_id: yup.string().required('Region is required'),
 });
 const schema1 = yup.object().shape({
     name: yup.string().required('Name is required'),
+    email: yup.string().email('Invalid email address').required('Email is required'),
+    mobile: yup.string().required('Mobile number is required').
+    min(10, 'Mobile number should be 10 digits').
+    max(10, 'Mobile number should be 10 digits'),
     username: yup.string().required('Username is required'),
     role: yup.string().required('Role is required'),
+    region_id: yup.string().required('Region is required'),
 });
 function RegionUser({ activeTab }) {
     const [title, setTile] = useState("Add User")
-    const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
         resolver: yupResolver(title === "Add User" ? schema : schema1),
     });
     const [userdata, setUserData] = useState()
+    const [regionList, setRegionList] = useState()
+    const [selectedRegion, setSelectedRegion] = useState()
     const [roleData, setRoleData] = useState()
     const [editData, setEditData] = useState()
     //pagination
@@ -54,21 +66,21 @@ function RegionUser({ activeTab }) {
         },
         {
             name: 'User Name',
-            selector: row => row?.name,
-            cell: row => <div>{row?.name}</div>,
+            selector: row => row?.user?.name,
+            cell: row => <div>{row?.user?.name}</div>,
             sortable: true
         },
         {
             name: 'Role',
             selector: row => row?.role?.name,
-            cell: row => <div>{row?.role?.name}</div>,
+            cell: row => <div>Region Head</div>,
             sortable: true
         },
         {
             name: 'Active Status',
-            selector: row => row.active,
+            selector: row => row.user.active,
             cell: row => <div className="form-check form-switch">
-                <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" defaultChecked={row.active} onChange={(event) => handleActiveStatus(event, row)} />
+                <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" defaultChecked={row.user.active} onChange={(event) => handleActiveStatus(event, row)} />
                 <label className="form-check-label" htmlFor="flexSwitchCheckChecked"></label>
             </div>,
             sortable: true
@@ -93,6 +105,7 @@ function RegionUser({ activeTab }) {
         },
     ];
     useEffect(() => {
+        console.log("editData",editData);
         if(editData){
         setSessionStorageItem('inputBar',true);
         inputContextObj?.setInputObj({from:"RegionUser", roleData:roleData,schema:schema,schema1:schema1,onSubmit:onSubmit,title:title,editData:editData,handleCancel:handleCancel})
@@ -128,7 +141,7 @@ function RegionUser({ activeTab }) {
             width: 400
         }).then((result) => {
             if (result.isConfirmed) {
-                var url = `/users/${row?.id}`
+                var url = `/users/${row?.user?.id}`
                 deleteAPI(url).then((response) => {
                     let data = response?.data
                     if (data?.status) {
@@ -157,10 +170,27 @@ function RegionUser({ activeTab }) {
         });
     }
     const fetchUserListData = () => {
-        var url = `/users/users/?user_type=region&skip=${skip}&limit=${limit}`
+        var url =`/region/region_user/?&skip=${skip}&limit=${limit}`
+        // var url = `/users/users/?user_type=region&skip=${skip}&limit=${limit}`
         getAPI(url).then((response) => {
-            setUserData(response?.data?.data)
+            console.log(response?.data[0]?.user?.name);
+            setUserData(response?.data)
             setTotal(response?.data?.total_count)
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
+    const fetchRegionListData = () => {
+        var url = `/region/?skip=${skip}&limit=${limit}`
+        getAPI(url).then((response) => {
+            var data =response?.data?.data
+            const regions = data?.map((item) => (
+                { value: item.id, label: item.name })
+              );
+            setRegionList(data)
+            console.log("regiondata",response?.data?.data);
+            // setTotal(response?.data?.total_count)
         }).catch((error) => {
             console.log(error)
         })
@@ -172,7 +202,7 @@ function RegionUser({ activeTab }) {
             var arr = []
             //eslint-disable-next-line
             data.map(it => {
-                if (it?.name === "Regional Admin" || it?.name === "Regional Team Member") {
+                if (it?.name === "Regional Admin") {
                     arr.push(it)
                 }
             })
@@ -183,16 +213,19 @@ function RegionUser({ activeTab }) {
     }
     useEffect(() => {
         fetchUserListData()
+        fetchRegionListData()
         // eslint-disable-next-line
     }, [skip, limit, activeTab])
     const handleActiveStatus = (event, row) => {
         var method = "PUT"
-        var url = `/users/${row?.id}`
+        var url = `/users/${row?.user_id}`
         var data = {
-            "name": row?.name,
-            "username": row?.username,
-            "role_id": Number(row?.role_id),
-            "active": event.target.checked
+            "name": row?.user?.name,
+            "username": row?.user?.username,
+            "role_id": Number(row?.user?.role_id),
+            "active": event.target.checked,
+            'email': row?.user?.email,
+            'mobile': String(row?.user?.mobile)
         }
         addUpdateAPI(method, url, data).then((response) => {
             let data = response?.data
@@ -220,27 +253,37 @@ function RegionUser({ activeTab }) {
         })
     }
     const onSubmit = (data) => {
+        console.log("add data-user",data,selectedRegion);
         var method;
         var url;
         var postData;
         if (title === "Add User") {
             method = "POST"
-            url = `/users/register/`
+            url = `/region/adduser/`
             postData = {
-                "name": data?.name,
+                'region_id': Number(data?.region_id),
+                "admin_name": data?.name,
+                'email': data?.email,
+                'mobile': data?.mobile,
                 "username": data?.username,
                 "password": data?.password,
                 "role_id": Number(data?.role),
-                "active": true
+                "active": data?.isactive,
+                
             }
         }
         else {
             method = "PUT"
-            url = `/users/${editData?.id}`
+            url = `/region/update_user/${editData?.user?.id}`
             postData = {
-                "name": data?.name,
+                'region_id': Number(data?.region_id),
+                "admin_name": data?.name,
+                'email': data?.email,
+                'mobile': data?.mobile,
                 "username": data?.username,
-                "role_id": Number(data?.role)
+                "password": data?.password,
+                "role_id": Number(data?.role),
+                "active": data?.active,
             }
         }
         addUpdateAPI(method, url, postData).then((response) => {
@@ -289,19 +332,35 @@ function RegionUser({ activeTab }) {
         setLimit(newPerPage)
     }
     useEffect(() => {
-        inputContextObj?.setInputObj({from:"RegionUser", roleData:roleData,schema:schema,schema1:schema1,onSubmit:onSubmit,title:title,editData:editData,handleCancel:handleCancel}) 
-    },[roleData])
+        inputContextObj?.setInputObj({from:"RegionUser",setValue:setValue, roleData:roleData,schema:schema,schema1:schema1,onSubmit:onSubmit,title:title,editData:editData,handleCancel:handleCancel,regionList:regionList,regionHandleChange:handleChange,selectedRegion:selectedRegion}) 
+    },[roleData,regionList,selectedRegion])
     const handleAdd = () => {
         fetchRoleData()
         setSessionStorageItem('inputBar',true);
-        inputContextObj?.setInputObj({from:"RegionUser", roleData:roleData,schema:schema,schema1:schema1,onSubmit:onSubmit,title:title,editData:editData,handleCancel:handleCancel})
+        inputContextObj?.setInputObj({from:"RegionUser", roleData:roleData,schema:schema,schema1:schema1,onSubmit:onSubmit,title:title,editData:editData,handleCancel:handleCancel,regionList:regionList,regionHandleChange:handleChange,selectedRegion:selectedRegion})
     }
+
+    const handleChange = (selectedOptions,name) => {
+        console.log("yes",selectedOptions);
+        // setValue("region_id", [selectedOptions])
+        setSelectedRegion([selectedOptions])
+        // inputContextObj?.setInputObj({from:"RegionUser",setValue:setValue, roleData:roleData,schema:schema,schema1:schema1,onSubmit:onSubmit,title:title,editData:editData,handleCancel:handleCancel,regionList:regionList,regionHandleChange:handleChange,selectedRegion:selectedRegion}) 
+    }
+
+    const searchRegion = (e) => {
+        var url = `/users/search/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`
+        getAPI(url).then((response) => {
+        //   setRegionList(response?.data?.data)
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
     return (
         <div>
             <div className='mt-1'>
                 <div className='d-flex justify-content-between align-items-end'>
                     <div className='d-flex'>
-                        <input type="text" className='form-control me-2 tab_search' placeholder='Search' />
+                        <input type="text" className='form-control me-2 tab_search' onChange={(e) => searchRegion(e)} placeholder='Search' />
                     </div>
                     <div>
                         <button className='btn btn-sm add px-2' type='button'

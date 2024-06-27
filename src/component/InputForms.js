@@ -8,41 +8,73 @@ import Select from 'react-select';
 
 function InputForms({ handleClose }) {
   const { inputObj, setInputObj } = useContext(inputContext);
-  const { from, roleData, schema, schema1, onSubmit, title, editData, handleCancel, adminList, handleAdminList, memberList, adminSelected, memberSelected } = inputObj || {};
-  const { control, register, handleSubmit, formState: { errors }, reset, setValue } = useForm(from === "RegionUser" ? {
+  const { from, roleData, schema, schema1, onSubmit, title, editData, handleCancel, adminList, handleAdminList, memberList, adminSelected, memberSelected,regionList,regionHandleChange,selectedRegion} = inputObj || {};
+  
+  const {  register:regionRegister,handleSubmit:regionHandleSubmit,formState: { errors: regionErrors }, reset:regionReset, setValue:regionSetValue } = useForm();
+  
+  const { control, register,handleSubmit:regionUserHandleSubmit,formState: { errors }, reset:regionUserReset, setValue } = useForm(from === "RegionUser" ? {
     resolver: yupResolver(title === "Add User" ? schema : schema1),
   } : '');
+
+  console.log("from",from, editData,title);
+
   const [first,setFirst]=useState(true)
+  
   useEffect(() => {
-    if (from === "RegionUser") {
-      reset({
-        name: editData?.name,
-        username: editData?.username,
-        role: editData?.role_id,
+
+    if (from === "RegionUser" && title === "Edit User") {
+      setValue("region_id", selectedRegion)
+      regionUserReset({
+        name: editData?.user?.name,
+        username: editData?.user?.username,
+        role: editData?.user?.role_id,
+        mobile: editData?.user?.mobile,
+        email: editData?.user?.email,
+        region_id:editData?.region_id,
+        active: editData?.user?.active
+
       })
     }
-    else if (from === "Region") {
-      setValue("admin", adminSelected)
-      setValue("member", memberSelected)
-      if(editData && first){
-        reset({
+    else if (from === "RegionUser" && title === "Add User") {
+      setValue("region_id", selectedRegion)
+      regionUserReset({
+        name:'',
+        username: '',
+        role: '',
+        mobile: '',
+        email: '',
+        region_id:'',
+        active: false
+
+      })
+    }
+  if (from === "Region" && title === "Edit Region") {
+      if(editData){
+        regionReset({
           code: editData?.code,
           id: editData?.id,
           name: editData?.name,
-          admin: adminSelected,
-          member: memberSelected
+          isactive: editData?.active
         })
         setFirst(false)
       }
     }
+    else if(from === "Region" && title == "Add Region"){
+      regionReset({
+        name: "",
+        code:'',
+        isactive:''
+      })
+    }
   }, [inputObj])
   const handleCancelBtn = () => {
+    console.log("yes");
     handleCancel()
     handleClose()
     setFirst(true)
     setInputObj({})
     if (from === "RegionUser") {
-      reset({
+      regionUserReset({
         name: "",
         username: "",
         password: "",
@@ -50,19 +82,35 @@ function InputForms({ handleClose }) {
         confirmPassword: ""
       })
     } else if (from === "Region") {
-      reset({ code: '', name: '', admin: '', member: '' })
+      regionReset({ code: '', name: '', isactive: false})
     }
   }
+
+  const handleSave = (data) => {
+    console.log("yes",data);
+    onSubmit(data,title)
+  }
+
 
   const loadForm = (type) => {
     if (type === "RegionUser") {
       return (
-        <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' style={{ fontSize: '12px' }}>
+        <form onSubmit={regionUserHandleSubmit(onSubmit)} autoComplete='off' style={{ fontSize: '12px' }}>
           <div>
             <div>
               <label htmlFor="name">Name<span className='text-danger'>*</span></label>
               <input id="name" className='form-control' {...register('name')} />
               {errors?.name?.message && <span className='text-danger'>{errors?.name?.message}</span>}
+            </div>
+            <div>
+              <label htmlFor="email">Mail I'd<span className='text-danger'>*</span></label>
+              <input id="email" className='form-control' {...register('email')} />
+              {errors?.email?.message && <span className='text-danger'>{errors?.email?.message}</span>}
+            </div>
+            <div>
+              <label htmlFor="mobile">Phone Number<span className='text-danger'>*</span></label>
+              <input id="mobile" className='form-control' {...register('mobile')} />
+              {errors?.mobile?.message && <span className='text-danger'>{errors?.mobile?.message}</span>}
             </div>
 
             <div>
@@ -97,11 +145,49 @@ function InputForms({ handleClose }) {
               </select>
               {errors.role && <span className='text-danger'>{errors.role.message}</span>}
             </div>
-
+            <div>
+              <label className='mt-2'>Region List<span className='text-danger'>*</span></label>
+              {/* <Controller
+                name="region_id"
+                control={control}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={regionList}
+                    isClearable
+                    selectedOptions={selectedRegion}
+                    // defaultValue={editData?.region_id}
+                    onChange={(selectedOptions) => {
+                      regionHandleChange(selectedOptions, 'region_id');
+                    }}
+                    isMulti={false}
+                  />
+                )}
+              /> */}
+              
+              <select className='form-control' id="role" {...register('region_id')}>
+                <option value="" style={{ fontSize: '12px' }} selected>Select Region</option>
+                {
+                  regionList?.map((item, index) => {
+                    return <option key={index} value={item?.id} selected={item?.id === editData?.role_id ? true : false}>{item?.name}</option>
+                  })
+                }
+              </select>
+              {errors.region_id && <span className='text-danger'>{errors.region_id.message}</span>}
+            </div>
+            {title === "Edit User" ? "" :
+             <div className='d-flex align-items-center mt-2'>
+             <input type="checkbox" className='form-check-input me-2' {...register('isactive', { required: false })} />
+               <label className=''>Isactive</label>
+             </div>
+ }
+           
           </div>
           <div className='d-flex justify-content-end mt-4'>
             <div className='mr-2'>
-              <button type="button" className="btn btn-sm text-white" style={{ marginRight: "10px", backgroundColor: "#e54e60" }} title='Cancel' onClick={() => handleCancelBtn()}>Cancel</button>
+              <button type="button" onClick={() => handleCancelBtn()}  className="btn btn-sm text-white" style={{ marginRight: "10px", backgroundColor: "#e54e60" }} title='Cancel'>Cancel</button>
             </div>
             <div className='ml-2'>
               <button type="submit" className="btn  btn-sm btn-success">{title === "Add User" ? "Save" : "Update"}</button>
@@ -112,19 +198,25 @@ function InputForms({ handleClose }) {
     }
     else if (type === "Region") {
       return (
-        <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' style={{ fontSize: '12px' }}>
+        <form onSubmit={regionHandleSubmit(handleSave)} autoComplete='off' style={{ fontSize: '12px' }}>
           <div>
             <div>
               <label className='mt-2'>Code <span className='text-danger'>*</span></label>
-              <input className='form-control' {...register('code', { required: true })} />
-              {errors.code && <span className='text-danger'>Code is required</span>}
+              <input className='form-control' {...regionRegister('code', { required: true })} />
+              {regionErrors.code && <span className='text-danger'>Code is required</span>}
             </div>
             <div>
               <label className='mt-2'>Name <span className='text-danger'>*</span></label>
-              <input className='form-control' {...register('name', { required: true })} />
-              {errors.name && <span className='text-danger'>Name is required</span>}
+              <input className='form-control' {...regionRegister('name', { required: true })} />
+              {regionErrors.name && <span className='text-danger'>Name is required</span>}
             </div>
-            <div>
+            {title === "Edit Region"?'' :
+             <div className='d-flex align-items-center mt-2'>
+             <input type="checkbox" className='form-check-input me-2' {...regionRegister('isactive', { required: false })} />
+               <label className=''>Isactive</label>
+             </div>}
+           
+            {/* <div>
               <label className='mt-2'>Admin <span className='text-danger'>*</span></label>
               <Controller
                 name="admin"
@@ -165,7 +257,7 @@ function InputForms({ handleClose }) {
                 )}
               />
 
-            </div>
+            </div> */}
           </div>
           <div className='d-flex justify-content-end mt-4'>
             <div className='mr-2'>
@@ -178,9 +270,13 @@ function InputForms({ handleClose }) {
         </form>
       )
     }
+    else if (type === "corporate") {
+      return(<h4>uhbhj vbhvh</h4>)
+    }
   }
   const handleCloseBtn = () => {
     handleClose()
+    handleCancelBtn()
     setInputObj({})
   }
   return (

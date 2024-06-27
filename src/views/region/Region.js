@@ -23,7 +23,7 @@ function Region() {
   const [editData,setEditData]=useState();
 
   useEffect(() => {
-    getUserList()
+    // getUserList()
     if (selectedTab === 'region') {
       inputContextObj?.setInputObj({})
       setSessionStorageItem('inputBar',false);
@@ -75,22 +75,17 @@ function Region() {
     })
   }
 
-  const addRegion = (data) => {
-    const userids = memberSelectedList && memberSelectedList?.map((item) => ({ user_id: item?.value }));
+  const addRegion =  (data,mode) => {
     const values = {
       "code": data?.code,
       "name": data?.name,
-      "admin_id": {
-        "user_id": editData?adminSelectedList?.[0]?.value:adminSelectedList?.value
-      },
-      "member_ids": userids ? userids : [],
-      "active": true
+      "active": data?.isactive?data?.isactive:false
     }
 
     var method
     var url
 
-    if (mode === 'add') {
+    if (mode === 'Add Region') {
       method = "POST"
       url = `/region/`
     }
@@ -109,7 +104,7 @@ function Region() {
           toast: true,
           position: "center",
           icon: "success",
-          title: mode === 'add' ? "Region added successfully" : "Region updated successfully",
+          title: mode === 'Add Region' ? "Region added successfully" : "Region updated successfully",
           showConfirmButton: false,
           timer: 1500
         });
@@ -195,6 +190,35 @@ function Region() {
     })
 
   }
+  const handleActiveStatus = (event, row) => {
+    console.log("event.target.checked",event.target.checked);
+    var method = "PUT"
+    var url = `region/status/${row?.id}?status=${event.target.checked}`
+    addUpdateAPI(method, url).then((response) => {
+        let data = response?.data
+        if (data?.status) {
+            getRegionList()
+            Swal.fire({
+                toast: true,
+                position: "center",
+                icon: "success",
+                title: "Region updated successfully",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+        else {
+            Swal.fire({
+                toast: true,
+                icon: "error",
+                title: "Oops...",
+                text: response?.data?.detail,
+            });
+        }
+    }).catch((error) => {
+        console.log(error)
+    })
+}
 
   const searchRegion = (e) => {
     var url = `/region/search/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`
@@ -221,9 +245,12 @@ function Region() {
     {
       name: 'Active Status',
       selector: row => row.active,
-      cell: row => activeStatus(row.active),
-      sortable: true,
-    },
+      cell: row => <div className="form-check form-switch">
+          <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" defaultChecked={row.active} onChange={(event) => handleActiveStatus(event, row)} />
+          <label className="form-check-label" htmlFor="flexSwitchCheckChecked"></label>
+      </div>,
+      sortable: true
+  },
     {
       name: 'Actions',
       selector: row => row.status,
@@ -291,9 +318,9 @@ function Region() {
     }
   },[adminSelectedList,memberSelectedList])
   const clearModal = () => {
-    reset({ code: '', name: '', admin: '', member: '' })
-    setAdminSelectedList([])
-    setMemberSelectedList([])
+    reset({ code: '', name: '', isactive: ''})
+    // setAdminSelectedList([])
+    // setMemberSelectedList([])
   }
 
   const handlePerRowsChange = (newPerPage, page) => {
@@ -306,16 +333,17 @@ function Region() {
 const handleAdd = () => {
   setMode('add')
   setSessionStorageItem('inputBar',true);
-  inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title:mode==="edit"? "Edit Region" : "Add Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList,adminSelected:adminSelectedList,memberSelected:memberSelectedList})
+  inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title:"Add Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList,adminSelected:adminSelectedList,memberSelected:memberSelectedList})
 }
+
 useEffect(() => {
   if(editData){
   setSessionStorageItem('inputBar',true);
-  inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title:mode==="edit"? "Edit Region" : "Add Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList,adminSelected:adminSelectedList,memberSelected:memberSelectedList,editData:editData})
+  inputContextObj?.setInputObj({from:"Region",onSubmit:addRegion,title: "Edit Region",handleCancel:clearModal,adminList:adminList,handleAdminList:handleChange,memberList:memberList,adminSelected:adminSelectedList,memberSelected:memberSelectedList,editData:editData})
 }},[editData])
 const handleEdit = (data) => {
-  getSingleRegion(data?.id) 
   setMode('edit')
+  setEditData(data)
 }
   return (
     <div className='mt-2'>
