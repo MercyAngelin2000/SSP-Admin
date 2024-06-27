@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import Swal from 'sweetalert2';
 import "./Corporate.css";
 import "../../index.css"
-import { deleteAPI,getAPI,addUpdateAPI} from '../../apiService/ApiService';
+import { deleteAPI, getAPI, addUpdateAPI } from '../../apiService/ApiService';
 import { tableStyle } from '../../utils/Utils';
 
 // Define the validation schema using Yup
@@ -46,6 +46,33 @@ function CorporateUser({ activeTab }) {
   const [skip, setSkip] = useState(0);
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
+  const mainContainerRef = useRef(null);
+  const offcanvasRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new MutationObserver((mutationsList) => {
+      for (let mutation of mutationsList) {
+        if (mutation.attributeName === 'class') {
+          if (offcanvasRef.current.classList.contains('show')) {
+            mainContainerRef.current.classList.add('canvas_open');
+            mainContainerRef.current.classList.remove('canvas_close');
+          } else {
+            mainContainerRef.current.classList.remove('canvas_open');
+            mainContainerRef.current.classList.add('canvas_close');
+          }
+        }
+      }
+    });
+
+    if (offcanvasRef.current) {
+      observer.observe(offcanvasRef.current, { attributes: true });
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   const columns = [
     {
       width: '100px',
@@ -125,7 +152,7 @@ function CorporateUser({ activeTab }) {
       width: 400
     }).then((result) => {
       if (result.isConfirmed) {
-        var url=`/users/${row?.id}`
+        var url = `/users/${row?.id}`
         deleteAPI(url).then((response) => {
           let data = response?.data
           if (data?.status) {
@@ -154,7 +181,7 @@ function CorporateUser({ activeTab }) {
     });
   }
   const fetchUserListData = () => {
-    var url=`/users/users/?user_type=corporate&skip=${skip}&limit=${limit}`
+    var url = `/users/users/?user_type=corporate&skip=${skip}&limit=${limit}`
     getAPI(url).then((response) => {
       setUserData(response?.data?.data)
       setTotal(response?.data?.total_count)
@@ -184,13 +211,13 @@ function CorporateUser({ activeTab }) {
     // eslint-disable-next-line
   }, [skip, limit, activeTab])
   const handleActiveStatus = (event, row) => {
-    var method="PUT"
-    var url=`/users/${row?.id}`
+    var method = "PUT"
+    var url = `/users/${row?.id}`
     var data = {
       "name": row?.name,
-        "username": row?.username,
-        "role_id": Number(row?.role_id),
-        "active": event.target.checked
+      "username": row?.username,
+      "role_id": Number(row?.role_id),
+      "active": event.target.checked
     }
     addUpdateAPI(method, url, data).then((response) => {
       let data = response?.data
@@ -222,23 +249,23 @@ function CorporateUser({ activeTab }) {
     var url;
     var postData;
     if (title === "Add User") {
-      method="POST"
-      url=`/users/register/`
-      postData={
+      method = "POST"
+      url = `/users/register/`
+      postData = {
         "name": data?.name,
-          "username": data?.username,
-          "password": data?.password,
-          "role_id": Number(defaultRoleValue),
-          "active": true
+        "username": data?.username,
+        "password": data?.password,
+        "role_id": Number(defaultRoleValue),
+        "active": true
       }
     }
     else {
-      method="PUT"
-      url=`/users/${editData?.id}`
-      postData={
+      method = "PUT"
+      url = `/users/${editData?.id}`
+      postData = {
         "name": data?.name,
-          "username": data?.username,
-          "role_id": Number(defaultRoleValue)
+        "username": data?.username,
+        "role_id": Number(defaultRoleValue)
       }
     }
     addUpdateAPI(method, url, postData).then((response) => {
@@ -289,99 +316,112 @@ function CorporateUser({ activeTab }) {
     fetchRoleData()
   }
   return (
-    <div>
-      <div className='mt-1'>
-        <div className='d-flex justify-content-between align-items-end'>
-          <div className=''>
-            <input type="text" className='form-control me-2 tab_search' placeholder='Search' />
+    <>
+      <div   ref={mainContainerRef} className='mt-2 canvas_close'>
+        <div className='mt-1'>
+          <div className='d-flex justify-content-between align-items-end'>
+            <div className=''>
+              <input type="text" className='form-control me-2 tab_search' placeholder='Search' />
+            </div>
+            <div>
+              <button className='btn btn-sm add px-2' data-bs-toggle="offcanvas" data-bs-target="#Adduser" aria-controls="offcanvasRight" onClick={() => handleAdd()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+              </svg></button>
+            </div>
           </div>
-          <div>
-            <button className='btn btn-sm add px-2' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                        </svg></button>
+          <div className='card my-3 tablecard'>
+            <DataTable
+              columns={columns}
+              data={userdata}
+              customStyles={tableStyle}
+              pagination
+              paginationServer
+              paginationTotalRows={total}
+              onChangeRowsPerPage={handlePerRowsChange}
+              onChangePage={handlePageChange}
+            />
           </div>
         </div>
-        <div className='card my-3 tablecard'>
-          <DataTable
-            columns={columns}
-            data={userdata}
-            customStyles={tableStyle}
-            pagination
-            paginationServer
-            paginationTotalRows={total}
-            onChangeRowsPerPage={handlePerRowsChange}
-            onChangePage={handlePageChange}
-          />
+        <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1 className="modal-title fs-5" id="staticBackdropLabel">{title}</h1>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close" onClick={() => handleCancel()}></button>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
-      <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="staticBackdropLabel">{title}</h1>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close" onClick={() => handleCancel()}></button>
-            </div>
-            <form onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
-              <div className="modal-body">
-                <div>
-                  <label htmlFor="name">Corporate Group Admin Name<span className='text-danger'>*</span></label>
-                  <input id="name" className='form-control' {...register('name')} />
-                  {errors.name && <span className='text-danger'>{errors.name.message}</span>}
-                </div>
 
-                <div>
-                  <label htmlFor="username">Username<span className='text-danger'>*</span></label>
-                  <input id="username" className='form-control' {...register('username')} autoComplete='off' />
-                  {errors.username && <span className='text-danger'>{errors.username.message}</span>}
-                </div>
-                {
-                  title === "Edit User" ? "" :
-                    <>
-                      <div>
-                        <label htmlFor="password">Password<span className='text-danger'>*</span></label>
-                        <input id="password" className='form-control' type="text" {...register('password')} autoComplete='off' />
-                        {errors.password && <span className='text-danger'>{errors.password.message}</span>}
-                      </div>
-                      {/* <div>
+      <div ref={offcanvasRef} class="offcanvas offcanvas-end " tabindex="-1" id="Adduser" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+          <h5 id="offcanvasRightLabel">{title}</h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body pt-0">
+          <form onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
+            <div className="modal-body">
+              <div className='form-group'>
+                <label htmlFor="name">Corporate Group Admin Name<span className='text-danger'>*</span></label>
+                <input id="name" className='form-control' {...register('name')} />
+                {errors.name && <span className='text-danger'>{errors.name.message}</span>}
+              </div>
+
+              <div className='form-group'>
+                <label htmlFor="username">Username<span className='text-danger'>*</span></label>
+                <input id="username" className='form-control' {...register('username')} autoComplete='off' />
+                {errors.username && <span className='text-danger'>{errors.username.message}</span>}
+              </div>
+              {
+                title === "Edit User" ? "" :
+                  <>
+                    <div className='form-group'>
+                      <label htmlFor="password">Password<span className='text-danger'>*</span></label>
+                      <input id="password" className='form-control' type="text" {...register('password')} autoComplete='off' />
+                      {errors.password && <span className='text-danger'>{errors.password.message}</span>}
+                    </div>
+                    {/* <div>
                         <label htmlFor="confirmPassword">Confirm Password<span className='text-danger'>*</span></label>
                         <input id="confirmPassword" className='form-control' type="text" {...register('confirmPassword')} />
                         {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword.message}</span>}
                       </div> */}
-                      <div>
-                        <label htmlFor="confirmPassword">Email ID<span className='text-danger'>*</span></label>
-                        <input id="confirmPassword" className='form-control' type="text" {...register('confirmPassword')} />
-                        {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword.message}</span>}
-                      </div>
-                      <div>
-                        <label htmlFor="confirmPassword">Mobile No<span className='text-danger'>*</span></label>
-                        <input id="confirmPassword" className='form-control' type="text" {...register('confirmPassword')} />
-                        {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword.message}</span>}
-                      </div>
-                    </>
-                }
-                <div>
-                  <label htmlFor="role">Role<span className='text-danger'>*</span></label>
-                  <select className='form-control' id="role" {...register('role')} defaultValue={defaultRoleValue}>
-                    {
-                      roleData?.map((item, index) => {
-                        return <option key={index} value={item?.id} defaultValue={item?.id}>{item?.name}</option>
-                      })
-                    }
-                  </select>
-                  {errors.role && <span className='text-danger'>{errors.role.message}</span>}
-                </div>
+                    <div className='form-group'>
+                      <label htmlFor="confirmPassword">Email ID<span className='text-danger'>*</span></label>
+                      <input id="confirmPassword" className='form-control' type="text" {...register('confirmPassword')} />
+                      {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword.message}</span>}
+                    </div>
+                    <div className='form-group'>
+                      <label htmlFor="confirmPassword">Mobile No<span className='text-danger'>*</span></label>
+                      <input id="confirmPassword" className='form-control' type="text" {...register('confirmPassword')} />
+                      {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword.message}</span>}
+                    </div>
+                  </>
+              }
+              <div className='form-group'>
+                <label htmlFor="role">Role<span className='text-danger'>*</span></label>
+                <select className='form-control' id="role" {...register('role')} defaultValue={defaultRoleValue}>
+                  {
+                    roleData?.map((item, index) => {
+                      return <option key={index} value={item?.id} defaultValue={item?.id}>{item?.name}</option>
+                    })
+                  }
+                </select>
+                {errors.role && <span className='text-danger'>{errors.role.message}</span>}
+              </div>
 
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary btn-sm" data-bs-dismiss="modal" title='Cancel' onClick={() => handleCancel()}>Cancel</button>
-                <button type="submit" className="btn  btn-sm add">{title === "Add User" ? "Save" : "Update"}</button>
-              </div>
-            </form>
-          </div>
+            </div>
+            <div className="modal-footer mt-4">
+              <button type="button" className="btn btn-danger btn-sm" data-bs-dismiss="modal" title='Cancel' onClick={() => handleCancel()}>Cancel</button>
+              <button type="submit" className="btn  btn-sm btn-success ms-3" >{title === "Add User" ? "Save" : "Update"}</button>
+            </div>
+          </form>
         </div>
       </div>
-    </div>
+
+    </>
   )
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import DataTable from 'react-data-table-component';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
@@ -19,6 +19,32 @@ function Corporate() {
   const [total, setTotal] = useState(0)
   const [regionList, setRegionList] = useState()
   const { control, register, formState: { errors }, reset, handleSubmit, setValue, getValues, clearErrors } = useForm();
+  const mainContainerRef = useRef(null);
+  const offcanvasRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new MutationObserver((mutationsList) => {
+      for (let mutation of mutationsList) {
+        if (mutation.attributeName === 'class') {
+          if (offcanvasRef.current.classList.contains('show')) {
+            mainContainerRef.current.classList.add('canvas_open');
+            mainContainerRef.current.classList.remove('canvas_close');
+          } else {
+            mainContainerRef.current.classList.remove('canvas_open');
+            mainContainerRef.current.classList.add('canvas_close');
+          }
+        }
+      }
+    });
+
+    if (offcanvasRef.current) {
+      observer.observe(offcanvasRef.current, { attributes: true });
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     getUserList()
@@ -153,7 +179,7 @@ function Corporate() {
       if (result.isConfirmed) {
         var url = `/corporate/${id}`
         deleteAPI(url).then((response) => {
-          
+
           if (response?.data?.status) {
             Swal.fire({
               toast: true,
@@ -211,7 +237,7 @@ function Corporate() {
       cell: row => activeStatus(row.active),
       sortable: true,
     },
-    
+
     {
       name: 'Actions',
       selector: row => row.status,
@@ -246,7 +272,7 @@ function Corporate() {
         var newAdminList = userList.filter((item) => item.value !== selectedOptions?.value);
         setUserList([...newAdminList, oldAdmin]);
         setValue("admin_id", selectedOptions);
-       
+
       } else {
         setValue("admin_id", selectedOptions);
       }
@@ -297,111 +323,124 @@ function Corporate() {
     getRegionList()
   }
   return (
-    <div>
-       <small className='text-muted'>Home / System admin / <span className='text-primary'>Corporate</span></small>
-      <div className='container-fluid p-0'>
-        <h6 className='title fw-bold mt-1'>Corporate</h6>
-      </div>
-      <div className='container-fluid card mb-5 container-card'>
-        <ul className="nav nav-tabs" >
-          <li className="nav-item " id="corporatetab" onClick={() => setSelectedTab('corporate')}>
-            <span className="nav-link " aria-current="page" role='button'>Corporate</span>
-          </li>
-          <li className="nav-item" id="usertab" onClick={() => setSelectedTab('user')}>
-            <span className="nav-link" role='button'>User</span>
-          </li>
-        </ul>
+    <>
+      <div  ref={mainContainerRef} className='mt-2 canvas_close'>
+        <small className='text-muted'>Home / System admin / <span className='text-primary'>Corporate</span></small>
+        <div className='container-fluid p-0'>
+          <h6 className='title fw-bold mt-1'>Corporate</h6>
+        </div>
+        <div className='container-fluid card mb-5 container-card'>
+          <ul className="nav nav-tabs" >
+            <li className="nav-item " id="corporatetab" onClick={() => setSelectedTab('corporate')}>
+              <span className="nav-link " aria-current="page" role='button'>Corporate</span>
+            </li>
+            <li className="nav-item" id="usertab" onClick={() => setSelectedTab('user')}>
+              <span className="nav-link" role='button'>User</span>
+            </li>
+          </ul>
 
-        {selectedTab === 'corporate' &&
-          <section id='regiontbl'>
-            <div className='d-flex justify-content-between align-items-end mt-1 p-0'>
-              <div className=''>
-                <input type="text" className='form-control me-2 tab_search' placeholder='Search' onChange={(e) => searchCorporate(e)} />
+          {selectedTab === 'corporate' &&
+            <section id='regiontbl'>
+              <div className='d-flex justify-content-between align-items-end mt-1 p-0'>
+                <div className=''>
+                  <input type="text" className='form-control me-2 tab_search' placeholder='Search' onChange={(e) => searchCorporate(e)} />
+                </div>
+                <div>
+                  <button className='btn btn-sm add px-2'  data-bs-toggle="offcanvas" data-bs-target="#AddCorporate" aria-controls="offcanvasRight" onClick={() => handleAddCorporate()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                  </svg></button>
+                </div>
               </div>
-              <div>
-                <button className='btn btn-sm add px-2' data-bs-toggle="modal" data-bs-target="#addRegionModal" onClick={() => handleAddCorporate()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                        </svg></button>
+              <div className='card my-3 tablecard'>
+                <DataTable
+                  pagination
+                  customStyles={tableStyle}
+                  columns={columns}
+                  data={corporateList}
+                  paginationTotalRows={total}
+                  paginationServer
+                  onChangeRowsPerPage={handlePerRowsChange}
+                  onChangePage={handlePageChange}
+                />
               </div>
-            </div>
-            <div className='card my-3 tablecard'>
-              <DataTable
-                pagination
-                customStyles={tableStyle}
-                columns={columns}
-                data={corporateList}
-                paginationTotalRows={total}
-                paginationServer
-                onChangeRowsPerPage={handlePerRowsChange}
-                onChangePage={handlePageChange}
-              />
-            </div>
-          </section>}
+            </section>}
 
-        {selectedTab === 'user' &&
-          <section id='user'>
-            <CorporateUser activeTab={selectedTab} />
-          </section>}
+          {selectedTab === 'user' &&
+            <section id='user'>
+              <CorporateUser activeTab={selectedTab} />
+            </section>}
 
-      </div>
+        </div>
 
-      <div className="modal fade" id="viewRegionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="staticBackdropLabel">View Corporate</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div className="modal-body">
-              {/* <div className="row mb-3">
+        <div className="modal fade" id="viewRegionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="staticBackdropLabel">View Corporate</h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div className="modal-body">
+                {/* <div className="row mb-3">
                 <div className="col-sm-4 fw-bold">Region:</div>
                 <div className="col-sm-8">{`${selectedCorporate?.region?.code ? selectedCorporate?.region?.code : ""}${selectedCorporate?.region?.code ? ' - ' : ''}${selectedCorporate?.region?.name ? selectedCorporate?.region?.name : ''}`}</div>
               </div> */}
-              <div className="row mb-3">
-                <div className="col-sm-4 fw-bold">Corporate Group Code (CG):</div>
-                <div className="col-sm-8">{selectedCorporate?.corporate_group_code ? selectedCorporate?.corporate_group_code : '-'}</div>
-              </div>
-              <div className="row mb-3">
-                <div className="col-sm-4 fw-bold">Name:</div>
-                <div className="col-sm-8">{selectedCorporate?.name ? selectedCorporate?.name : '-'}</div>
-              </div>
-              <div className="row mb-3">
-                <div className="col-sm-4 fw-bold">Address:</div>
-                <div className="col-sm-8">{selectedCorporate?.address ? selectedCorporate?.address : '-'}</div>
-              </div>
-              <div className="row mb-3">
-                <div className="col-sm-4 fw-bold">City:</div>
-                <div className="col-sm-8">{selectedCorporate?.city ? selectedCorporate?.city : '-'}</div>
-              </div>
-              <div className="row mb-3">
-                <div className="col-sm-4 fw-bold">District:</div>
-                <div className="col-sm-8">{selectedCorporate?.district ? selectedCorporate?.district : '-'}</div>
-              </div>
-              <div className="row mb-3">
-                <div className="col-sm-4 fw-bold">Pincode:</div>
-                <div className="col-sm-8">{selectedCorporate?.pincode ? selectedCorporate?.pincode : "-"}</div>
-              </div>
-              <div className="row mb-3">
-                <div className="col-sm-4 fw-bold">State:</div>
-                <div className="col-sm-8">{selectedCorporate?.state ? selectedCorporate?.state : '-'}</div>
-              </div>
-              {/* <div className="row mb-3">
+                <div className="row mb-3">
+                  <div className="col-sm-4 fw-bold">Corporate Group Code (CG):</div>
+                  <div className="col-sm-8">{selectedCorporate?.corporate_group_code ? selectedCorporate?.corporate_group_code : '-'}</div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-sm-4 fw-bold">Name:</div>
+                  <div className="col-sm-8">{selectedCorporate?.name ? selectedCorporate?.name : '-'}</div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-sm-4 fw-bold">Address:</div>
+                  <div className="col-sm-8">{selectedCorporate?.address ? selectedCorporate?.address : '-'}</div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-sm-4 fw-bold">City:</div>
+                  <div className="col-sm-8">{selectedCorporate?.city ? selectedCorporate?.city : '-'}</div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-sm-4 fw-bold">District:</div>
+                  <div className="col-sm-8">{selectedCorporate?.district ? selectedCorporate?.district : '-'}</div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-sm-4 fw-bold">Pincode:</div>
+                  <div className="col-sm-8">{selectedCorporate?.pincode ? selectedCorporate?.pincode : "-"}</div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-sm-4 fw-bold">State:</div>
+                  <div className="col-sm-8">{selectedCorporate?.state ? selectedCorporate?.state : '-'}</div>
+                </div>
+                {/* <div className="row mb-3">
                 <div className="col-sm-4 fw-bold">Corporate Admin:</div>
                 <div className="col-sm-8">{selectedCorporate?.admin_id?.name ? selectedCorporate?.admin_id?.name : '-'}</div>
               </div> */}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="modal fade" id="addRegionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div className="modal-dialog modal-lg">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="staticBackdropLabel">{mode === 'edit' ? 'Edit Corporate' : 'Add Corporate'}</h1>
-              <button type="button" id='modalClose' className="btn-close" onClick={() => clearModal()} data-bs-dismiss="modal" aria-label="Close"></button>
+        {/* <div className="modal fade" id="addRegionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1 className="modal-title fs-5" id="staticBackdropLabel">{mode === 'edit' ? 'Edit Corporate' : 'Add Corporate'}</h1>
+                <button type="button" id='modalClose' className="btn-close" onClick={() => clearModal()} data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+
             </div>
+          </div>
+        </div> */}
+
+        <div ref={offcanvasRef} class="offcanvas offcanvas-end " tabindex="-1" id="AddCorporate" aria-labelledby="offcanvasRightLabel">
+          <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel">{mode === 'edit' ? 'Edit Corporate' : 'Add Corporate'}</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body pt-0">
             <form onSubmit={handleSubmit(addCorporate)}>
               <div className="modal-body">
                 <div className="row">
@@ -417,39 +456,39 @@ function Corporate() {
                   </div> */}
                 </div>
                 <div className="row mt-2">
-                  <div className="col">
+                  <div className="col-lg-12">
                     <label className="mt-2">Corporate Group Code (CG) <span className="text-danger">*</span></label>
-                    <input className="form-control" {...register('corporate_group_code', { required: true })} />
+                    <input className="form-control" placeholder='Corporate Group Code' {...register('corporate_group_code', { required: true })} />
                     {errors?.corporate_group_code && <span className="text-danger">Corporate Group Code is required</span>}
                   </div>
-                  <div className="col">
+                  <div className="col-lg-12">
                     <label className="mt-2">Name <span className="text-danger">*</span></label>
-                    <input className="form-control" {...register('name', { required: true })} />
+                    <input className="form-control" placeholder='Name' {...register('name', { required: true })} />
                     {errors.name && <span className="text-danger">Name is required</span>}
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col">
+                  <div className="col-lg-12">
                     <label className="mt-2">Address <span className="text-danger">*</span></label>
-                    <input className="form-control" {...register('address', { required: true })} />
+                    <input className="form-control" placeholder='Address' {...register('address', { required: true })} />
                     {errors.address && <span className="text-danger">Address is required</span>}
                   </div>
-                  <div className="col">
+                  <div className="col-lg-12">
                     <label className="mt-2">City <span className="text-danger">*</span></label>
-                    <input className="form-control" {...register('city', { required: true })} />
+                    <input className="form-control" placeholder='City' {...register('city', { required: true })} />
                     {errors.city && <span className="text-danger">City is required</span>}
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col">
+                  <div className="col-lg-12">
                     <label className="mt-2">District <span className="text-danger">*</span></label>
-                    <input className="form-control" {...register('district', { required: true })} />
+                    <input className="form-control" placeholder='District' {...register('district', { required: true })} />
                     {errors.district && <span className="text-danger">Name is required</span>}
                   </div>
-                  <div className="col">
+                  <div className="col-lg-12">
                     <label className="mt-2">Pincode <span className="text-danger">*</span></label>
                     <input
-                      className="form-control"
+                      className="form-control" placeholder='Pincode'
                       {...register('pincode', {
                         required: 'Pincode is required',
                         pattern: {
@@ -462,9 +501,9 @@ function Corporate() {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-6">
+                  <div className="col-lg-12">
                     <label className="mt-2">State <span className="text-danger">*</span></label>
-                    <input className="form-control" {...register('state', { required: true })} />
+                    <input className="form-control" placeholder='State' {...register('state', { required: true })} />
                     {errors.state && <span className="text-danger">State is required</span>}
                   </div>
                   {/* <div className="col">
@@ -490,16 +529,16 @@ function Corporate() {
                   </div> */}
                 </div>
               </div>
-              <div className="modal-footer">
-                <button type="button" onClick={() => clearModal()} className="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" className="btn  btn-sm add">Save</button>
+              <div className="modal-footer mt-3">
+                <button type="button" onClick={() => clearModal()} className="btn btn-danger btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" className="btn  btn-sm btn-success ms-2">Save</button>
               </div>
             </form>
-
           </div>
         </div>
+        
       </div>
-    </div>
+    </>
   )
 }
 
