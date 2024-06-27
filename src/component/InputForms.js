@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect,useState } from 'react';
 import './InputForms.css';
 import { inputContext } from '../layout/DefaultLayout';
 import { useForm } from 'react-hook-form';
@@ -57,7 +57,7 @@ function InputForms({ handleClose }) {
           isactive: editData?.active
         })
       } else {
-        reset({ code: '', name: '', admin: '', member: '' })
+        regionUserReset({ code: '', name: '', isactive: '' })
       }
     }
     else if(from === "Region" && title == "Add Region"){
@@ -89,7 +89,7 @@ function InputForms({ handleClose }) {
         confirmPassword: ""
       })
     } else if (from === "Region") {
-      reset({ code: '', name: '', admin: '', member: '' })
+      regionUserReset({ code: '', name: '', isactive: '' })
     }
     else if (from === "userRole") {
       handleClose()
