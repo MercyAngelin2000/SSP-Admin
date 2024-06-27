@@ -137,7 +137,7 @@ function ForgotPassword() {
                                     {showMobileFields ? (
                                         <>
                                             <div className="form-group mb-2">
-                                                <label>Mobile Number</label>
+                                                <label>Mobile Number <span className="required-asterisk">*</span></label>
                                                 <input
                                                     type="number"
                                                     className="form-control form-control-login"
@@ -149,8 +149,8 @@ function ForgotPassword() {
                                     ) : (
                                         <>
                                             <div className="form-group mb-2">
-                                                <label>Username / Email ID</label>
-                                                <input
+                                            <label>Username / Email ID <span className="required-asterisk">*</span></label>
+                                            <input
                                                     type="text"
                                                     className="form-control form-control-login"
                                                     value={username}
@@ -162,7 +162,7 @@ function ForgotPassword() {
 
 
                                     <div className="form-group mb-2">
-                                        <label>OTP</label>
+                                        <label>OTP <span className="required-asterisk">*</span></label>
                                         <div className="row">
                                             <div className='col-lg-8'>
                                                 <input
@@ -183,7 +183,7 @@ function ForgotPassword() {
                                     </div>
 
                                     <div className="form-group mb-2">
-                                        <label>New Password</label>
+                                        <label>New Password <span className="required-asterisk">*</span></label>
                                         <input
                                             type="password"
                                             className="form-control form-control-login"
@@ -193,7 +193,7 @@ function ForgotPassword() {
                                     </div>
 
                                     <div className="form-group mb-2">
-                                        <label>Confirm Password</label>
+                                        <label>Confirm Password <span className="required-asterisk">*</span></label>
                                         <input
                                             type="password"
                                             className="form-control form-control-login"

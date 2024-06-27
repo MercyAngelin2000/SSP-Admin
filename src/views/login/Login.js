@@ -159,11 +159,18 @@ export default function Login() {
                                     <p className='text-muted mb-3'>Welcome Back to SSP! <button type="button" className='btn btn-link small' onClick={() => setOtpRequired(!otpRequired)}>OTP Login</button></p>
                                 </div>
                                 <div className="form-group mb-3">
-                                    <label>{!otpRequired ? 'Username/' : ''} Email ID/ Mobile Number</label>
+                                    <label>{!otpRequired ? 'Username/' : ''} Email ID/ Mobile Number <span className="required-asterisk">*</span></label>
                                     <input
                                         type="text"
                                         className="form-control"
-                                        {...register("loginId")}
+                                        // {...register("loginId")}
+                                        {...register("loginId", {
+                                            required: "This field is required",
+                                            pattern: {
+                                                value: /^[\d]{10,12}$/, // Regular expression for mobile number validation
+                                                message: "Enter a valid mobile number (10 to 12 digits)"
+                                            }
+                                        })}
                                         placeholder="Enter Username/Email ID/Mobile Number"
                                     // onChange={(e) => {
                                     //     const value = e.target.value;
@@ -180,7 +187,7 @@ export default function Login() {
                                     {errors.loginId && <span className="error-text">{errors.loginId.message}</span>}
                                 </div>
                                 {!otpRequired ? <div className="form-group mb-3">
-                                    <label>Password</label>
+                                    <label>Password  <span className="required-asterisk">*</span></label>
                                     <div>
                                         <input
                                             type="password"
@@ -200,7 +207,7 @@ export default function Login() {
                                     :
                                     <div className=''>
                                         <div className="form-group mb-3">
-                                            <label>OTP</label>
+                                            <label>OTP <span className="required-asterisk">*</span></label>
                                             <div className="row">
                                                 <div className='col-lg-8'>
                                                     <input

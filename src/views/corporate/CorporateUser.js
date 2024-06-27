@@ -55,7 +55,7 @@ function CorporateUser({ activeTab }) {
       sortable: true
     },
     {
-      name: 'User Name',
+      name: 'Corporate Group Admin Name',
       selector: row => row?.name,
       cell: row => <div>{row?.name}</div>,
       sortable: true
@@ -325,7 +325,7 @@ function CorporateUser({ activeTab }) {
             <form onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
               <div className="modal-body">
                 <div>
-                  <label htmlFor="name">Name<span className='text-danger'>*</span></label>
+                  <label htmlFor="name">Corporate Group Admin Name<span className='text-danger'>*</span></label>
                   <input id="name" className='form-control' {...register('name')} />
                   {errors.name && <span className='text-danger'>{errors.name.message}</span>}
                 </div>
@@ -343,8 +343,18 @@ function CorporateUser({ activeTab }) {
                         <input id="password" className='form-control' type="text" {...register('password')} autoComplete='off' />
                         {errors.password && <span className='text-danger'>{errors.password.message}</span>}
                       </div>
-                      <div>
+                      {/* <div>
                         <label htmlFor="confirmPassword">Confirm Password<span className='text-danger'>*</span></label>
+                        <input id="confirmPassword" className='form-control' type="text" {...register('confirmPassword')} />
+                        {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword.message}</span>}
+                      </div> */}
+                      <div>
+                        <label htmlFor="confirmPassword">Email ID<span className='text-danger'>*</span></label>
+                        <input id="confirmPassword" className='form-control' type="text" {...register('confirmPassword')} />
+                        {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword.message}</span>}
+                      </div>
+                      <div>
+                        <label htmlFor="confirmPassword">Mobile No<span className='text-danger'>*</span></label>
                         <input id="confirmPassword" className='form-control' type="text" {...register('confirmPassword')} />
                         {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword.message}</span>}
                       </div>

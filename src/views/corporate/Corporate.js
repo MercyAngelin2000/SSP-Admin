@@ -194,7 +194,7 @@ function Corporate() {
       selector: (row, index) => index + 1
     },
     {
-      name: 'Code',
+      name: 'Corporate Group Code (CG)',
       selector: row => row?.corporate_group_code,
     },
     {
@@ -211,6 +211,7 @@ function Corporate() {
       cell: row => activeStatus(row.active),
       sortable: true,
     },
+    
     {
       name: 'Actions',
       selector: row => row.status,
@@ -353,12 +354,12 @@ function Corporate() {
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
-              <div className="row mb-3">
+              {/* <div className="row mb-3">
                 <div className="col-sm-4 fw-bold">Region:</div>
                 <div className="col-sm-8">{`${selectedCorporate?.region?.code ? selectedCorporate?.region?.code : ""}${selectedCorporate?.region?.code ? ' - ' : ''}${selectedCorporate?.region?.name ? selectedCorporate?.region?.name : ''}`}</div>
-              </div>
+              </div> */}
               <div className="row mb-3">
-                <div className="col-sm-4 fw-bold">Code:</div>
+                <div className="col-sm-4 fw-bold">Corporate Group Code (CG):</div>
                 <div className="col-sm-8">{selectedCorporate?.corporate_group_code ? selectedCorporate?.corporate_group_code : '-'}</div>
               </div>
               <div className="row mb-3">
@@ -385,10 +386,10 @@ function Corporate() {
                 <div className="col-sm-4 fw-bold">State:</div>
                 <div className="col-sm-8">{selectedCorporate?.state ? selectedCorporate?.state : '-'}</div>
               </div>
-              <div className="row mb-3">
+              {/* <div className="row mb-3">
                 <div className="col-sm-4 fw-bold">Corporate Admin:</div>
                 <div className="col-sm-8">{selectedCorporate?.admin_id?.name ? selectedCorporate?.admin_id?.name : '-'}</div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -404,7 +405,7 @@ function Corporate() {
             <form onSubmit={handleSubmit(addCorporate)}>
               <div className="modal-body">
                 <div className="row">
-                  <div className="col-lg-6">
+                  {/* <div className="col-lg-6">
                     <label className="mt-2">Region <span className="text-danger">*</span></label>
                     <select className="form-select" {...register('region', { required: true })}>
                       <option value="">Select Region</option>
@@ -413,13 +414,13 @@ function Corporate() {
                       ))}
                     </select>
                     {errors?.region && <span className="text-danger">Region is required</span>}
-                  </div>
+                  </div> */}
                 </div>
                 <div className="row mt-2">
                   <div className="col">
-                    <label className="mt-2">Code <span className="text-danger">*</span></label>
+                    <label className="mt-2">Corporate Group Code (CG) <span className="text-danger">*</span></label>
                     <input className="form-control" {...register('corporate_group_code', { required: true })} />
-                    {errors?.corporate_group_code && <span className="text-danger">Code is required</span>}
+                    {errors?.corporate_group_code && <span className="text-danger">Corporate Group Code is required</span>}
                   </div>
                   <div className="col">
                     <label className="mt-2">Name <span className="text-danger">*</span></label>
@@ -461,12 +462,12 @@ function Corporate() {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col">
+                  <div className="col-6">
                     <label className="mt-2">State <span className="text-danger">*</span></label>
                     <input className="form-control" {...register('state', { required: true })} />
                     {errors.state && <span className="text-danger">State is required</span>}
                   </div>
-                  <div className="col">
+                  {/* <div className="col">
                     <label className="mt-2">Admin <span className="text-danger">*</span></label>
                     <Controller
                       name="admin_id"
@@ -486,7 +487,7 @@ function Corporate() {
                       )}
                     />
                     {errors?.admin_id && <span className="text-danger">Admin is required</span>}
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="modal-footer">

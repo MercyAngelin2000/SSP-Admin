@@ -297,6 +297,12 @@ p {
   height: 30px !important; /* Smaller icon size */
 
 }
+.required-asterisk {
+  color: red;
+  margin-left: 2px; /* Adjust spacing between the label text and the asterisk */
+  font-size: 1.1em; /* Adjust size if needed */
+  vertical-align: middle; /* Adjust vertical alignment */
+}
 
 /* .cardView {
   background: linear-gradient(100deg, #e0e0e0, #e0e0e0 100%);
