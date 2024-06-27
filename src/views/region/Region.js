@@ -41,7 +41,7 @@ function Region() {
   useEffect(() => {
     getRegionList()
     // eslint-disable-next-line
-  }, [limit, skip])
+  }, [limit, skip, selectedTab])
 
   const getRegionList = () => {
     var url = `/region/?skip=${skip}&limit=${limit}`

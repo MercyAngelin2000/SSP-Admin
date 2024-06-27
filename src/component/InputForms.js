@@ -25,13 +25,13 @@ function InputForms({ handleClose }) {
     if (from === "RegionUser" && title === "Edit User") {
       setValue("region_id", selectedRegion)
       regionUserReset({
-        name: editData?.user?.name,
-        username: editData?.user?.username,
-        role: editData?.user?.role_id,
-        mobile: editData?.user?.mobile,
-        email: editData?.user?.email,
+        name: editData?.name,
+        username: editData?.username,
+        role: editData?.role_id,
+        mobile: editData?.mobile,
+        email: editData?.email,
         region_id:editData?.region_id,
-        active: editData?.user?.active
+        active: editData?.active
 
       })
     }
@@ -67,13 +67,7 @@ function InputForms({ handleClose }) {
         isactive:''
       })
     }
-    else if(from === "Region" && title == "Add Region"){
-      regionReset({
-        name: "",
-        code:'',
-        isactive:''
-      })
-    }
+
   }, [inputObj])
   const handleCancelBtn = () => {
     console.log("yes");
@@ -108,23 +102,23 @@ function InputForms({ handleClose }) {
       return (
         <form onSubmit={regionUserHandleSubmit(onSubmit)} autoComplete='off' style={{ fontSize: '12px' }}>
           <div>
-            <div>
+            <div className='mt-2'>
               <label htmlFor="name">Name<span className='text-danger'>*</span></label>
               <input id="name" className='form-control' {...register('name')} />
               {errors?.name?.message && <span className='text-danger'>{errors?.name?.message}</span>}
             </div>
-            <div>
+            <div className='mt-2'>
               <label htmlFor="email">Mail I'd<span className='text-danger'>*</span></label>
               <input id="email" className='form-control' {...register('email')} />
               {errors?.email?.message && <span className='text-danger'>{errors?.email?.message}</span>}
             </div>
-            <div>
+            <div className='mt-2'>
               <label htmlFor="mobile">Phone Number<span className='text-danger'>*</span></label>
               <input id="mobile" className='form-control' {...register('mobile')} />
               {errors?.mobile?.message && <span className='text-danger'>{errors?.mobile?.message}</span>}
             </div>
 
-            <div>
+            <div className='mt-2'>
               <label htmlFor="username">Username<span className='text-danger'>*</span></label>
               <input id="username" className='form-control' {...register('username')} autoComplete='off' />
               {errors.username && <span className='text-danger'>{errors.username.message}</span>}
@@ -132,19 +126,19 @@ function InputForms({ handleClose }) {
             {
               title === "Edit User" ? "" :
                 <>
-                  <div>
+                  <div className='mt-2'>
                     <label htmlFor="password">Password<span className='text-danger'>*</span></label>
                     <input id="password" className='form-control' type="text" {...register('password')} autoComplete='off' />
                     {errors.password && <span className='text-danger'>{errors.password.message}</span>}
                   </div>
-                  <div>
+                  <div className='mt-2'>
                     <label htmlFor="confirmPassword">Confirm Password<span className='text-danger'>*</span></label>
                     <input id="confirmPassword" className='form-control' type="text" {...register('confirmPassword')} />
                     {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword.message}</span>}
                   </div>
                 </>
             }
-            <div>
+            <div className='mt-2'>
               <label htmlFor="role">Role<span className='text-danger'>*</span></label>
               <select className='form-control' id="role" {...register('role')}>
                 <option value="" style={{ fontSize: '12px' }}>Select Role</option>
@@ -156,28 +150,8 @@ function InputForms({ handleClose }) {
               </select>
               {errors.role && <span className='text-danger'>{errors.role.message}</span>}
             </div>
-            <div>
+            <div className='mt-2'>
               <label className='mt-2'>Region List<span className='text-danger'>*</span></label>
-              {/* <Controller
-                name="region_id"
-                control={control}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    options={regionList}
-                    isClearable
-                    selectedOptions={selectedRegion}
-                    // defaultValue={editData?.region_id}
-                    onChange={(selectedOptions) => {
-                      regionHandleChange(selectedOptions, 'region_id');
-                    }}
-                    isMulti={false}
-                  />
-                )}
-              /> */}
-              
               <select className='form-control' id="role" {...register('region_id')}>
                 <option value="" style={{ fontSize: '12px' }} selected>Select Region</option>
                 {

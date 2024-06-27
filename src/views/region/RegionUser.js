@@ -56,6 +56,7 @@ function RegionUser({ activeTab }) {
     const [limit, setLimit] = useState(10);
     const [total, setTotal] = useState(0);
     const inputContextObj= useContext(inputContext);
+
     const columns = [
         {
             width: '100px',
@@ -66,21 +67,27 @@ function RegionUser({ activeTab }) {
         },
         {
             name: 'User Name',
-            selector: row => row?.user?.name,
-            cell: row => <div>{row?.user?.name}</div>,
+            selector: row => row?.name,
+            cell: row => <div>{row?.username}</div>,
+            sortable: true
+        },
+        {
+            name: 'Mail Id',
+            selector: row => row?.email,
+            cell: row => <div>{row?.email}</div>,
             sortable: true
         },
         {
             name: 'Role',
-            selector: row => row?.role?.name,
+            selector: row => row?.name,
             cell: row => <div>Region Head</div>,
             sortable: true
         },
         {
             name: 'Active Status',
-            selector: row => row.user.active,
+            selector: row => row?.active,
             cell: row => <div className="form-check form-switch">
-                <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" defaultChecked={row.user.active} onChange={(event) => handleActiveStatus(event, row)} />
+                <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" defaultChecked={row?.active} onChange={(event) => handleActiveStatus(event, row)} />
                 <label className="form-check-label" htmlFor="flexSwitchCheckChecked"></label>
             </div>,
             sortable: true
@@ -105,7 +112,6 @@ function RegionUser({ activeTab }) {
         },
     ];
     useEffect(() => {
-        console.log("editData",editData);
         if(editData){
         setSessionStorageItem('inputBar',true);
         inputContextObj?.setInputObj({from:"RegionUser", roleData:roleData,schema:schema,schema1:schema1,onSubmit:onSubmit,title:title,editData:editData,handleCancel:handleCancel})
@@ -141,7 +147,7 @@ function RegionUser({ activeTab }) {
             width: 400
         }).then((result) => {
             if (result.isConfirmed) {
-                var url = `/users/${row?.user?.id}`
+                var url = `/region/RegionUsers/${row?.id}`
                 deleteAPI(url).then((response) => {
                     let data = response?.data
                     if (data?.status) {
@@ -171,11 +177,27 @@ function RegionUser({ activeTab }) {
     }
     const fetchUserListData = () => {
         var url =`/region/region_user/?&skip=${skip}&limit=${limit}`
-        // var url = `/users/users/?user_type=region&skip=${skip}&limit=${limit}`
         getAPI(url).then((response) => {
-            console.log(response?.data[0]?.user?.name);
-            setUserData(response?.data)
+            var temp = [];
+            response?.data?.map((item) => {
+                temp.push({
+                    'region_id': item?.region?.id,
+                    'name': item?.region?.name,
+                    'email': item?.user?.email,
+                    'mobile': item?.user?.mobile,
+                    'username': item?.user?.username,
+                    'password': item?.user?.password,
+                    'role_id': item?.user?.role_id,
+                    'active': item?.user?.active,
+                    'id': item?.user_id,
+                    'user_id': item?.user_id
+                });
+        
+
+            })
+            setUserData(temp)
             setTotal(response?.data?.total_count)
+            
         }).catch((error) => {
             console.log(error)
         })
@@ -189,7 +211,6 @@ function RegionUser({ activeTab }) {
                 { value: item.id, label: item.name })
               );
             setRegionList(data)
-            console.log("regiondata",response?.data?.data);
             // setTotal(response?.data?.total_count)
         }).catch((error) => {
             console.log(error)
@@ -220,12 +241,13 @@ function RegionUser({ activeTab }) {
         var method = "PUT"
         var url = `/users/${row?.user_id}`
         var data = {
-            "name": row?.user?.name,
-            "username": row?.user?.username,
-            "role_id": Number(row?.user?.role_id),
+            "name": row?.name,
+            "username": row?.username,
+            "role_id": Number(row?.role_id),
             "active": event.target.checked,
-            'email': row?.user?.email,
-            'mobile': String(row?.user?.mobile)
+            'email': row?.email,
+            'mobile': String(row?.mobile),
+            
         }
         addUpdateAPI(method, url, data).then((response) => {
             let data = response?.data
@@ -253,7 +275,6 @@ function RegionUser({ activeTab }) {
         })
     }
     const onSubmit = (data) => {
-        console.log("add data-user",data,selectedRegion);
         var method;
         var url;
         var postData;
@@ -262,7 +283,7 @@ function RegionUser({ activeTab }) {
             url = `/region/adduser/`
             postData = {
                 'region_id': Number(data?.region_id),
-                "admin_name": data?.name,
+                "name": data?.name,
                 'email': data?.email,
                 'mobile': data?.mobile,
                 "username": data?.username,
@@ -274,10 +295,10 @@ function RegionUser({ activeTab }) {
         }
         else {
             method = "PUT"
-            url = `/region/update_user/${editData?.user?.id}`
+            url = `/region/update_user/${editData?.id}`
             postData = {
                 'region_id': Number(data?.region_id),
-                "admin_name": data?.name,
+                "name": data?.name,
                 'email': data?.email,
                 'mobile': data?.mobile,
                 "username": data?.username,
@@ -341,16 +362,32 @@ function RegionUser({ activeTab }) {
     }
 
     const handleChange = (selectedOptions,name) => {
-        console.log("yes",selectedOptions);
         // setValue("region_id", [selectedOptions])
         setSelectedRegion([selectedOptions])
         // inputContextObj?.setInputObj({from:"RegionUser",setValue:setValue, roleData:roleData,schema:schema,schema1:schema1,onSubmit:onSubmit,title:title,editData:editData,handleCancel:handleCancel,regionList:regionList,regionHandleChange:handleChange,selectedRegion:selectedRegion}) 
     }
 
     const searchRegion = (e) => {
-        var url = `/users/search/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`
+        var url = `/region/seach_region_user/?value=${e?.target?.value}&skip=${skip}&limit=${limit}`
         getAPI(url).then((response) => {
-        //   setRegionList(response?.data?.data)
+            var temp = [];
+            console.log('response?.data?.data',response?.data?.data);
+            response?.data?.data?.map((item) => {
+                temp.push({
+                    'region_id': item?.region_id,
+                    'name': item?.name,
+                    'email': item?.email,
+                    'mobile': item?.mobile,
+                    'username': item?.username,
+                    'password': item?.password,
+                    'role_id': item?.role_id,
+                    'active': item?.active,
+                    'id': item?.id,
+                });        
+
+            })
+            setUserData(temp)
+            console.log('temp',temp);
         }).catch((error) => {
           console.log(error)
         })
