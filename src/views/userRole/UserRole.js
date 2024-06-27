@@ -1,17 +1,22 @@
 import React, { useContext, useState } from 'react'
 import DataTable from 'react-data-table-component'
 import { activeStatus, tableStyle, setSessionStorageItem } from '../../utils/Utils';
-import {inputContext} from '../../layout/DefaultLayout';
+import { inputContext } from '../../layout/DefaultLayout';
+import "../../index.css"
+import "../region/Region.css"
 function UserRole() {
-    const [selectedTab, setSelectedTab] = useState('region')
-    const [regionList, setRegionList] = useState()
-    const [adminList, setAdminList] = useState()
-    const [memberList, setMemberList] = useState()
+    const [regionList, setRegionList] = useState([
+        {
+            code: '1',
+            name : 'test',
+            active: true
+        }
+    ])
     const [mode, setMode] = useState('add')
     const [skip, setSkip] = useState(0)
     const [limit, setLimit] = useState(10)
     const [total, setTotal] = useState(0)
-    const inputContextObj= useContext(inputContext);
+    const inputContextObj = useContext(inputContext);
 
     const columns = [
         {
@@ -38,7 +43,7 @@ function UserRole() {
             selector: row => row.status,
             cell: row =>
                 <div className='d-flex'>
-                    <button className='btn text-primary btn-sm me-2' >
+                    <button className='btn text-primary btn-sm me-2' onClick={() => handleAdd()}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
@@ -92,7 +97,7 @@ function UserRole() {
                                 <input type="text" className='form-control me-2 tab_search' placeholder='Search' />
                             </div>
                             <div>
-                                
+
                                 <button className='btn btn-sm add px-2' onClick={() => handleAdd()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
                                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
@@ -184,6 +189,17 @@ function UserRole() {
           </div>
         </div>
       </div> */}
+            </div>
+            {/* <div class="loader_contain col">
+                <div class="loader" id="loader-8"></div>
+            </div> */}
+            <div class="loader_contain col">
+                <div class="loader" id="loader-6">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </>
     )
