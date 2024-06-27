@@ -41,8 +41,8 @@
 .forgot_link {
   margin-top: 10px;
   color: red;
-  display: flex;
-  justify-content: flex-end;
+  /* display: flex;
+  justify-content: flex-end; */
   font-size: 0.9rem;
 }
 .try_link{
@@ -250,6 +250,52 @@ p {
 .loginBtn:hover {
   background-color: #6e06a7 !important;
   color: white;
+}
+
+
+
+/* Customize SweetAlert appearance */
+
+.custom-swal-size {
+
+  font-size: 14px !important; /* Reduce text size */
+
+  padding: 10px 15px !important; /* Reduce padding */
+
+  border-radius: 8px !important; /* Optional: make corners rounder */
+
+}
+
+
+
+/* Optional: Additional customization for the toast */
+
+.swal2-toast .swal2-title {
+
+  font-size: 16px !important; /* Smaller title font size */
+
+  margin: 0 !important; /* Remove margin around title */
+
+}
+
+
+
+.swal2-toast .swal2-content {
+
+  font-size: 14px !important; /* Smaller content font size */
+
+  margin: 0 !important; /* Remove margin around content */
+
+}
+
+
+
+.swal2-toast .swal2-icon {
+
+  width: 30px !important; /* Smaller icon size */
+
+  height: 30px !important; /* Smaller icon size */
+
 }
 
 /* .cardView {
