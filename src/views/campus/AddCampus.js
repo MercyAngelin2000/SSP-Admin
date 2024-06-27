@@ -9,7 +9,9 @@ import Swal from 'sweetalert2';
 import "./Campus.css";
 function AddCampus() {
 
-    const { control, register, formState: { errors }, reset, handleSubmit, setValue, getValues } = useForm();
+    const { control, register, formState: { errors }, reset, handleSubmit, setValue, getValues } = useForm({
+        isActive: true
+    });
     const navigate = useNavigate();
     const [campusUserList, setCampusUserList] = useState()
     const [corporateUserList, setCorporateUserList] = useState([])
@@ -17,6 +19,9 @@ function AddCampus() {
     const [authorityError, setAuthorityError] = useState({})
     const [formEntries, setFormEntries] = useState([
     ]);
+    const [roleData, setRoleData] = useState()
+    const [defaultRoleValue, setDefaultRoleValue] = useState()
+
 
 
     const { mode } = location.state
@@ -28,20 +33,21 @@ function AddCampus() {
 
 
     useEffect(() => {
-        getCampusUserList()
+        // getCampusUserList()
         getCorporateUserList()
-
+        fetchRoleData()
     }, [])
 
 
     const handleInputChange = (index, field, value) => {
         const updatedEntries = [...formEntries];
 
-        if (mode === "edit" && field === "user") {
+        if (mode === "edit") {
 
-            const olddata = formEntries[index][field];
-            const newAdminList = campusUserList.filter((item) => item.value !== value?.value);
-            olddata ? setCampusUserList([...newAdminList, olddata]) : setCampusUserList(newAdminList);
+            // const olddata = formEntries[index][field];
+            // const newAdminList = campusUserList.filter((item) => item.value !== value?.value);
+            // olddata ? setCampusUserList([...newAdminList, olddata]) : setCampusUserList(newAdminList);
+            // setCampusUserList(newAdminList);
             updatedEntries[index][field] = value;
             setFormEntries(updatedEntries);
 
@@ -53,13 +59,14 @@ function AddCampus() {
     };
 
     const addNewEntry = () => {
-        setFormEntries([...formEntries, { user: '', position: '', phone1: '', phone2: '', email1: '', email2: '' }]);
+        // setFormEntries([...formEntries, { user: '', position: '', phone1: '', phone2: '', email1: '', email2: '' }]);
+        setFormEntries([...formEntries, { name: '', position: '', phone1: '', phone2: '', email1: '', email2: '', username: '', password: '', role: '' }]);
     };
 
     const removeEntry = (index) => {
-        if (formEntries && campusUserList.filter((item) => item.value == formEntries[index]?.user?.value).length === 0) {
-            setCampusUserList([...campusUserList, formEntries[index].user]);
-        }
+        // if (formEntries && campusUserList.filter((item) => item.value == formEntries[index]?.user?.value).length === 0) {
+        //     setCampusUserList([...campusUserList, formEntries[index].user]);
+        // }
         const updatedEntries = formEntries.filter((_, i) => i !== index);
         setFormEntries(updatedEntries);
     }
@@ -69,12 +76,20 @@ function AddCampus() {
         getAPI(url).then((response) => {
             var data = response?.data?.data
             reset({ ...data, 'corporate_group_id': { value: data?.corporate?.id, label: data?.corporate?.name } })
-            if (data?.authority) {
+
+            if (data?.authorities) {
                 var temp = []
-                data?.authority?.forEach((item) => {
-                    temp.push({ ...item, user: { value: item?.user?.id, label: item?.user?.name } })
+                data?.authorities?.forEach((item) => {
+                    temp.push({ ...item })
                 })
+                console.log(temp);
                 setFormEntries(temp)
+                setFormEntries((prevForm) =>
+                    prevForm.map(({ role_id, ...rest }) => ({
+                        role: role_id,
+                        ...rest,
+                    }))
+                );
             }
 
         })
@@ -110,13 +125,15 @@ function AddCampus() {
     const addCampus = (data) => {
         const newErrors = {};
         var authorityData = []
-
+        console.log('====================================');
+        console.log("data", data);
+        console.log('====================================');
         // For Authority Validation 
         if (!formEntries.length == 0) {
             formEntries.forEach((entry, index) => {
-                if (!entry.user) {
+                if (!entry.name) {
                     newErrors[index] = newErrors[index] || {};
-                    newErrors[index].user = 'User is required';
+                    newErrors[index].name = 'Name is required';
                 }
                 if (!entry.position) {
                     newErrors[index] = newErrors[index] || {};
@@ -130,6 +147,18 @@ function AddCampus() {
                     newErrors[index] = newErrors[index] || {};
                     newErrors[index].phone1 = 'Phone Number is required';
                 }
+                if (!entry.username) {
+                    newErrors[index] = newErrors[index] || {};
+                    newErrors[index].username = 'Username is required';
+                }
+                if (!entry.password) {
+                    newErrors[index] = newErrors[index] || {};
+                    newErrors[index].password = 'Password is required';
+                }
+                if (!entry.role) {
+                    newErrors[index] = newErrors[index] || {};
+                    newErrors[index].role = 'Role is required';
+                }
             });
             setAuthorityError(newErrors);
         }
@@ -142,7 +171,11 @@ function AddCampus() {
                         "position": entry?.position,
                         "phone1": entry?.phone1,
                         "email1": entry?.email1,
-                        "user_id": entry?.user?.value
+                        // "user_id": entry?.user?.value
+                        "role_id": entry?.role,
+                        "username": entry?.username,
+                        "name": entry?.name,
+                        "password": entry?.password
                     }
                     if (entry?.phone2) {
                         data['phone2'] = entry?.phone2
@@ -153,11 +186,15 @@ function AddCampus() {
                     if (mode === "edit") {
                         data['id'] = entry?.id
                         data['campus_id'] = entry?.campus_id
-
+                        data['role_id'] = entry?.role
+                        data['user_id'] = entry?.user?.id
                     }
                     authorityData.push(data)
 
                 })
+                console.log('====================================');
+                console.log(authorityData);
+                console.log('====================================');
             }
 
             const values = {
@@ -168,8 +205,9 @@ function AddCampus() {
                 "district": data?.district,
                 "state": data?.state,
                 "pincode": data?.pincode,
-                "corporate_group_id": data?.corporate_group_id?.value,
-                "authority": authorityData
+                "isActive": data?.isActive,
+                // "corporate_group_id": data?.corporate_group_id?.value,
+                "authorities": authorityData
 
             }
             var method
@@ -210,10 +248,50 @@ function AddCampus() {
         }
     }
 
+    const handleNumericInput = (e) => {
+        const value = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters     
+        if (value.length <= 6) {
+            e.target.value = value; // Update the input value with the numeric-only value
+        } else {
+            e.target.value = value.slice(0, 6); // Restrict to 6 digits
+        }
+    };
+
+
+    const fetchRoleData = () => {
+        var url = `/users/roles/`
+        getAPI(url).then((response) => {
+            var data = response?.data?.data
+            console.log(data);
+            var arr = []
+            //eslint-disable-next-line
+            data.map(it => {
+                if (it?.name === "Campus Admin") {
+                    arr.push(it)
+                }
+            })
+            setDefaultRoleValue(arr[0]?.id)
+            setRoleData(arr)
+
+            // Initialize roles if not set
+            const updatedEntries = formEntries.map(entry => ({
+                ...entry,
+                role: entry.role || (roleData.length > 0 ? roleData[0].id : ''),
+            }));
+            setFormEntries(updatedEntries);
+            if (mode === "edit") {
+                getCampusData()
+            }
+        }).catch((error) => {
+            console.log(error)
+        })
+        console.log('formEntries', formEntries);
+    }
+
 
     return (
         <div>
-        <small className='text-muted'>Home / System admin / <span className='text-primary' onClick={() => navigate('/campus')} role='button' title='Navigate to Campus'>Campus</span></small>
+            <small className='text-muted'>Home / System admin / <span className='text-primary' onClick={() => navigate('/campus')} role='button' title='Navigate to Campus'>Campus</span></small>
             <div className='container-fluid p-0'>
                 <h6 className='title fw-bold mt-1'>Campus</h6>
             </div>
@@ -234,57 +312,66 @@ function AddCampus() {
 
                             <div className="row">
                                 <div className="col">
-                                    <label className="mt-2">Code <span className="text-danger">*</span></label>
-                                    <input className="form-control" {...register('campus_code', { required: true })} />
-                                    {errors?.campus_code && <span className="text-danger">Code is required</span>}
+                                    <label className="mt-2">Campus Code <span className="text-danger">*</span></label>
+                                    <input placeholder="Enter Campus Code" className="form-control" {...register('campus_code', { required: true })} />
+                                    {errors?.campus_code && <span className="text-danger">Campus Code is required</span>}
                                 </div>
                                 <div className="col">
-                                    <label className="mt-2">Name <span className="text-danger">*</span></label>
-                                    <input className="form-control" {...register('name', { required: true })} />
-                                    {errors.name && <span className="text-danger">Name is required</span>}
+                                    <label className="mt-2">Campus Name <span className="text-danger">*</span></label>
+                                    <input placeholder="Enter Campus Name" className="form-control" {...register('name', { required: true })} />
+                                    {errors.name && <span className="text-danger">Campus Name is required</span>}
                                 </div>
                                 <div className="col">
                                     <label className="mt-2">Address <span className="text-danger">*</span></label>
-                                    <input className="form-control" {...register('address', { required: true })} />
+                                    <input placeholder="Enter Address" className="form-control" {...register('address', { required: true })} />
                                     {errors.address && <span className="text-danger">Address is required</span>}
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col">
                                     <label className="mt-2">City <span className="text-danger">*</span></label>
-                                    <input className="form-control" {...register('city', { required: true })} />
+                                    <input placeholder="Enter City" className="form-control" {...register('city', { required: true })} />
                                     {errors.city && <span className="text-danger">City is required</span>}
                                 </div>
                                 <div className="col">
                                     <label className="mt-2">District <span className="text-danger">*</span></label>
-                                    <input className="form-control" {...register('district', { required: true })} />
+                                    <input placeholder="Enter District" className="form-control" {...register('district', { required: true })} />
                                     {errors.district && <span className="text-danger">District is required</span>}
                                 </div>
                                 <div className="col">
+                                    <label className="mt-2">State <span className="text-danger">*</span></label>
+                                    <input placeholder="Enter State" className="form-control" {...register('state', { required: true })} />
+                                    {errors.state && <span className="text-danger">State is required</span>}
+                                </div>
+
+                            </div>
+                            <div className="row">
+                                <div className="col-md-4">
                                     <label className="mt-2">Pincode <span className="text-danger">*</span></label>
-                                    <input
+                                    <input type="text" placeholder="Enter Pincode"
                                         className="form-control"
                                         {...register('pincode', {
                                             required: 'Pincode is required',
                                             pattern: {
                                                 value: /^\d{6}$/,
                                                 message: 'Invalid pincode format'
+                                            },
+                                            maxLength: {
+                                                value: 6,
+                                                message: 'Pincode cannot exceed 6 digits'
                                             }
                                         })}
                                     />
                                     {errors.pincode && <span className="text-danger">{errors.pincode.message}</span>}
                                 </div>
-                            </div>
-                            <div className="row">
-
-                            </div>
-                            <div className="row">
-                                <div className="col">
-                                    <label className="mt-2">State <span className="text-danger">*</span></label>
-                                    <input className="form-control" {...register('state', { required: true })} />
-                                    {errors.state && <span className="text-danger">State is required</span>}
+                                <div className="col-md-4 mt-4">
+                                    <label className="mt-2"> <input type="checkbox" defaultChecked={true} className="form-check-input"{...register('isActive', { required: true })} /> Set as active <span className="text-danger">*</span></label>
+                                    <div>
+                                        {errors.isActive && <span className="text-danger">Is Active is required</span>}
+                                    </div>
                                 </div>
-                                <div className="col">
+
+                                {/* <div className="col">
                                     <label className="mt-2">Corporate Admin <span className="text-danger">*</span></label>
                                     <Controller
                                         name="corporate_group_id"
@@ -303,7 +390,7 @@ function AddCampus() {
                                         )}
                                     />
                                     {errors.corporate_group_id && <span className="text-danger">Admin is required</span>}
-                                </div>
+                                </div> */}
                             </div>
                         </div>
 
@@ -330,19 +417,28 @@ function AddCampus() {
                                         </div>
                                         <div className='row p-2'>
                                             <div className='col'>
-                                                <Select
+                                                {/* <Select
                                                     options={campusUserList}
                                                     placeholder="Select campus user"
                                                     value={formEntries[index]?.user}
                                                     onChange={(selectedOption) => handleInputChange(index, 'user', selectedOption)}
-                                                />
-                                                {authorityError[index]?.user && <span className="text-danger">{authorityError[index].user}</span>}
-                                            </div>
-                                            <div className='col'>
+                                                /> */}
+                                                <label>Name <span className="text-danger">*</span></label>
                                                 <input
                                                     className='form-control'
                                                     type="text"
-                                                    placeholder="Position"
+                                                    placeholder="Enter Name"
+                                                    value={entry.name}
+                                                    onChange={(e) => handleInputChange(index, 'name', e.target.value)}
+                                                />
+                                                {authorityError[index]?.name && <span className="text-danger">{authorityError[index].name}</span>}
+                                            </div>
+                                            <div className='col'>
+                                                <label>Position <span className="text-danger">*</span></label>
+                                                <input
+                                                    className='form-control'
+                                                    type="text"
+                                                    placeholder="Enter Position"
                                                     value={entry.position}
                                                     onChange={(e) => handleInputChange(index, 'position', e.target.value)}
                                                 />
@@ -351,27 +447,35 @@ function AddCampus() {
                                         </div>
                                         <div className='row p-2'>
                                             <div className='col'>
-                                                <PhoneInput
-                                                    country={'in'}
-                                                    value={String(entry.phone1)}
-                                                    onChange={(phone) => handleInputChange(index, 'phone1', phone)}
+                                                <label>Username <span className="text-danger">*</span></label>
+                                                <input
+                                                    className='form-control'
+                                                    type="text"
+                                                    placeholder="Enter Username"
+                                                    value={entry.username}
+                                                    onChange={(e) => handleInputChange(index, 'username', e.target.value)}
                                                 />
-                                                {authorityError?.[index]?.phone1 && <span className="text-danger">{authorityError?.[index]?.phone1}</span>}
+                                                {authorityError[index]?.username && <span className="text-danger">{authorityError[index].username}</span>}
                                             </div>
                                             <div className='col'>
-                                                <PhoneInput
-                                                    country={'in'}
-                                                    value={String(entry.phone2)}
-                                                    onChange={(phone) => handleInputChange(index, 'phone2', phone)}
+                                                <label>Password <span className="text-danger">*</span></label>
+                                                <input
+                                                    className='form-control'
+                                                    type="password"
+                                                    placeholder="Enter Password"
+                                                    value={entry.password}
+                                                    onChange={(e) => handleInputChange(index, 'password', e.target.value)}
                                                 />
+                                                {authorityError[index]?.password && <span className="text-danger">{authorityError[index].password}</span>}
                                             </div>
                                         </div>
                                         <div className='row p-2'>
                                             <div className='col'>
+                                                <label>Email 1 <span className="text-danger">*</span></label>
                                                 <input
                                                     className='form-control'
                                                     type="email"
-                                                    placeholder="Email Id"
+                                                    placeholder="Enter Email 1"
                                                     value={entry.email1}
                                                     onChange={(e) => handleInputChange(index, 'email1', e.target.value)}
                                                 />
@@ -379,14 +483,77 @@ function AddCampus() {
 
                                             </div>
                                             <div className='col'>
+                                                <label>Email 2</label>
                                                 <input
                                                     className='form-control'
                                                     type="email"
-                                                    placeholder="Email Id-2"
+                                                    placeholder="Enter Email 2"
                                                     value={entry.email2}
                                                     onChange={(e) => handleInputChange(index, 'email2', e.target.value)}
                                                 />
                                             </div>
+                                        </div>
+                                        <div className='row p-2'>
+                                            <div className='col-md-6'>
+                                                <label>Phone 1 <span className="text-danger">*</span></label>
+                                                <PhoneInput
+                                                    country={'in'}
+                                                    value={String(entry.phone1)}
+                                                    onChange={(phone) => handleInputChange(index, 'phone1', phone)}
+                                                />
+                                                {authorityError?.[index]?.phone1 && <span className="text-danger">{authorityError?.[index]?.phone1}</span>}
+                                            </div>
+                                            <div className='col-md-6'>
+                                                <label>Phone 2 </label>
+                                                <PhoneInput
+                                                    country={'in'}
+                                                    value={String(entry.phone2)}
+                                                    onChange={(phone) => handleInputChange(index, 'phone2', phone)}
+                                                />
+                                            </div>
+                                        </div>
+                                        {/* <div className='row p-2'>
+                                              <Select
+                                                    options={campusUserList}
+                                                    placeholder="Select campus user"
+                                                    value={formEntries[index]?.user}
+                                                    onChange={(selectedOption) => handleInputChange(index, 'user', selectedOption)}
+                                                />
+                                            </div>                                  */}
+                                        <div className='row p-2'>
+                                            <label htmlFor="role">Role<span className='text-danger'>*</span></label>
+                                            {/* <select className='form-control' id="role" onChange={(e) => handleInputChange(index, 'role', e.target.value)} value={entry.role}  {...register(`formEntries[${index}].role`, { required: 'Role is required' })}>
+                                                {
+                                                    roleData?.map((item, index) => {
+                                                        return <option key={index} value={item?.id ? item?.id : roleData[0].id} defaultValue={item?.id ? item?.id : roleData[0].id}>{item?.name}</option>
+                                                    })
+                                                }
+                                            </select> */}
+
+                                            <select
+                                                id="role"
+                                                className="form-control"
+                                                name="role"
+                                                value={entry.role ? entry.role : entry.role_id}
+                                                onChange={(e) =>
+                                                    handleInputChange(index, 'role', e.target.value)
+                                                }
+                                            >
+                                                {entry.role == "" ? (
+                                                    <option selected>
+                                                        --- Select Role ---
+                                                    </option>
+                                                ) : (
+                                                    ""
+                                                )}
+                                                {roleData?.map((item) => {
+                                                    return (
+                                                        <option value={item?.id}>{item?.name}</option>
+                                                    );
+                                                })}
+                                            </select>
+
+                                            {authorityError?.[index]?.role && <span className="text-danger">{authorityError?.[index]?.role}</span>}
                                         </div>
                                     </div>
                                 ))}

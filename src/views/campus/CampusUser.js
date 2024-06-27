@@ -7,8 +7,9 @@ import * as yup from 'yup';
 import Swal from 'sweetalert2';
 import "./Campus.css"
 import "../../index.css"
-import { deleteAPI,getAPI,addUpdateAPI} from '../../apiService/ApiService';
+import { deleteAPI, getAPI, addUpdateAPI } from '../../apiService/ApiService';
 import { tableStyle } from '../../utils/Utils';
+import PhoneInput from 'react-phone-input-2';
 
 // Define the validation schema using Yup
 const schema = yup.object().shape({
@@ -31,6 +32,8 @@ const schema1 = yup.object().shape({
   name: yup.string().required('Name is required'),
   username: yup.string().required('Username is required'),
   role: yup.string().optional(),
+  email: yup.string().email('Email is invalid').required('Email is required'),
+  mobile: yup.string().required("Phone Number is required"),
 });
 function CampusUser({ activeTab }) {
   const [title, setTile] = useState("Add User")
@@ -104,6 +107,8 @@ function CampusUser({ activeTab }) {
       name: row?.name,
       username: row?.username,
       // role: row?.role_id,
+      email: row?.email,
+      mobile: row?.mobile
     })
   }
   const handleDelete = (row) => {
@@ -126,7 +131,7 @@ function CampusUser({ activeTab }) {
       width: 400
     }).then((result) => {
       if (result.isConfirmed) {
-        var url=`/users/${row?.id}`
+        var url = `/users/${row?.id}`
         deleteAPI(url).then((response) => {
           let data = response?.data
           if (data?.status) {
@@ -155,7 +160,7 @@ function CampusUser({ activeTab }) {
     });
   }
   const fetchUserListData = () => {
-    var url=`/users/users/?user_type=campus&skip=${skip}&limit=${limit}`
+    var url = `/users/users/?user_type=campus&skip=${skip}&limit=${limit}`
     getAPI(url).then((response) => {
       setUserData(response?.data?.data)
       setTotal(response?.data?.total_count)
@@ -186,13 +191,15 @@ function CampusUser({ activeTab }) {
     // eslint-disable-next-line
   }, [skip, limit, activeTab])
   const handleActiveStatus = (event, row) => {
-    var method="PUT"
-    var url=`/users/${row?.id}`
+    var method = "PUT"
+    var url = `/users/${row?.id}`
     var data = {
       "name": row?.name,
-        "username": row?.username,
-        "role_id": Number(row?.role_id),
-        "active": event.target.checked
+      "username": row?.username,
+      "role_id": Number(row?.role_id),
+      "active": event.target.checked,
+      "email": row?.email,
+      "mobile": String(91 + row?.mobile)
     }
     addUpdateAPI(method, url, data).then((response) => {
       let data = response?.data
@@ -224,23 +231,27 @@ function CampusUser({ activeTab }) {
     var url;
     var postData;
     if (title === "Add User") {
-      method="POST"
-      url=`/users/register/`
-      postData={
+      method = "POST"
+      url = `/users/register/`
+      postData = {
         "name": data?.name,
-          "username": data?.username,
-          "password": data?.password,
-          "role_id": Number(defaultRoleValue),
-          "active": true
+        "username": data?.username,
+        "password": data?.password,
+        "role_id": Number(defaultRoleValue),
+        "active": true,
+        "email": data?.email,
+        "mobile": data?.mobile
       }
     }
     else {
-      method="PUT"
-      url=`/users/${editData?.id}`
-      postData={
+      method = "PUT"
+      url = `/users/${editData?.id}`
+      postData = {
         "name": data?.name,
-          "username": data?.username,
-          "role_id": Number(defaultRoleValue)
+        "username": data?.username,
+        "role_id": Number(defaultRoleValue),
+        "email": data?.email,
+        "mobile": data?.mobile
       }
     }
     addUpdateAPI(method, url, postData).then((response) => {
@@ -277,7 +288,9 @@ function CampusUser({ activeTab }) {
       username: "",
       password: "",
       // role: "",
-      confirmPassword: ""
+      confirmPassword: "",
+      email: "",
+      mobile: ""
     })
     setEditData()
   }
@@ -297,12 +310,12 @@ function CampusUser({ activeTab }) {
           <div className=''>
             <input type="text" className='form-control me-2 tab_search' placeholder='Search' />
           </div>
-          <div>
+          {/* <div>
             <button className='btn  btn-sm add px-2' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick={() => handleAdd()}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                        </svg></button>
-          </div>
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+              <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+            </svg></button>
+          </div> */}
         </div>
         <div className='container card my-3 tablecard'>
           <DataTable
@@ -336,6 +349,20 @@ function CampusUser({ activeTab }) {
                   <label htmlFor="username">Username<span className='text-danger'>*</span></label>
                   <input id="username" className='form-control' {...register('username')} autoComplete='off' />
                   {errors.username && <span className='text-danger'>{errors.username.message}</span>}
+                </div>
+                <div>
+                  <label htmlFor="email">Email<span className='text-danger'>*</span></label>
+                  <input id="email" className='form-control' {...register('email')} autoComplete='off' />
+                  {errors.email && <span className='text-danger'>{errors.email.message}</span>}
+                </div>
+                <div>
+                  <label htmlFor="mobile">Phone Number<span className='text-danger'>*</span></label>
+                  <input id="mobile" className='form-control' {...register('mobile')} autoComplete='off' />
+                  {/* <PhoneInput
+                    country={'in'}
+                    {...register('mobile')}
+                  /> */}
+                  {errors.mobile && <span className='text-danger'>{errors.mobile.message}</span>}
                 </div>
                 {
                   title === "Edit User" ? "" :

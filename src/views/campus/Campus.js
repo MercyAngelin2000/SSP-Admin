@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import Swal from 'sweetalert2';
 import CampusUser from './CampusUser';
 import { useNavigate } from 'react-router-dom';
-import { getAPI, deleteAPI } from '../../apiService/ApiService';
+import { getAPI, deleteAPI, addUpdateAPI } from '../../apiService/ApiService';
 import "./Campus.css";
 import "../../index.css";
 import { tableStyle } from '../../utils/Utils';
@@ -41,6 +41,9 @@ function Campus() {
         var url = `/campus/?skip=${skip}&limit=${limit}`
         getAPI(url).then((response) => {
             setCampusList(response?.data?.data)
+            console.log('====================================');
+            console.log(response?.data?.data);
+            console.log('====================================');
             setTotal(response?.data?.total_count)
         }).catch((error) => {
             console.log(error);
@@ -83,6 +86,7 @@ function Campus() {
             if (result.isConfirmed) {
                 var url = `/campus/${id}`
                 deleteAPI(url).then((response) => {
+                    console.log(response?.data);
                     if (response?.data?.status) {
                         getCampusList()
                         Swal.fire({
@@ -93,13 +97,12 @@ function Campus() {
                             showConfirmButton: false,
                             timer: 1500
                         });
-                    }
-                    else {
+                    } else {
                         Swal.fire({
                             toast: true,
                             icon: "error",
-                            title: "Oops...",
-                            text: response?.detail,
+                            title: "Oops...dd",
+                            text: response?.data?.detail,
                         });
                     }
 
@@ -134,7 +137,15 @@ function Campus() {
             name: 'State',
             selector: row => row?.state,
         },
-
+        {
+            name: 'Active',
+            selector: row => row?.isActive,
+            cell: row => <div className="form-check form-switch">
+                <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" defaultChecked={row.isActive} onChange={(event) => handleActiveStatus(event, row)} />
+                <label className="form-check-label" htmlFor="flexSwitchCheckChecked"></label>
+            </div>,
+            sortable: true
+        },
         {
             name: 'Actions',
             selector: row => row.status,
@@ -170,12 +181,53 @@ function Campus() {
         setSkip((currentpage - 1) * limit)
     }
     const searchCampus = (e) => {
-    var url = `/campus/search/?value=${e?.target?.value}`
-    getAPI(url).then((response) => {
-        setCampusList(response?.data?.data)
-    }).catch((error) => {
-      console.log(error)
-    })
+        var url = `/campus/search/?value=${e?.target?.value}`
+        getAPI(url).then((response) => {
+            setCampusList(response?.data?.data)
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
+    const handleActiveStatus = (event, row) => {
+        var method = "PUT"
+        var url = `/campus/${row?.id}`
+        var data = {
+            "campus_code": row?.campus_code,
+            "name": row?.name,
+            "address": row?.address,
+            "city": row?.city,
+            "district": row?.district,
+            "state": row?.state,
+            "pincode": row?.pincode,
+            "isActive": event.target.checked,
+            "authorities": row.authorities ? JSON.parse(row.authorities) : [],
+            "active": event.target.checked
+        }
+        addUpdateAPI(method, url, data).then((response) => {
+            let data = response?.data
+            if (data?.status) {
+                getCampusList()
+                Swal.fire({
+                    toast: true,
+                    position: "center",
+                    icon: "success",
+                    title: "Campus updated successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+            else {
+                Swal.fire({
+                    toast: true,
+                    icon: "error",
+                    title: "Oops...",
+                    text: response?.data?.detail,
+                });
+            }
+        }).catch((error) => {
+            console.log(error)
+        })
     }
 
     return (
@@ -199,14 +251,14 @@ function Campus() {
                         <div className='d-flex justify-content-between align-items-end mt-1 p-0'>
                             <div className=''>
                                 <input type="text" className='form-control me-2 tab_search' placeholder='Search'
-                                 onChange={(e) => searchCampus(e)}
+                                    onChange={(e) => searchCampus(e)}
                                 />
                             </div>
                             <div>
                                 <button className='btn btn-sm add px-2' onClick={() => navigate('/addCampus', { state: { mode: 'add' } })}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                        </svg></button>
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                                </svg></button>
                             </div>
                         </div>
                         <div className='card my-3 tablecard'>
