@@ -389,7 +389,7 @@ function Menu({ onToggleSidebar, barStatus }) {
     }
   }
   return (
-    <div className={"sidebar " + (barStatus ? "open" : "")}>
+    <div id="sidebar" className={"sidebar " + (barStatus ? "open" : "")}>
       <div className="logo_details px-2">
         <div className="logo_name"><img src={sspLogo} width={50} height={30} alt='logo' /></div>
         <i className="bx bx-menu-alt-right" id="btn" onClick={onToggleSidebar}></i>

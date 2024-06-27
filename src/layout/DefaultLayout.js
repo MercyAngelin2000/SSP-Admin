@@ -8,15 +8,31 @@ import '../App.css'
 import InputForms from '../component/InputForms';
 import '../component/InputForms.css';
 import GlobalSearch from '../component/GlobalSearch';
+import { type } from '@testing-library/user-event/dist/type';
+import { bool } from 'yup';
 
 const inputContext = createContext(null);
 
 function DefaultLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  // const [sidebarOpen,setSidebarOpen]=useState(JSON.parse(sessionStorage.getItem("sidebar")))
+  console.log(sidebarOpen,typeof sidebarOpen);
   sessionStorage.setItem('inputBar', false)
   const [inputBar, setInputBar] = useState(JSON.parse(sessionStorage.getItem('inputBar')) || false);
   const [inputObj, setInputObj] = useState({});
 
+  // useEffect(()=>{
+  //   setSidebarOpen(sessionStorage.setItem("sidebar",true))
+  // },[])
+  // useEffect(() => {
+  //   const handleStorageChange = () => {
+  //     setSidebarOpen(sessionStorage.getItem("sidebar"))
+  //   };
+  //   window.addEventListener('sidebarChanged', handleStorageChange);
+  //   return () => {
+  //     window.removeEventListener('sidebarChanged', handleStorageChange);
+  //   };
+  // }, []);
   useEffect(() => {
     const handleStorageChange = () => {
       setInputBar(JSON.parse(sessionStorage.getItem('inputBar')));
@@ -33,14 +49,18 @@ function DefaultLayout() {
   }
   useEffect(() => {
     if (inputBar || (inputObj?.from === "Header")) {
-      setSidebarOpen(false)
+      // setSidebarOpen(false)
+      sessionStorage.setItem("sidebar",false)
     }
   }, [inputBar, inputObj]);
+  const handleSidebar=()=>{
+    setSidebarOpen(!sidebarOpen)
+  }
   return (
     <div className='wrapper'>
       <inputContext.Provider value={{ inputObj, setInputObj }}>
         <div className={`sidebarmenucol ${sidebarOpen ? 'open' : ''}`}>
-          <Menu onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} barStatus={sidebarOpen} />
+          <Menu onToggleSidebar={() => handleSidebar()} barStatus={sidebarOpen} />
         </div>
 
         <div className={`content ${sidebarOpen ? 'sidebar-open' : 'sidebar-close'}`}>

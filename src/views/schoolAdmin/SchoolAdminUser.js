@@ -293,7 +293,7 @@ function SchoolAdminUser({ activeTab }) {
   }
   return (
     <div>
-      <div className='container-fluid card mb-5 container-card'>
+      <div className='container-fluid card mb-5 '>
         <div className='d-flex justify-content-between align-items-end mt-1 p-0'>
           <div className=''>
             <input type="text" className='form-control me-2 tab_search' placeholder='Search' />

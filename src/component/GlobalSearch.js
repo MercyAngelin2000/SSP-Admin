@@ -32,7 +32,7 @@ function GlobalSearch() {
                     <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
                 </svg></span>
             </div>
-            <div className='d-flex'>
+            <div className='d-flex card'>
                 <div className='row global'>
                     <div className='col-lg-3 history'>
                         <div className='d-flex flex-column align-items-start p-3'>
@@ -385,10 +385,12 @@ function GlobalSearch() {
             </div>
             <div className="p-4 d-flex justify-content-center fixed-bottom">
                 <div class="input-group w-75 input-group-sm searchGroup">
-                    <input type='text' className="form-control" placeholder='Search...' aria-label="Username" aria-describedby="basic-addon1" style={{borderColor: '#0d6efd'}}/>
-                    <button class="btn btn-outline-primary" type="button" id="basic-addon1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                    </svg></button>
+                    <input type='text' className="form-control" placeholder='Search...' aria-label="Username" aria-describedby="basic-addon1" />
+                    <button class="btn text-primary" type="button" id="basic-addon1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                            <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>

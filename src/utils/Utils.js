@@ -10,8 +10,8 @@ export const activeStatus = (status) => {
 // export const tableHeaderBackground= '#1eaeca63'
 export const tableStyle = {
     headRow: {
-        style:{
-            minHeight:  '30px'
+        style: {
+            minHeight: '30px'
         }
     },
     headCells: {
@@ -21,7 +21,7 @@ export const tableStyle = {
             color: '#fff',
             // #8b2949 
             // backgroundColor: '#762942',
-            backgroundColor:'hsl(241.41deg 60.95% 58.82%)'
+            backgroundColor: 'hsl(241.41deg 60.95% 58.82%)'
         },
     },
     rows: {
@@ -30,7 +30,7 @@ export const tableStyle = {
             marginTop: '10px',
             borderBottom: '1px solid lightgray',
             boxShadow: "0px 3px 4px -5px grey",
-            minHeight:  '5px',
+            minHeight: '5px',
             backgroundColor: '#ffff', // Background color for rows
             '&:hover': {
                 // backgroundColor: '#e9ecef', // Background color for row on hover
@@ -50,4 +50,10 @@ export function setSessionStorageItem(key, value) {
     sessionStorage.setItem(key, value);
     const event = new Event('sessionStorageChanged');
     window.dispatchEvent(event);
-  }
+}
+export function closeSidebar(key, value) {
+    document.querySelector('#sidebar').classList.remove("open")
+    document.querySelector('.sidebarmenucol').classList.remove("open")
+    document.querySelector('.content').classList.replace("sidebar-open","sidebar-close")
+}
+

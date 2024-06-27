@@ -3,9 +3,9 @@
     height: calc(100vh - 60px);
 }
 .global{
-    border: solid 2px rgb(219, 218, 218);
+    /* border: solid 2px rgb(219, 218, 218);
     border-radius: 10px;
-    height: 90%;
+    height: 90%; */
     width: 100%;
 }
 .history{
@@ -16,10 +16,11 @@
 }
 .searchList{
     padding: 3px;
-    width: 250px;
-    white-space: nowrap; 
     overflow: hidden;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 .searchContent{
     height: 100%;
@@ -31,5 +32,19 @@
     cursor: pointer;
 }
 .searchGroup{
-    border-color: blue !important;
+    padding: 12px;
+    background: white;
+    border-radius: 20px;
+    border: none;
+}
+.searchGroup input{
+ border: none;
+ background: transparent;
+}
+.searchGroup .btn{
+background: lightgray;
+border-radius: 20px !important;
+}
+.searchGroup input:focus{
+ box-shadow: none;
 }
